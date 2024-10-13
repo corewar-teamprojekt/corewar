@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 val kotlin_version = "2.0.20"
 val ktor_version = "3.0.0"
 
@@ -38,4 +40,15 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     testImplementation("io.ktor:ktor-server-test-host-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_22)
+    }
+}
+
+tasks.withType<JavaCompile> {
+    sourceCompatibility = "22"
+    targetCompatibility = "22"
 }
