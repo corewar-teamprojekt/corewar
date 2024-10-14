@@ -1,4 +1,4 @@
-package software.shonk
+package software.shonk.interpreter
 
 interface InterestingInterface {
     fun doSomething()

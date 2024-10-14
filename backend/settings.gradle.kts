@@ -4,5 +4,6 @@ plugins {
 
 rootProject.name = "backend"
 
-include("api", "mars-interpreter")
-
+include("api")
+include("mars-interpreter")
+include("testing")
