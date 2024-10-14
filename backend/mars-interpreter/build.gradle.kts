@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.0.20"
     id("com.ncorti.ktfmt.gradle") version "0.20.1"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
 }
 
 ktfmt { kotlinLangStyle() }
