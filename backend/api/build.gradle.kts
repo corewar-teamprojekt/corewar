@@ -50,11 +50,11 @@ dependencies {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_22)
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }
 
 tasks.withType<JavaCompile> {
-    sourceCompatibility = "22"
-    targetCompatibility = "22"
+    sourceCompatibility = "21"
+    targetCompatibility = "21"
 }
