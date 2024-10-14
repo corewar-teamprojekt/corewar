@@ -8,6 +8,6 @@ import software.shonk.application.port.HelloWorldUseCase
 class HelloWorldService() : HelloWorldUseCase {
 
     override fun sayHello(): String {
-        return "Hello World"
+        return "Hello world!"
     }
 }

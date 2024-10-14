@@ -9,10 +9,10 @@ import software.shonk.module
 
 class ApplicationTest {
     @Test
-    fun testRoot() = testApplication {
+    fun testHello() = testApplication {
         application { module() }
-        val response = client.get("/")
+        val response = client.get("/api/hello")
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals("Hello, world!", response.bodyAsText())
+        assertEquals("Hello world!", response.bodyAsText())
     }
 }
