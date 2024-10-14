@@ -1,0 +1,26 @@
+repos:
+  - repo: local
+    hooks:
+      - id: prettier-npx
+        name: Prettier using npx
+        language: system
+        entry: 'npx prettier --config ./frontend/app/.prettierrc --write'
+        files: ^frontend/app/src/.*\.(js|jsx|ts|tsx|json|css|scss|md)$
+      - id: ktfmt-gradle
+        name: ktfmt for mars-interpreter
+        language: system
+        entry: bash -c 'cd ./backend/mars-interpreter && ./gradlew ktfmtCheck && ./gradlew ktlintCheck'
+        files: ^backend/mars-interpreter/.*\.kt$
+      - id: ktfmt-gradle-api
+        name: ktfmt for api
+        language: system
+        entry: bash -c 'cd ./backend/api && ./gradlew ktfmtCheck && ./gradlew ktlintCheck'
+        files: ^backend/api/.*\.kt$
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.12.0
+    hooks:
+      - id: eslint
+        name: eslint
+        files: ^frontend/app/.*\.(js|jsx|ts|tsx)$
+        args: ['--config', './frontend/app/eslint.config.js']
