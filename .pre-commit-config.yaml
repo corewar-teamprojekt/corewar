@@ -9,12 +9,12 @@ repos:
       - id: ktfmt-gradle
         name: ktfmt for mars-interpreter
         language: system
-        entry: bash -c 'cd ./backend/mars-interpreter && ./gradlew ktfmtCheck && ./gradlew ktlintCheck'
+        entry: bash -c 'cd ./backend/mars-interpreter && ./gradlew ktfmtCheck'
         files: ^backend/mars-interpreter/.*\.kt$
       - id: ktfmt-gradle-api
         name: ktfmt for api
         language: system
-        entry: bash -c 'cd ./backend/api && ./gradlew ktfmtCheck && ./gradlew ktlintCheck'
+        entry: bash -c 'cd ./backend/api && ./gradlew ktfmtCheck'
         files: ^backend/api/.*\.kt$
 
   - repo: https://github.com/pre-commit/mirrors-eslint

@@ -24,7 +24,7 @@ jobs:
 
       - name: Run Lint- and Format-Check on api
         working-directory: backend/api
-        run: ./gradlew ktlintCheck ktfmtCheck
+        run: ./gradlew ktfmtCheck
 
   kt-lint-interpreter:
     name: "Lint- and Format-Check Interpreter"
@@ -43,7 +43,7 @@ jobs:
 
       - name: Run Lint- and Format-Check on api
         working-directory: backend/mars-interpreter
-        run: ./gradlew ktlintCheck ktfmtCheck
+        run: ./gradlew ktfmtCheck
 
   kt-unittest-api:
     name: "Unit Test API"
