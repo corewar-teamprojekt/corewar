@@ -1,0 +1,90 @@
+name: "Backend"
+on:
+  push:
+    paths:
+        - 'backend/**'
+        - 'e2e/**'
+        - '.github/workflows/backend.yml'
+
+jobs:
+  kt-lint-api:
+    name: "Lint- and Format-Check API"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Lint- and Format-Check on api
+        working-directory: backend/api
+        run: ./gradlew ktlintCheck ktfmtCheck
+
+  kt-lint-interpreter:
+    name: "Lint- and Format-Check Interpreter"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Lint- and Format-Check on api
+        working-directory: backend/mars-interpreter
+        run: ./gradlew ktlintCheck ktfmtCheck
+
+  kt-unittest-api:
+    name: "Unit Test API"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 21, 23 ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Lint- and Format-Check on api
+        working-directory: backend/api
+        run: ./gradlew test 
+
+  kt-unittest-interpreter:
+    name: "Unit Test Interpreter"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ 21, 23 ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Lint- and Format-Check on api
+        working-directory: backend/mars-interpreter
+        run: ./gradlew test
