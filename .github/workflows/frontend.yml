@@ -1,6 +1,10 @@
 name: "Frontend"
 on:
   push:
+    paths:
+        - 'frontend/**'
+        - 'e2e/**'
+        - '.github/workflows/frontend.yml'
 
 jobs:
   eslint:
