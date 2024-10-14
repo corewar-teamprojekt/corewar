@@ -1,0 +1,39 @@
+#headerContainer {
+	height: 75px;
+	width: 100%;
+
+	background-color: black;
+	color: white;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#headerText {
+	margin-left: 100px;
+}
+
+h2 {
+	width: fit-content;
+}
+
+#player {
+	width: 200px;
+	margin-right: 30px;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+#playerIcon {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background-color: red;
+
+	margin-right: 14px;
+}
