@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0" version="24.7.17">
   <diagram name="Page-1" id="0eHJ7MtMPAZvea-WposX">
-    <mxGraphModel dx="3170" dy="2350" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2590" dy="2038" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -118,7 +118,7 @@
             <mxPoint x="390" y="-480" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="OusR4v1maH0W4ZChgaof-21" value="NOT READY" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="OusR4v1maH0W4ZChgaof-20">
+        <mxCell id="OusR4v1maH0W4ZChgaof-21" value="NOT STARTED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="OusR4v1maH0W4ZChgaof-20">
           <mxGeometry x="0.163" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -183,7 +183,7 @@
             <mxPoint x="390" y="-330" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="OusR4v1maH0W4ZChgaof-36" value="GAME IN PROGRESS" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="OusR4v1maH0W4ZChgaof-35">
+        <mxCell id="OusR4v1maH0W4ZChgaof-36" value="RUNNING" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="OusR4v1maH0W4ZChgaof-35">
           <mxGeometry x="0.163" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -247,7 +247,7 @@
             <mxPoint x="1002.5" y="-263.36" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="OusR4v1maH0W4ZChgaof-55" value="GAME IN PROGRESS" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="OusR4v1maH0W4ZChgaof-54">
+        <mxCell id="OusR4v1maH0W4ZChgaof-55" value="RUNNING" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="OusR4v1maH0W4ZChgaof-54">
           <mxGeometry x="0.163" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -272,7 +272,7 @@
             <mxPoint x="1002.5" y="-178.36" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="OusR4v1maH0W4ZChgaof-60" value="GAME DONE, body contains result" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="OusR4v1maH0W4ZChgaof-59">
+        <mxCell id="OusR4v1maH0W4ZChgaof-60" value="FINISHED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="OusR4v1maH0W4ZChgaof-59">
           <mxGeometry x="0.163" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -319,7 +319,7 @@
         <mxCell id="OusR4v1maH0W4ZChgaof-71" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="330" y="-130" width="20" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="OusR4v1maH0W4ZChgaof-75" value="&lt;font style=&quot;font-size: 48px;&quot;&gt;NOT READY FOR DEV&lt;br&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;fontColor=#FF0000;" vertex="1" parent="1">
+        <mxCell id="OusR4v1maH0W4ZChgaof-75" value="READY FOR DEV" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;fontColor=#00FF00;fontSize=48;" vertex="1" parent="1">
           <mxGeometry x="440" y="-825" width="490" height="110" as="geometry" />
         </mxCell>
       </root>
