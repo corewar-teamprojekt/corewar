@@ -1,2 +1,2 @@
-rootProject.name = "corewar-setup"
+rootProject.name = "corewar-api"
 
