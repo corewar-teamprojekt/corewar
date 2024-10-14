@@ -7,11 +7,7 @@ import software.shonk.application.port.HelloWorldUseCase
 
 // Configure all endpoints regarding Hello World in here (example)
 fun Route.configureHelloWorldController(helloWorldUseCase: HelloWorldUseCase) {
-    get("/") {
-        call.respondText(
-            helloWorldUseCase.sayHello()
-        )
-    }
+    get("/") { call.respondText(helloWorldUseCase.sayHello()) }
 }
 
 // Localized DTOs down here

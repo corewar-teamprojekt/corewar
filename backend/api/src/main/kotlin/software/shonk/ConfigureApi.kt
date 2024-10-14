@@ -9,9 +9,5 @@ import software.shonk.application.service.HelloWorldService
 fun Application.configureApi() {
     val helloWorldUseCase = HelloWorldService()
 
-    routing {
-        route("/api") {
-            configureHelloWorldController(helloWorldUseCase)
-        }
-    }
+    routing { route("/api") { configureHelloWorldController(helloWorldUseCase) } }
 }
