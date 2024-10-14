@@ -23,8 +23,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run Lint- and Format-Check on api
-        working-directory: backend/api
-        run: ./gradlew ktfmtCheck
+        working-directory: backend/
+        run: ./gradlew api:ktfmtCheck
 
   kt-lint-interpreter:
     name: "Lint- and Format-Check Interpreter"
@@ -42,8 +42,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run Lint- and Format-Check on api
-        working-directory: backend/mars-interpreter
-        run: ./gradlew ktfmtCheck
+        working-directory: backend/
+        run: ./gradlew mars-interpreter:ktfmtCheck
 
   kt-unittest-api:
     name: "Unit Test API"
@@ -64,8 +64,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run Lint- and Format-Check on api
-        working-directory: backend/api
-        run: ./gradlew test 
+        working-directory: backend/
+        run: ./gradlew api:test
 
   kt-unittest-interpreter:
     name: "Unit Test Interpreter"
@@ -86,5 +86,5 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run Lint- and Format-Check on api
-        working-directory: backend/mars-interpreter
-        run: ./gradlew test
+        working-directory: backend/
+        run: ./gradlew mars-interpreter:test
