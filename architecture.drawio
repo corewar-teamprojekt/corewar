@@ -1,9 +1,15 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0" version="24.7.17">
   <diagram name="Page-1" id="0eHJ7MtMPAZvea-WposX">
-    <mxGraphModel dx="2488" dy="1982" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="3170" dy="2350" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="OusR4v1maH0W4ZChgaof-77" value="&lt;div align=&quot;left&quot;&gt;&quot;looged in&quot; as player B&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-420" y="-434" width="750" height="394" as="geometry" />
+        </mxCell>
+        <mxCell id="OusR4v1maH0W4ZChgaof-76" value="&lt;div align=&quot;left&quot;&gt;&quot;looged in&quot; as player A&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;" vertex="1" parent="1">
+          <mxGeometry x="-420" y="-570" width="750" height="109" as="geometry" />
+        </mxCell>
         <mxCell id="KnRI6pCMRfKjTZJ7syq_-1" value="react&lt;br&gt;&lt;div align=&quot;left&quot;&gt;frontend&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;horizontal=1;verticalAlign=top;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="40" y="310" width="520" height="250" as="geometry" />
         </mxCell>
@@ -130,6 +136,11 @@
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="270" y="-476" as="sourcePoint" />
             <mxPoint x="270" y="-416" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OusR4v1maH0W4ZChgaof-79" value="change user" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="OusR4v1maH0W4ZChgaof-25">
+          <mxGeometry x="-0.0627" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="OusR4v1maH0W4ZChgaof-26" value="navigate based on status result" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
@@ -292,8 +303,13 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="OusR4v1maH0W4ZChgaof-73" value="on play again route back" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="OusR4v1maH0W4ZChgaof-72">
+        <mxCell id="OusR4v1maH0W4ZChgaof-73" value="on &lt;b&gt;PLAY AGAIN&lt;/b&gt; route back" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="OusR4v1maH0W4ZChgaof-72">
           <mxGeometry x="0.0163" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OusR4v1maH0W4ZChgaof-78" value="change user" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="OusR4v1maH0W4ZChgaof-72">
+          <mxGeometry x="0.2035" y="-3" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
