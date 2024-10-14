@@ -9,6 +9,10 @@ plugins {
     id("com.ncorti.ktfmt.gradle") version "0.20.1"
 }
 
+ktfmt {
+    kotlinLangStyle()
+}
+
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
 }
