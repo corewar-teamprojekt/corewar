@@ -1,19 +1,20 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import {
 	useDispatchUser,
 	UserProvider,
 	useUser,
 } from "@/services/UserContext.tsx";
-import { createRoot } from "react-dom/client";
-import { screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { act } from "react";
 
 describe("mvp", () => {
+	beforeEach(() => {
+		cleanup();
+	});
+
 	it("initializes as PlayerA", () => {
-		const container = document.body.appendChild(document.createElement("div"));
-		const root = createRoot(container!);
 		act(() => {
-			root.render(
+			render(
 				<UserProvider>
 					<TestComponent></TestComponent>
 				</UserProvider>,
@@ -22,6 +23,23 @@ describe("mvp", () => {
 
 		const playerName = screen.getByTestId("playerName").textContent;
 		expect(playerName).toEqual("PlayerA");
+	});
+
+	it("can switch to PlayerB", () => {
+		act(() => {
+			render(
+				<UserProvider>
+					<TestComponent></TestComponent>
+				</UserProvider>,
+			);
+		});
+
+		act(() => {
+			screen.getByTestId("switchToB").click();
+		});
+
+		const playerName = screen.getByTestId("playerName").textContent;
+		expect(playerName).toEqual("PlayerB");
 	});
 });
 
@@ -33,6 +51,7 @@ function TestComponent() {
 		<>
 			<div data-testid="playerName">{user?.name}</div>
 			<button
+				data-testid="switchToA"
 				onClick={() => {
 					if (userDispatch) {
 						userDispatch({ user: null, type: "setPlayerA" });
@@ -42,13 +61,14 @@ function TestComponent() {
 				Set to PlayerA
 			</button>
 			<button
+				data-testid="switchToB"
 				onClick={() => {
 					if (userDispatch) {
 						userDispatch({ user: null, type: "setPlayerB" });
 					}
 				}}
 			>
-				Set to PlayerA
+				Set to PlayerB
 			</button>
 		</>
 	);
