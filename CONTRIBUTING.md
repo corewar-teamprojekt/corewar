@@ -1,4 +1,8 @@
 # Contributing
+## Merging:
+To merge a branch into main, create a pull request. Before merging, at least one other person needs to review the code.
+
+When merging, please use the "rebase" option, to keep the commit history clean.
 ## Commit message format:
 `[#xxx] <message>`  
 Where `xxx` is the issue number the commit references.  
