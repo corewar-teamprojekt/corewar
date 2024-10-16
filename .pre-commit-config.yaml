@@ -12,16 +12,11 @@ repos:
         language: system
         entry: 'npx prettier --config ./frontend/app/.prettierrc --write'
         files: ^frontend/app/src/.*\.(js|jsx|ts|tsx|json|css|scss|md)$
-      - id: ktfmt-gradle
-        name: ktfmt for mars-interpreter
-        language: system
-        entry: bash -c 'cd ./backend/mars-interpreter && ./gradlew ktfmtCheck'
-        files: ^backend/mars-interpreter/.*\.kt$
       - id: ktfmt-gradle-api
-        name: ktfmt for api
+        name: ktfmt
         language: system
-        entry: bash -c 'cd ./backend/api && ./gradlew ktfmtCheck'
-        files: ^backend/api/.*\.kt$
+        entry: bash -c 'cd ./backend && ./gradlew ktfmtCheck'
+        files: ^backend/.*\.kt$
 
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v9.12.0
