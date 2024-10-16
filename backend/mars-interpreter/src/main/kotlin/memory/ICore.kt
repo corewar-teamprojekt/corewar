@@ -1,4 +1,6 @@
-package software.shonk.interpreter
+package software.shonk.interpreter.memory
+
+import software.shonk.interpreter.instruction.AbstractInstruction
 
 interface ICore {
     fun load(index: Int): AbstractInstruction

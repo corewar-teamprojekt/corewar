@@ -1,4 +1,9 @@
-package software.shonk.interpreter
+package software.shonk.interpreter.instruction
+
+import software.shonk.interpreter.process.AbstractProcess
+import software.shonk.interpreter.program.AbstractProgram
+import software.shonk.interpreter.AddressMode
+import software.shonk.interpreter.Modifier
 
 abstract class AbstractInstruction(
     private val aField: Int,

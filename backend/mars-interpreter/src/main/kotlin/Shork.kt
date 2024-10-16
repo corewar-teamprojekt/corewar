@@ -1,5 +1,9 @@
 package software.shonk.interpreter
 
+import software.shonk.interpreter.memory.ICore
+import software.shonk.interpreter.program.AbstractProgram
+import software.shonk.interpreter.settings.ISettings
+
 class Shork : IShork {
     private val settings: ISettings
     private val programs: List<AbstractProgram>
