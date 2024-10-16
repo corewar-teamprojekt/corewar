@@ -2,44 +2,69 @@ import { beforeEach, describe, expect, it } from "vitest";
 import {
 	useDispatchUser,
 	UserProvider,
+	userReducer,
 	useUser,
 } from "@/services/UserContext.tsx";
 import { cleanup, render, screen } from "@testing-library/react";
 import { act } from "react";
+import { User } from "@/domain/user.ts";
 
 describe("mvp", () => {
 	beforeEach(() => {
 		cleanup();
 	});
 
-	it("initializes as PlayerA", () => {
-		act(() => {
-			render(
-				<UserProvider>
-					<TestComponent></TestComponent>
-				</UserProvider>,
+	describe("reducer", () => {
+		it("returns playerA on setPlayerA", () => {
+			expect(userReducer(null, { type: "setPlayerA", user: null })).toEqual(
+				new User("PlayerA", "#FF0000"),
 			);
 		});
 
-		const playerName = screen.getByTestId("playerName").textContent;
-		expect(playerName).toEqual("PlayerA");
+		it("returns playerB on setPlayerB", () => {
+			expect(userReducer(null, { type: "setPlayerB", user: null })).toEqual(
+				new User("PlayerB", "#0000FF"),
+			);
+		});
+
+		it("returns playerB after initializing with playerA and then setting to playerB", () => {
+			const playerA = userReducer(null, { type: "setPlayerA", user: null });
+			expect(userReducer(playerA, { type: "setPlayerB", user: null })).toEqual(
+				new User("PlayerB", "#0000FF"),
+			);
+		});
 	});
 
-	it("can switch to PlayerB", () => {
-		act(() => {
-			render(
-				<UserProvider>
-					<TestComponent></TestComponent>
-				</UserProvider>,
-			);
+	describe("context", () => {
+		it("initializes as PlayerA", () => {
+			act(() => {
+				render(
+					<UserProvider>
+						<TestComponent></TestComponent>
+					</UserProvider>,
+				);
+			});
+
+			const playerName = screen.getByTestId("playerName").textContent;
+			expect(playerName).toEqual("PlayerA");
 		});
 
-		act(() => {
-			screen.getByTestId("switchToB").click();
-		});
+		it("can switch to PlayerB", () => {
+			act(() => {
+				render(
+					<UserProvider>
+						<TestComponent></TestComponent>
+					</UserProvider>,
+				);
+			});
 
-		const playerName = screen.getByTestId("playerName").textContent;
-		expect(playerName).toEqual("PlayerB");
+			act(() => {
+				screen.getByTestId("switchToB").click();
+			});
+
+			const playerName = screen.getByTestId("playerName").textContent;
+			expect(playerName).toEqual("PlayerB");
+		});
 	});
 });
 

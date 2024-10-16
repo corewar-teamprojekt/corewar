@@ -42,7 +42,14 @@ export function useDispatchUser() {
 	return useContext(UserDispatchContext);
 }
 
-function userReducer(_user: User, action: { type: string; user: User | null }) {
+// the user field in action is currently nullable and pretty much everywhere null, but I think we need it for the reducer,
+// and since we will need it for the future, we are just gonna keep it :3
+// Export for testing
+// eslint-disable-next-line react-refresh/only-export-components
+export function userReducer(
+	_user: User | null,
+	action: { type: string; user: User | null },
+) {
 	switch (action.type) {
 		case "setPlayerA": {
 			return playerA;
