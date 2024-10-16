@@ -1,6 +1,6 @@
-import { useDispatchUser } from "@/services/UserContext.tsx";
+import { useDispatchUser } from "@/services/userContext/UserContext.tsx";
 
-function Button() {
+function RemoveBeforeProdMvpUserTester() {
 	const dispatch = useDispatchUser();
 
 	function switchToPlayerB(): void {
@@ -23,4 +23,4 @@ function Button() {
 	);
 }
 
-export default Button;
+export default RemoveBeforeProdMvpUserTester;

@@ -4,7 +4,7 @@ import {
 	UserProvider,
 	userReducer,
 	useUser,
-} from "@/services/UserContext.tsx";
+} from "@/services/userContext/UserContext.tsx";
 import { cleanup, render, screen } from "@testing-library/react";
 import { act } from "react";
 import { User } from "@/domain/user.ts";

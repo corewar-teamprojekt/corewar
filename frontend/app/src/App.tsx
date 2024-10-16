@@ -1,8 +1,8 @@
 import "./App.css";
-import Header from "./components/Header.tsx";
+import Header from "./components/header/Header.tsx";
 import { ThemeProvider } from "./components/ThemeProvider.tsx";
-import { UserProvider } from "@/services/UserContext.tsx";
-import Button from "@/components/ChangeUser.tsx";
+import { UserProvider } from "@/services/userContext/UserContext.tsx";
+import RemoveBeforeProdMvpUserTester from "@/components/tempHelpersForTestingManually/RemoveBeforeProdMvpUserTester.tsx";
 
 function App() {
 	return (
@@ -11,7 +11,7 @@ function App() {
 				<UserProvider>
 					<Header />
 					<div>hello world</div>
-					<Button></Button>
+					<RemoveBeforeProdMvpUserTester></RemoveBeforeProdMvpUserTester>
 				</UserProvider>
 			</ThemeProvider>
 		</>

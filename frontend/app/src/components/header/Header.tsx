@@ -1,5 +1,5 @@
 import "./Header.css";
-import { useUser } from "@/services/UserContext.tsx";
+import { useUser } from "@/services/userContext/UserContext.tsx";
 import { User } from "@/domain/user.ts";
 
 function Header() {
