@@ -6,7 +6,7 @@ module.exports = {
     {
       rules: {
         "header-match-ticket": ({ header }) => {
-          const ticketPattern = /^\[(#\d+(,#\d+)*)?] /;
+          const ticketPattern = /^\[(#\d+(, ?#\d+)*)?] /;
           return [
             ticketPattern.test(header),
             `Commit message must start with a ticket number like "[#123]"`,
