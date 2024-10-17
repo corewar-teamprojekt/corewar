@@ -1,25 +1,18 @@
 import "./App.css";
-import Header from "./components/header/Header.tsx";
-import { ThemeProvider } from "./components/ThemeProvider.tsx";
-import { UserProvider } from "@/services/userContext/UserContext.tsx";
 import RemoveBeforeProdMvpUserTester from "@/components/tempHelpersForTestingManually/RemoveBeforeProdMvpUserTester.tsx";
 import LoadingSpinner from "@/components/loadingSpinner/LoadingSpinner.tsx";
-import Footer from "@/components/footer/Footer.tsx";
 import { Link } from "react-router-dom";
+import BasePage from "@/pages/basePage/BasePage.tsx";
 
 function App() {
 	return (
 		<>
-			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-				<UserProvider>
-					<Header />
-					<div>hello world</div>
-					<RemoveBeforeProdMvpUserTester></RemoveBeforeProdMvpUserTester>
-					<LoadingSpinner></LoadingSpinner>
-					<Link to={"/demo-route"}>demo route</Link>
-					<Footer></Footer>
-				</UserProvider>
-			</ThemeProvider>
+			<BasePage>
+				<div>hello world</div>
+				<RemoveBeforeProdMvpUserTester></RemoveBeforeProdMvpUserTester>
+				<LoadingSpinner></LoadingSpinner>
+				<Link to={"/demo-route"}>demo route</Link>
+			</BasePage>
 		</>
 	);
 }

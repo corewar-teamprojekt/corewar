@@ -1,5 +1,7 @@
+@import "../../vars.css";
+
 footer {
-	height: 100px;
+	height: var(--FOOTER-HEIGHT);
 	width: 100%;
 
 	display: flex;

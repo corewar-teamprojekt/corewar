@@ -1,5 +1,7 @@
+@import "../../vars.css";
+
 #headerContainer {
-	height: 75px;
+	height: var(--HEADER-HEIGHT);
 	width: 100%;
 
 	background-color: black;

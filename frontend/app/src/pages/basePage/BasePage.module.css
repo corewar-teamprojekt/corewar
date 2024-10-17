@@ -1,0 +1,10 @@
+@import "../../vars.css";
+
+#everything {
+	height: 100dvh;
+	width: 100dvw;
+}
+
+#mainContent {
+	height: calc(100dvh - var(--HEADER-HEIGHT) - var(--FOOTER-HEIGHT));
+}
