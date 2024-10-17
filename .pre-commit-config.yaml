@@ -13,7 +13,7 @@ repos:
         entry: 'npx prettier --config ./frontend/app/.prettierrc --write'
         files: ^frontend/app/src/.*\.(js|jsx|ts|tsx|json|css|scss|md)$
 
-  - repo: https://github.com/nikkischnelle/ktfmt-pre-commit-hook
+  - repo: https://github.com/corewar-teamprojekt/ktfmt-pre-commit-hook
     rev: 0.8.0
     hooks:
     - id: ktfmt
