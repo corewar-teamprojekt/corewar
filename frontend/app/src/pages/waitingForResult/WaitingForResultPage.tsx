@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { POLLING_INTERVAL_MS } from "@/pages/waitingForResult/consts.ts";
 import { StatusResponse } from "@/domain/StatusResponse.ts";
 import { GameState } from "@/domain/GameState.ts";
+import { BACKEND_BASE_URL } from "@/domain/consts.ts";
 
 function WaitingForResultPage() {
 	const isPageVisible = usePageVisibility();
@@ -18,10 +19,9 @@ function WaitingForResultPage() {
 		const pollingCallback = async () => {
 			console.debug("Polling game status...");
 
-			const response = await fetch("https://backend/api/status");
+			const response = await fetch(BACKEND_BASE_URL + "/status");
 			const data: StatusResponse = await response.json();
 
-			// TODO: Extract api response and contained enums
 			if (data.gameState === GameState.FINISHED) {
 				setIsPollingEnabled(false);
 				console.log("Game finished. Stopped polling. Rerouting");
