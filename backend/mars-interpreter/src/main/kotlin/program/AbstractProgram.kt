@@ -1,6 +1,7 @@
 package software.shonk.interpreter.program
 
 import software.shonk.interpreter.IShork
+import software.shonk.interpreter.process.AbstractProcess
 
 /**
  * Abstract class representing a program that can be run on the Shonk interpreter It holds processes
@@ -22,4 +23,11 @@ abstract class AbstractProgram(val id: String, val shork: IShork) {
      */
     // TODO: Should the caller be responsible for constructing an AbstractProcess? Factory?
     abstract fun addProcess(startingAddress: Int)
+
+    /**
+     * This function removes a process from the program
+     *
+     * @param process The process to remove
+     */
+    abstract fun removeProcess(process: AbstractProcess)
 }
