@@ -13,9 +13,9 @@ function App() {
 				<RemoveBeforeProdMvpUserTester></RemoveBeforeProdMvpUserTester>
 				<LoadingSpinner></LoadingSpinner>
 				<Link to={"/demo-route"}>demo route</Link>
-				<br/>
+				<br />
 				<Link to={"/waiting-for-result"}>Waiting for result</Link>
-				<ProgrammInput onProgramUploadClicked={(s) => console.log(s)}/>
+				<ProgrammInput onProgramUploadClicked={(s) => console.log(s)} />
 			</BasePage>
 		</>
 	);
