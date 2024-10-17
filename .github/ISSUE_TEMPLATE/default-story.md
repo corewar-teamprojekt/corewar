@@ -20,3 +20,4 @@ NOTES:
 Acceptance Criteria:
 - [ ] Criteria 1
 - [ ] Criteria 2
+- [ ] The code is fully tested or a good explanation given why it should not or cannot be tested
