@@ -3,12 +3,31 @@ import { cleanup, render, waitFor } from "@testing-library/react";
 import { act } from "react";
 import WaitingForResultPage from "@/pages/waitingForResult/WaitingForResultPage.tsx";
 import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
+import { POLLING_INTERVAL_MS } from "@/pages/waitingForResult/consts.ts";
+
+const POLLING_BUFFER = 500;
+
+const testRouterConfig = [
+	{
+		path: "/",
+		element: <Navigate to="/waiting-for-result" replace={true} />,
+	},
+	{
+		path: "/waiting-for-result",
+		element: <WaitingForResultPage />,
+	},
+	{
+		path: "/result-display",
+		element: <div>Result display</div>,
+	},
+];
 
 beforeEach(() => {
 	cleanup();
 	vi.restoreAllMocks();
 });
 
+// Might theoretically become flaky, since its working with actual timers
 describe("backend polling", () => {
 	it("starts polling correct endpoint once component gets rendered", async () => {
 		// Mock the fetch function
@@ -26,21 +45,7 @@ describe("backend polling", () => {
 		// @ts-ignore
 		global.fetch = mockFetch;
 
-		// TODO: move router config to single source of truth
-		const router = createMemoryRouter([
-			{
-				path: "/",
-				element: <Navigate to="/waiting-for-result" replace={true} />,
-			},
-			{
-				path: "/waiting-for-result",
-				element: <WaitingForResultPage />,
-			},
-			{
-				path: "/result-display",
-				element: <div>Result display</div>,
-			},
-		]);
+		const router = createMemoryRouter(testRouterConfig);
 
 		act(() => {
 			render(<RouterProvider router={router} />);
@@ -51,9 +56,7 @@ describe("backend polling", () => {
 				expect(mockFetch).toHaveBeenCalledWith("https://backend/api/status");
 			},
 			{
-				// 1 * Polling Interval + Polling Interval
-				// TODO: Extract Polling interval to some kind of consts file
-				timeout: 2000,
+				timeout: POLLING_INTERVAL_MS + POLLING_BUFFER,
 			},
 		);
 	});
@@ -74,20 +77,7 @@ describe("backend polling", () => {
 		// @ts-ignore
 		global.fetch = mockFetch;
 
-		const router = createMemoryRouter([
-			{
-				path: "/",
-				element: <Navigate to="/waiting-for-result" replace={true} />,
-			},
-			{
-				path: "/waiting-for-result",
-				element: <WaitingForResultPage />,
-			},
-			{
-				path: "/result-display",
-				element: <div>Result display</div>,
-			},
-		]);
+		const router = createMemoryRouter(testRouterConfig);
 
 		act(() => {
 			render(<RouterProvider router={router} />);
@@ -98,9 +88,7 @@ describe("backend polling", () => {
 				expect(mockFetch).toHaveBeenCalledTimes(1);
 			},
 			{
-				// 1 * Polling Interval + Polling Interval
-				// TODO: Extract Polling interval to some kind of consts file
-				timeout: 2000,
+				timeout: POLLING_INTERVAL_MS + POLLING_BUFFER,
 			},
 		);
 
@@ -109,9 +97,7 @@ describe("backend polling", () => {
 				expect(mockFetch).toHaveBeenCalledTimes(2);
 			},
 			{
-				// 1 * Polling Interval + Polling Interval
-				// TODO: Extract Polling interval to some kind of consts file
-				timeout: 2000,
+				timeout: POLLING_INTERVAL_MS + POLLING_BUFFER,
 			},
 		);
 
@@ -120,9 +106,7 @@ describe("backend polling", () => {
 				expect(mockFetch).toHaveBeenCalledTimes(3);
 			},
 			{
-				// 1 * Polling Interval + Polling Interval
-				// TODO: Extract Polling interval to some kind of consts file
-				timeout: 2000,
+				timeout: POLLING_INTERVAL_MS + POLLING_BUFFER,
 			},
 		);
 	});
@@ -142,20 +126,7 @@ describe("backend polling", () => {
 		// @ts-ignore
 		global.fetch = mockFetch;
 
-		const router = createMemoryRouter([
-			{
-				path: "/",
-				element: <Navigate to="/waiting-for-result" replace={true} />,
-			},
-			{
-				path: "/waiting-for-result",
-				element: <WaitingForResultPage />,
-			},
-			{
-				path: "/result-display",
-				element: <div>Result display</div>,
-			},
-		]);
+		const router = createMemoryRouter(testRouterConfig);
 
 		act(() => {
 			render(<RouterProvider router={router} />);
@@ -166,9 +137,7 @@ describe("backend polling", () => {
 				expect(mockFetch).toHaveBeenCalledTimes(1);
 			},
 			{
-				// 1 * Polling Interval + Polling Interval
-				// TODO: Extract Polling interval to some kind of consts file
-				timeout: 2000,
+				timeout: POLLING_INTERVAL_MS + POLLING_BUFFER,
 			},
 		);
 
@@ -177,9 +146,7 @@ describe("backend polling", () => {
 				expect(mockFetch).toHaveBeenCalledTimes(2);
 			},
 			{
-				// 1 * Polling Interval + Polling Interval
-				// TODO: Extract Polling interval to some kind of consts file
-				timeout: 2000,
+				timeout: POLLING_INTERVAL_MS + POLLING_BUFFER,
 			},
 		);
 
@@ -188,9 +155,7 @@ describe("backend polling", () => {
 				expect(mockFetch).toHaveBeenCalledTimes(3);
 			},
 			{
-				// 1 * Polling Interval + Polling Interval
-				// TODO: Extract Polling interval to some kind of consts file
-				timeout: 2000,
+				timeout: POLLING_INTERVAL_MS + POLLING_BUFFER,
 			},
 		);
 	});
@@ -211,20 +176,7 @@ describe("backend polling", () => {
 		// @ts-ignore
 		global.fetch = mockFetch;
 
-		const router = createMemoryRouter([
-			{
-				path: "/",
-				element: <Navigate to="/waiting-for-result" replace={true} />,
-			},
-			{
-				path: "/waiting-for-result",
-				element: <WaitingForResultPage />,
-			},
-			{
-				path: "/result-display",
-				element: <div>Result display</div>,
-			},
-		]);
+		const router = createMemoryRouter(testRouterConfig);
 
 		act(() => {
 			render(<RouterProvider router={router} />);
@@ -235,9 +187,7 @@ describe("backend polling", () => {
 				expect(mockFetch).toHaveBeenCalledOnce();
 			},
 			{
-				// 1 * Polling Interval + Polling Interval
-				// TODO: Extract Polling interval to some kind of consts file
-				timeout: 2000,
+				timeout: POLLING_INTERVAL_MS + POLLING_BUFFER,
 			},
 		);
 
@@ -260,20 +210,7 @@ describe("backend polling", () => {
 		// @ts-ignore
 		global.fetch = mockFetch;
 
-		const router = createMemoryRouter([
-			{
-				path: "/",
-				element: <Navigate to="/waiting-for-result" replace={true} />,
-			},
-			{
-				path: "/waiting-for-result",
-				element: <WaitingForResultPage />,
-			},
-			{
-				path: "/result-display",
-				element: <div>Result display</div>,
-			},
-		]);
+		const router = createMemoryRouter(testRouterConfig);
 
 		act(() => {
 			render(<RouterProvider router={router} />);
@@ -286,17 +223,19 @@ describe("backend polling", () => {
 				expect(mockFetch).toHaveBeenCalledOnce();
 			},
 			{
-				// 1 * Polling Interval + Polling Interval
-				// TODO: Extract Polling interval to some kind of consts file
-				timeout: 2000,
+				timeout: POLLING_INTERVAL_MS + POLLING_BUFFER,
 			},
 		);
 
-		await new Promise((r) => setTimeout(r, 1100));
+		await new Promise((r) =>
+			setTimeout(r, POLLING_INTERVAL_MS + POLLING_BUFFER),
+		);
 
 		expect(mockFetch).toHaveBeenCalledTimes(1);
 
-		await new Promise((r) => setTimeout(r, 1100));
+		await new Promise((r) =>
+			setTimeout(r, POLLING_INTERVAL_MS + POLLING_BUFFER),
+		);
 
 		expect(mockFetch).toHaveBeenCalledTimes(1);
 	});
