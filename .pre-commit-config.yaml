@@ -12,11 +12,14 @@ repos:
         language: system
         entry: 'npx prettier --config ./frontend/app/.prettierrc --write'
         files: ^frontend/app/src/.*\.(js|jsx|ts|tsx|json|css|scss|md)$
-      - id: ktfmt-gradle-api
-        name: ktfmt
-        language: system
-        entry: bash -c 'cd ./backend && ./gradlew ktfmtCheck'
-        files: ^backend/.*\.kt$
+
+  - repo: https://github.com/nikkischnelle/ktfmt-pre-commit-hook
+    rev: 0.8.0
+    hooks:
+    - id: ktfmt
+      args: [--dry-run, --kotlinlang-style]
+      stages: [commit]
+      files: ^backend/.*\.kt$
 
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v9.12.0
