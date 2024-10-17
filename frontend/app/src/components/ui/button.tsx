@@ -53,4 +53,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
+//components from the ui folder are official shadcn components, their warnings can therefore be ignored
+// eslint-disable-next-line react-refresh/only-export-components
 export { Button, buttonVariants };
