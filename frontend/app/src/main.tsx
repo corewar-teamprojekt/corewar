@@ -7,11 +7,12 @@ import ErrorPage from "@/pages/ErrorPage.tsx";
 import BasePage from "@/pages/basePage/BasePage.tsx";
 import { UserProvider } from "@/services/userContext/UserContext.tsx";
 import { ThemeProvider } from "@/components/ThemeProvider.tsx";
+import WaitingForResultPage from "@/pages/waitingForResult/WaitingForResultPage.tsx";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <App></App>,
+		element: <App />,
 		errorElement: <ErrorPage />,
 	},
 	{
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
 				<Link to={"/"}>route back</Link>
 			</BasePage>
 		),
+	},
+	{
+		path: "/waiting-for-result",
+		element: <WaitingForResultPage />,
 	},
 ]);
 

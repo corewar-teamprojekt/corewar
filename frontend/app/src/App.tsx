@@ -7,13 +7,17 @@ import ProgrammInput from "./components/mainContent/playerInput/ProgramInput";
 
 function App() {
 	return (
-		<BasePage>
-			<div>hello world</div>
-			<RemoveBeforeProdMvpUserTester></RemoveBeforeProdMvpUserTester>
-			<LoadingSpinner></LoadingSpinner>
-			<Link to={"/demo-route"}>demo route</Link>
-			<ProgrammInput onProgramUploadClicked={(s) => console.log(s)} />
-		</BasePage>
+		<>
+			<BasePage>
+				<div>hello world</div>
+				<RemoveBeforeProdMvpUserTester></RemoveBeforeProdMvpUserTester>
+				<LoadingSpinner></LoadingSpinner>
+				<Link to={"/demo-route"}>demo route</Link>
+				<br/>
+				<Link to={"/waiting-for-result"}>Waiting for result</Link>
+				<ProgrammInput onProgramUploadClicked={(s) => console.log(s)}/>
+			</BasePage>
+		</>
 	);
 }
 
