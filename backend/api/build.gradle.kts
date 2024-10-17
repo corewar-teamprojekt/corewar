@@ -28,6 +28,10 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
+dependencies {
+    implementation(project(":mars-interpreter"))
+}
+
 tasks.test {
     useJUnitPlatform()
 }
