@@ -7,5 +7,17 @@ internal enum class Modifier {
     BA,
     F,
     X,
-    I,
+    I;
+
+    override fun toString(): String {
+        return when (this) {
+            A -> "A"
+            B -> "B"
+            AB -> "AB"
+            BA -> "BA"
+            F -> "F"
+            X -> "X"
+            I -> "I"
+        }
+    }
 }

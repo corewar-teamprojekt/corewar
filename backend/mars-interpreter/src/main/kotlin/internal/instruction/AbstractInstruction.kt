@@ -1,5 +1,6 @@
 package software.shonk.interpreter.internal.instruction
 
+import software.shonk.interpreter.internal.ICloneable
 import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.process.AbstractProcess
@@ -11,7 +12,7 @@ internal abstract class AbstractInstruction(
     var addressModeA: AddressMode,
     var addressModeB: AddressMode,
     var modifier: Modifier,
-) {
+) : ICloneable<AbstractInstruction> {
 
     abstract fun execute(process: AbstractProcess)
 
