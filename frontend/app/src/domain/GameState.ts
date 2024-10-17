@@ -1,0 +1,5 @@
+export enum GameState {
+	NOT_STARTED = "NOT_STARTED",
+	RUNNING = "RUNNING",
+	FINISHED = "FINISHED",
+}

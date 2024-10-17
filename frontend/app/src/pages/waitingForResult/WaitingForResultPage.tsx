@@ -4,6 +4,9 @@ import styles from "./WaitingForResult.module.css";
 import { useEffect, useRef, useState } from "react";
 import { usePageVisibility } from "@/lib/usePageVisibility.ts";
 import { useNavigate } from "react-router-dom";
+import { POLLING_INTERVAL_MS } from "@/pages/waitingForResult/consts.ts";
+import { StatusResponse } from "@/domain/StatusResponse.ts";
+import { GameState } from "@/domain/GameState.ts";
 
 function WaitingForResultPage() {
 	const isPageVisible = usePageVisibility();
@@ -13,14 +16,13 @@ function WaitingForResultPage() {
 
 	useEffect(() => {
 		const pollingCallback = async () => {
-			// Your polling logic here
-			console.log("Polling...");
+			console.debug("Polling game status...");
 
 			const response = await fetch("https://backend/api/status");
-			const data = await response.json();
+			const data: StatusResponse = await response.json();
 
 			// TODO: Extract api response and contained enums
-			if (data["gameState"] === "FINISHED") {
+			if (data.gameState === GameState.FINISHED) {
 				setIsPollingEnabled(false);
 				console.log("Game finished. Stopped polling. Rerouting");
 				navigate("/result-display");
@@ -28,9 +30,7 @@ function WaitingForResultPage() {
 		};
 
 		const startPolling = () => {
-			// pollingCallback(); // To immediately start fetching data
-			// Polling every 30 seconds
-			timerIdRef.current = setInterval(pollingCallback, 1000);
+			timerIdRef.current = setInterval(pollingCallback, POLLING_INTERVAL_MS);
 		};
 
 		const stopPolling = () => {
