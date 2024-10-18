@@ -14,16 +14,15 @@ function App() {
 	};
 
 	return (
-		<>
-			<BasePage>
-				<JsonDisplay json={jsonObj} />
-				<RemoveBeforeProdMvpUserTester></RemoveBeforeProdMvpUserTester>
-				<Link to={"/demo-route"}>demo route</Link>
-				<br />
-				<Link to={"/waiting-for-result"}>Waiting for result</Link>
-				<ProgrammInput onProgramUploadClicked={(s) => console.log(s)} />
-			</BasePage>
-		</>
+		<BasePage>
+			<JsonDisplay json={jsonObj} />
+			<RemoveBeforeProdMvpUserTester></RemoveBeforeProdMvpUserTester>
+			<Link to={"/demo-route"}>demo route</Link>
+			<br />
+			<Link to={"/waiting-for-result"}>Waiting for result</Link>
+			<Link to={"/player-coding"}>Player coding page</Link>
+			<ProgrammInput onProgramUploadClicked={(s) => console.log(s)} />
+		</BasePage>
 	);
 }
 
