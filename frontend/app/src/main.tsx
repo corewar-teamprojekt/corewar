@@ -6,7 +6,7 @@ import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
 import ErrorPage from "@/pages/ErrorPage.tsx";
 import BasePage from "@/pages/basePage/BasePage.tsx";
 import { UserProvider } from "@/services/userContext/UserContext.tsx";
-import { ThemeProvider } from "@/components/ThemeProvider.tsx";
+import { ThemeProvider } from "@/components/ui/ThemeProvider.tsx";
 import WaitingForResultPage from "@/pages/waitingForResult/WaitingForResultPage.tsx";
 
 const router = createBrowserRouter([
