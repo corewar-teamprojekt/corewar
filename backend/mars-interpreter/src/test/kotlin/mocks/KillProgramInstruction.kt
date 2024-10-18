@@ -5,26 +5,26 @@ import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.instruction.AbstractInstruction
 import software.shonk.interpreter.internal.process.AbstractProcess
 
-internal class MockInstruction(
+/**
+ * Instruction that is used for testing; Removes all processes in a program, effectively making it
+ * loose / killing it. 🌹⚰️🪦
+ */
+internal class KillProgramInstruction(
     aField: Int,
     bField: Int,
     addressModeA: AddressMode,
     addressModeB: AddressMode,
     modifier: Modifier,
 ) : AbstractInstruction(aField, bField, addressModeA, addressModeB, modifier) {
-    constructor() : this(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I)
-
-    var executionCount = 0
+    constructor() : this(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
 
     override fun execute(process: AbstractProcess) {
-        executionCount++
+        while (!process.program.processes.isEmpty()) {
+            process.program.processes.removeByReference(process.program.processes.get())
+        }
     }
 
     override fun deepCopy(): AbstractInstruction {
-        return MockInstruction(aField, bField, addressModeA, addressModeB, modifier)
-    }
-
-    override fun toString(): String {
-        return "MockInstruction(aField=$aField, bField=$bField, addressModeA=$addressModeA, addressModeB=$addressModeB, modifier=$modifier)"
+        return KillProgramInstruction(aField, bField, addressModeA, addressModeB, modifier)
     }
 }
