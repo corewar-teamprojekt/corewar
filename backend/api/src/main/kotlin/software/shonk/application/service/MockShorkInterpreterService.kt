@@ -1,10 +1,10 @@
 package software.shonk.application.service
 
-import software.shonk.application.port.GameState
-import software.shonk.application.port.Result
 import software.shonk.application.port.ShorkInterpreterUseCase
-import software.shonk.application.port.Status
-import software.shonk.application.port.Winner
+import software.shonk.domain.GameState
+import software.shonk.domain.Result
+import software.shonk.domain.Status
+import software.shonk.domain.Winner
 import software.shonk.interpreter.MockShork
 import software.shonk.interpreter.settings.AbstractSettings // TODO
 import software.shonk.interpreter.settings.MockSettings
@@ -16,7 +16,7 @@ class MockShorkInterpreterService() : ShorkInterpreterUseCase {
     val shork = MockShork()
 
     var programs = HashMap<String, String>()
-    var current_settings: AbstractSettings = MockSettings()
+    var currentSettings: AbstractSettings = MockSettings()
 
     var gameState = GameState.NOT_STARTED
     var winner = Winner.UNDECIDED
@@ -40,7 +40,7 @@ class MockShorkInterpreterService() : ShorkInterpreterUseCase {
         gameState = GameState.NOT_STARTED
         winner = Winner.UNDECIDED
 
-        shork.run(programs, current_settings)
+        shork.run(programs, currentSettings)
         gameState = GameState.RUNNING
 
         val result = shork.getResult()
