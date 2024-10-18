@@ -28,7 +28,7 @@ internal abstract class AbstractInstruction(
      */
     fun resolve(process: AbstractProcess, field: Int, mode: AddressMode): Int {
         val referenceAddress = process.programCounter + field // Address we are pointing to
-        val instruction = process.program.shork.getCore().loadAbsolute(referenceAddress)
+        val instruction = process.program.shork.memoryCore.loadAbsolute(referenceAddress)
         return when (mode) {
             AddressMode.IMMEDIATE -> {
                 process.programCounter
