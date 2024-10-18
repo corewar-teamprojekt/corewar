@@ -1,0 +1,7 @@
+.jsonDisplayContainer {
+	width: 400px;
+	height: 500px;
+	border: 1px solid white;
+
+	overflow: scroll;
+}
