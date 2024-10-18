@@ -1,11 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { act, useEffect } from "react";
-import {
-	useDispatchUser,
-	UserProvider,
-} from "@/services/userContext/UserContext.tsx";
+import { UserProvider } from "@/services/userContext/UserContext.tsx";
 import Header from "@/components/header/Header.tsx";
 import { cleanup, render, screen } from "@testing-library/react";
+import { useDispatchUser } from "@/services/userContext/UserContextHelpers.ts";
 
 beforeEach(() => {
 	cleanup();

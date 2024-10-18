@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-	useDispatchUser,
-	UserProvider,
-	userReducer,
-	useUser,
-} from "@/services/userContext/UserContext.tsx";
+import { UserProvider } from "@/services/userContext/UserContext.tsx";
 import { cleanup, render, screen } from "@testing-library/react";
 import { act } from "react";
 import { User } from "@/domain/user.ts";
+import {
+	useDispatchUser,
+	userReducer,
+	useUser,
+} from "@/services/userContext/UserContextHelpers.ts";
 
 describe("mvp", () => {
 	beforeEach(() => {

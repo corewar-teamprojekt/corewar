@@ -1,4 +1,4 @@
-import { useDispatchUser } from "@/services/userContext/UserContext.tsx";
+import { useDispatchUser } from "@/services/userContext/UserContextHelpers.ts";
 
 function RemoveBeforeProdMvpUserTester() {
 	const dispatch = useDispatchUser();

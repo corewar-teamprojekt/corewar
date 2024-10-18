@@ -1,6 +1,6 @@
 import "./Header.css";
-import { useUser } from "@/services/userContext/UserContext.tsx";
 import { User } from "@/domain/user.ts";
+import { useUser } from "@/services/userContext/UserContextHelpers.ts";
 
 function Header() {
 	const user: User | null = useUser();
