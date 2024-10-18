@@ -6,5 +6,5 @@
 }
 
 #mainContent {
-	height: calc(100dvh - var(--HEADER-HEIGHT) - var(--FOOTER-HEIGHT));
+	min-height: calc(100dvh - var(--HEADER-HEIGHT) - var(--FOOTER-HEIGHT));
 }
