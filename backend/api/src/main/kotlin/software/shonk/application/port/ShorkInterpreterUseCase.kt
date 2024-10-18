@@ -1,6 +1,6 @@
 package software.shonk.application.port
 
-import kotlinx.serialization.Serializable
+import software.shonk.domain.Status
 import software.shonk.interpreter.settings.AbstractSettings
 
 interface ShorkInterpreterUseCase {
@@ -12,27 +12,3 @@ interface ShorkInterpreterUseCase {
 
     fun getStatus(): Status
 }
-
-@Serializable
-enum class GameState {
-    NOT_STARTED,
-    RUNNING,
-    FINISHED,
-}
-
-@Serializable
-enum class Winner {
-    A,
-    B,
-    UNDECIDED,
-}
-
-@Serializable data class Result(val winner: Winner)
-
-@Serializable
-data class Status(
-    val playerASubmitted: Boolean,
-    val playerBSubmitted: Boolean,
-    val gameState: GameState,
-    val result: Result,
-)
