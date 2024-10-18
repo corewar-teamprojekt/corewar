@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { ChangeEvent, useState } from "react";
 
@@ -41,16 +41,17 @@ export default function ProgrammInput({
 						readOnly={inputType !== "coding"}
 						className="w-[350px] h-[200px] mb-3"
 					/>
-					{/* display upload field, when inputType is upload, else display placeholder */}
-					{inputType === "upload" ? (
+					<TabsContent value="coding">
+						<div className="h-[40px]" />
+					</TabsContent>
+					<TabsContent value="upload">
 						<Input
+							role={"input"}
 							type="file"
 							className="w-[300px] h-[40px]"
 							onChange={getFileContentAndSetCode}
 						/>
-					) : (
-						<div className="h-[40px]" />
-					)}
+					</TabsContent>
 				</Tabs>
 			</CardContent>
 			<CardFooter className="flex flex-col items-center">
