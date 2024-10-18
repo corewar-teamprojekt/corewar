@@ -1,6 +1,6 @@
 package software.shonk.application.service
 
-import software.shonk.application.port.ShorkInterpreterUseCase
+import software.shonk.application.port.incoming.ShorkInterpreterUseCase
 import software.shonk.domain.GameState
 import software.shonk.domain.Result
 import software.shonk.domain.Status

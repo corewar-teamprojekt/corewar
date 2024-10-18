@@ -1,4 +1,4 @@
-package software.shonk.application.port
+package software.shonk.application.port.incoming
 
 import software.shonk.domain.Status
 import software.shonk.interpreter.settings.AbstractSettings
