@@ -58,4 +58,19 @@ internal class TestCircularQueue {
         val queue = CircularQueue<Int>()
         assertFailsWith<NoSuchElementException> { queue.get() }
     }
+
+    // Tests if the queue correctly returns whether it is empty or not.
+    // Tests once after initialization and once after adding an element.
+    // and once after removing an element.
+    @Test
+    fun testIsEmpty() {
+        val queue = CircularQueue<MockInstruction>()
+        val instruction = MockInstruction()
+
+        assert(queue.isEmpty())
+        queue.add(instruction)
+        assert(!queue.isEmpty())
+        queue.removeByReference(instruction)
+        assertEquals(true, queue.isEmpty())
+    }
 }

@@ -1,14 +1,15 @@
 package software.shonk.interpreter.internal.program
 
-import software.shonk.interpreter.internal.IInternalShork
+import software.shonk.interpreter.internal.AbstractInternalShork
 import software.shonk.interpreter.internal.process.AbstractProcess
+import software.shonk.interpreter.internal.util.CircularQueue
 
 /**
  * Abstract class representing a program that can be run on the Shonk interpreter It holds processes
  * which themselves execute instructions
  */
-internal abstract class AbstractProgram(val id: String, val shork: IInternalShork) {
-    val processes: MutableList<AbstractProcess> = mutableListOf()
+internal abstract class AbstractProgram(val id: String, val shork: AbstractInternalShork) {
+    val processes: CircularQueue<AbstractProcess> = CircularQueue()
 
     /**
      * This function will be called once on every turn and should call the tick method of a process
@@ -22,7 +23,7 @@ internal abstract class AbstractProgram(val id: String, val shork: IInternalShor
      *
      * @param startingAddress The address in memory where the process should start executing
      */
-    abstract fun addProcess(startingAddress: Int)
+    abstract fun createProcessAt(startingAddress: Int)
 
     /**
      * This function removes a process from the program
@@ -30,4 +31,12 @@ internal abstract class AbstractProgram(val id: String, val shork: IInternalShor
      * @param process The process to remove
      */
     abstract fun removeProcess(process: AbstractProcess)
+
+    /**
+     * This function checks if the program is still alive, i.e. if there are still processes
+     * executing / that can execute
+     */
+    fun isAlive(): Boolean {
+        return !processes.isEmpty()
+    }
 }
