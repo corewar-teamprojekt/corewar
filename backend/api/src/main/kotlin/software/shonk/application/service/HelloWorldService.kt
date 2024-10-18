@@ -1,6 +1,6 @@
 package software.shonk.application.service
 
-import software.shonk.application.port.HelloWorldUseCase
+import software.shonk.application.port.incoming.HelloWorldUseCase
 
 // Only do business logic on this layer, potentially calling into outgoing ports (e.g. DB, MARS
 // interpreter whatever)

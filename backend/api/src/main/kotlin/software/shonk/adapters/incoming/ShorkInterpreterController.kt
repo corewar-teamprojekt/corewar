@@ -7,7 +7,7 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
-import software.shonk.application.port.ShorkInterpreterUseCase
+import software.shonk.application.port.incoming.ShorkInterpreterUseCase
 
 // Configure all endpoints regarding Hello World in here (example)
 fun Route.configureShorkInterpreterController(shorkInterpreterUseCase: ShorkInterpreterUseCase) {
