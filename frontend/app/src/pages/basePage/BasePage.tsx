@@ -5,13 +5,13 @@ import styles from "./BasePage.module.css";
 
 function BasePage({ children }: { children: ReactNode }) {
 	return (
-		<>
-			<div id={styles["everything"]}>
-				<Header />
-				<div id={styles["mainContent"]}>{children}</div>
-				<Footer />
+		<div id={styles["everything"]}>
+			<Header />
+			<div id={styles["mainContent"]}>
+				<div id={styles["layoutingContainer"]}>{children}</div>
 			</div>
-		</>
+			<Footer />
+		</div>
 	);
 }
 

@@ -3,14 +3,6 @@
 	margin-top: 50px;
 }
 
-#layoutingContainer {
-	display: flex;
-	height: 100%;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: center;
-}
-
 #loadingSpinnerContainer {
 	display: flex;
 	justify-content: center;

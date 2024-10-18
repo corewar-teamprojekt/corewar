@@ -53,13 +53,11 @@ function WaitingForResultPage() {
 
 	return (
 		<BasePage>
-			<div id={styles["layoutingContainer"]}>
-				<div id={styles["waitingForResultHeadline"]}>
-					<h2 className="text-3xl font-semibold">Waiting for game result...</h2>
-				</div>
-				<div id={styles["loadingSpinnerContainer"]}>
-					<LoadingSpinner />
-				</div>
+			<div id={styles["waitingForResultHeadline"]}>
+				<h2 className="text-3xl font-semibold">Waiting for game result...</h2>
+			</div>
+			<div id={styles["loadingSpinnerContainer"]}>
+				<LoadingSpinner />
 			</div>
 		</BasePage>
 	);

@@ -7,4 +7,13 @@
 
 #mainContent {
 	min-height: calc(100dvh - var(--HEADER-HEIGHT) - var(--FOOTER-HEIGHT));
+	display: flex;
+}
+
+#layoutingContainer {
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
 }
