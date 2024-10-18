@@ -62,4 +62,29 @@ internal abstract class AbstractInstruction(
             }
         }
     }
+
+    // equals and override were auto generated
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+
+        other as AbstractInstruction
+
+        if (aField != other.aField) return false
+        if (bField != other.bField) return false
+        if (addressModeA != other.addressModeA) return false
+        if (addressModeB != other.addressModeB) return false
+        if (modifier != other.modifier) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = aField
+        result = 31 * result + bField
+        result = 31 * result + addressModeA.hashCode()
+        result = 31 * result + addressModeB.hashCode()
+        result = 31 * result + modifier.hashCode()
+        return result
+    }
 }
