@@ -1,4 +1,4 @@
-import { Theme } from "@/enums/Theme";
+import { Theme } from "@/domain/Theme";
 import { useEffect, useState } from "react";
 import { ThemeProviderContext } from "../hooks/useTheme";
 

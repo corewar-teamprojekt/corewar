@@ -1,4 +1,4 @@
-import { Theme } from "@/enums/Theme";
+import { Theme } from "@/domain/Theme";
 import { createContext, useContext } from "react";
 
 type ThemeProviderState = {
