@@ -6,7 +6,7 @@ export function uploadPlayerCode(
 	playerName: string,
 	code: string,
 ): Promise<Response> {
-	return fetch(API_URL + "/code/" + playerName, {
+	return fetch(API_URL + "/v0/code/" + playerName, {
 		method: "POST",
 		body: code,
 	});

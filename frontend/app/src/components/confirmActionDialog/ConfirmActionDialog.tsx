@@ -10,32 +10,34 @@ import {
 
 interface ConfirmActionDialogProps {
 	onConfirm: () => void;
-	onCancel: () => void | undefined;
-	title: string | undefined;
-	description: string | undefined;
 	isOpen: boolean;
+	setIsOpen: (value: boolean) => void;
+	onCancel?: () => void;
+	title?: string;
+	description?: string;
 }
 
 export default function ConfirmActionDialog({
 	onConfirm,
+	isOpen,
+	setIsOpen,
 	onCancel = () => {},
 	title = "Are you sure ?",
 	description = "This action might be irreversible",
-	isOpen,
 }: Readonly<ConfirmActionDialogProps>) {
 	return (
-		<Dialog open={isOpen}>
+		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
 					<DialogDescription>{description}</DialogDescription>
 				</DialogHeader>
-				<DialogContent>
-					<DialogClose asChild>
-						<Button onClick={onConfirm}>Confirm</Button>
-						<Button onClick={onCancel}>Cancel</Button>
-					</DialogClose>
-				</DialogContent>
+				<DialogClose className="flex flex-row justify-center gap-x-1">
+					<Button onClick={onConfirm}>Confirm</Button>
+					<Button onClick={onCancel} variant={"destructive"}>
+						Cancel
+					</Button>
+				</DialogClose>
 			</DialogContent>
 		</Dialog>
 	);
