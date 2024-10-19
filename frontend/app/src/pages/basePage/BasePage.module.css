@@ -1,13 +1,14 @@
 @import "../../vars.css";
 
 #everything {
-	height: 100dvh;
+	min-height: 100dvh;
 	width: 100dvw;
 }
 
 #mainContent {
 	min-height: calc(100dvh - var(--HEADER-HEIGHT) - var(--FOOTER-HEIGHT));
 	display: flex;
+	flex-grow: 1;
 }
 
 #layoutingContainer {

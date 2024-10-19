@@ -24,7 +24,7 @@ export default function ProgrammInput({
 	}
 
 	return (
-		<Card className="w-1/4 min-w-[360px]">
+		<Card className="w-1/4 min-w-[360px] border-0">
 			<CardContent className="flex flex-col items-center">
 				<Tabs
 					defaultValue="coding"

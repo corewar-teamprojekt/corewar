@@ -1,0 +1,33 @@
+@import "../../vars.css";
+
+#initialContentView {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+#initialBigTextContainer {
+	height: 400px;
+	display: flex;
+	flex-direction: column;
+}
+
+#initialBigTextContainer button {
+	margin-top: 50px;
+	height: 60px;
+	width: 200px;
+	align-self: center;
+}
+
+#initialAnimationContainer {
+}
+
+.fullContentView {
+	width: 100%;
+	height: calc(100dvh - var(--HEADER-HEIGHT));
+}
+
+.fullContentView:last-of-type {
+	height: calc(100dvh - var(--HEADER-HEIGHT) - var(--FOOTER-HEIGHT));
+}
