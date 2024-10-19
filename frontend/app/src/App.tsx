@@ -2,7 +2,7 @@ import "./App.css";
 import RemoveBeforeProdMvpUserTester from "@/components/tempHelpersForTestingManually/RemoveBeforeProdMvpUserTester.tsx";
 import { Link } from "react-router-dom";
 import BasePage from "@/pages/basePage/BasePage.tsx";
-import ProgrammInput from "./components/mainContent/playerInput/ProgramInput";
+import ProgrammInput from "./components/ProgramInput/ProgramInput";
 import JsonDisplay from "@/components/jsonDisplay/JsonDisplay.tsx";
 
 function App() {
