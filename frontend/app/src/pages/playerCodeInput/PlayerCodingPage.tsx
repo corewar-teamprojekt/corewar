@@ -1,5 +1,5 @@
 import ConfirmActionDialog from "@/components/confirmActionDialog/ConfirmActionDialog";
-import ProgrammInput from "@/components/mainContent/playerInput/ProgramInput";
+import ProgrammInput from "@/components/ProgramInput/ProgramInput";
 import { useToast } from "@/hooks/use-toast";
 import { uploadPlayerCode } from "@/services/rest/RestService";
 import { useUser } from "@/services/userContext/UserContextHelpers";
