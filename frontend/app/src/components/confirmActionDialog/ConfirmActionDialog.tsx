@@ -32,12 +32,16 @@ export default function ConfirmActionDialog({
 					<DialogTitle>{title}</DialogTitle>
 					<DialogDescription>{description}</DialogDescription>
 				</DialogHeader>
-				<DialogClose className="flex flex-row justify-center gap-x-1">
-					<Button onClick={onConfirm}>Confirm</Button>
-					<Button onClick={onCancel} variant={"destructive"}>
-						Cancel
-					</Button>
-				</DialogClose>
+				<div className="w-[100%] flex justify-center gap-x-1">
+					<DialogClose asChild>
+						<Button onClick={onConfirm}>Confirm</Button>
+					</DialogClose>
+					<DialogClose asChild>
+						<Button onClick={onCancel} variant={"destructive"}>
+							Cancel
+						</Button>
+					</DialogClose>
+				</div>
 			</DialogContent>
 		</Dialog>
 	);
