@@ -49,6 +49,7 @@ describe("PlayerCodingPage", () => {
 		act(() => {
 			render(<PlayerCodingPage />);
 		});
+
 		const programInput = screen.getByRole("textbox");
 		act(() => {
 			fireEvent.change(programInput, { target: { value: "some code" } });
@@ -63,13 +64,18 @@ describe("PlayerCodingPage", () => {
 
 	it("uploads code and shows success toast on confirm", async () => {
 		(uploadPlayerCode as Mock).mockResolvedValueOnce({});
-		render(<PlayerCodingPage />);
+		act(() => {
+			render(<PlayerCodingPage />);
+		});
 
 		const programInput = screen.getByRole("textbox");
-		fireEvent.change(programInput, { target: { value: "some code" } });
-		fireEvent.click(screen.getByText("upload"));
-		fireEvent.click(screen.getByText("Confirm"));
-
+		act(() => {
+			fireEvent.change(programInput, { target: { value: "some code" } });
+			fireEvent.click(screen.getByText("upload"));
+		});
+		act(() => {
+			fireEvent.click(screen.getByText("Confirm"));
+		});
 		await waitFor(() => {
 			expect(uploadPlayerCode).toHaveBeenCalledWith("testUser", "some code");
 			expect(mockToast).toHaveBeenCalledWith({
@@ -82,12 +88,18 @@ describe("PlayerCodingPage", () => {
 	it("shows error toast on upload failure", async () => {
 		const errorMessage = "Upload failed";
 		(uploadPlayerCode as Mock).mockRejectedValueOnce(new Error(errorMessage));
-		render(<PlayerCodingPage />);
+		act(() => {
+			render(<PlayerCodingPage />);
+		});
 
 		const programInput = screen.getByRole("textbox");
-		fireEvent.change(programInput, { target: { value: "some code" } });
-		fireEvent.click(screen.getByText("upload"));
-		fireEvent.click(screen.getByText("Confirm"));
+		act(() => {
+			fireEvent.change(programInput, { target: { value: "some code" } });
+			fireEvent.click(screen.getByText("upload"));
+		});
+		act(() => {
+			fireEvent.click(screen.getByText("Confirm"));
+		});
 
 		await waitFor(() => {
 			expect(uploadPlayerCode).toHaveBeenCalledWith("testUser", "some code");
@@ -101,14 +113,19 @@ describe("PlayerCodingPage", () => {
 
 	it("redirects to waiting-for-result page on successful upload", async () => {
 		(uploadPlayerCode as Mock).mockResolvedValueOnce({});
-		render(<PlayerCodingPage />);
+		act(() => {
+			render(<PlayerCodingPage />);
+		});
 
 		const programInput = screen.getByRole("textbox");
 		act(() => {
 			fireEvent.change(programInput, { target: { value: "some code" } });
 			fireEvent.click(screen.getByText("upload"));
 		});
-		act(() => fireEvent.click(screen.getByText("Confirm")));
+
+		act(() => {
+			fireEvent.click(screen.getByText("Confirm"));
+		});
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 		await waitFor(() => {
 			expect(window.location.href).toContain("/waiting-for-result");
