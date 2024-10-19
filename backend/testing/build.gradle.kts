@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation(project(":mars-interpreter"))
+    implementation(project(":shork"))
 }
 
 tasks.test {
