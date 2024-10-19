@@ -1,6 +1,7 @@
 @import "../../vars.css";
 
 #everything {
+	position: static;
 	min-height: 100dvh;
 	width: 100dvw;
 }
@@ -17,4 +18,43 @@
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
+}
+
+#background-animation {
+	position: fixed;
+	z-index: -1;
+	top: -200px;
+	left: -100px;
+	height: calc(100dvh + 200px);
+	width: calc(100dvw + 300px);
+	opacity: 0.2;
+
+	transform: rotateZ(15deg);
+}
+
+#cellContainer {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	flex-grow: 0;
+	height: calc(100dvh + 200px);
+	width: calc(100dvw + 500px);
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+.gridCell {
+	height: 200px;
+	width: 200px;
+	box-sizing: content-box;
+	border-bottom: 1px solid white;
+	border-right: 1px solid white;
+}
+
+.redCell {
+	background-color: #ff006e; /* The color when the cell is active */
+}
+
+.blueCell {
+	background-color: cyan;
 }
