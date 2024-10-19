@@ -1,7 +1,7 @@
 import ConfirmActionDialog from "@/components/confirmActionDialog/ConfirmActionDialog";
 import ProgrammInput from "@/components/mainContent/playerInput/ProgramInput";
 import { useToast } from "@/hooks/use-toast";
-import { uploadPlayerCode } from "@/services/rest/restService";
+import { uploadPlayerCode } from "@/services/rest/RestService";
 import { useUser } from "@/services/userContext/UserContextHelpers";
 import { useState } from "react";
 import BasePage from "../basePage/BasePage";
