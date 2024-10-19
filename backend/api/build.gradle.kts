@@ -30,7 +30,7 @@ dependencies {
 }
 
 dependencies {
-    implementation(project(":mars-interpreter"))
+    implementation(project(":shork"))
 }
 
 tasks.test {
