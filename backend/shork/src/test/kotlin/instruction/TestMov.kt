@@ -1,5 +1,6 @@
 package instruction
 
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import software.shonk.interpreter.InternalShork
 import software.shonk.interpreter.internal.addressing.AddressMode
@@ -12,11 +13,18 @@ import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestMov {
 
-    val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-    val settings = InternalSettings(8000, 1000, dat, 1000)
-    val shork = InternalShork(settings)
-    val program = Program("mov", shork)
-    val process = Process(program, 0)
+    private val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+    private val settings = InternalSettings(8000, 1000, dat, 1000)
+    private var shork = InternalShork(settings)
+    private var program = Program("mov", shork)
+    private var process = Process(program, 0)
+
+    @BeforeEach
+    fun setup() {
+        shork = InternalShork(settings)
+        program = Program("mov", shork)
+        process = Process(program, 0)
+    }
 
     @Test
     fun testExecuteA() {
@@ -26,11 +34,14 @@ internal class TestMov {
         shork.memoryCore.storeAbsolute(1, mov2)
 
         mov1.execute(process)
-        assert(shork.memoryCore.loadAbsolute(2) is Dat)
-        assert(shork.memoryCore.loadAbsolute(2).aField == 42)
-        assert(shork.memoryCore.loadAbsolute(2).bField == 0)
-        assert(shork.memoryCore.loadAbsolute(2).addressModeA == AddressMode.IMMEDIATE)
-        assert(shork.memoryCore.loadAbsolute(2).addressModeB == AddressMode.IMMEDIATE)
+
+        var movedInstruction = shork.memoryCore.loadAbsolute(2)
+
+        assert(movedInstruction is Dat)
+        assert(movedInstruction.aField == 42)
+        assert(movedInstruction.bField == 0)
+        assert(movedInstruction.addressModeA == AddressMode.IMMEDIATE)
+        assert(movedInstruction.addressModeB == AddressMode.IMMEDIATE)
     }
 
     @Test
@@ -41,11 +52,14 @@ internal class TestMov {
         shork.memoryCore.storeAbsolute(1, mov2)
 
         mov1.execute(process)
-        assert(shork.memoryCore.loadAbsolute(2) is Dat)
-        assert(shork.memoryCore.loadAbsolute(2).aField == 0)
-        assert(shork.memoryCore.loadAbsolute(2).bField == 69)
-        assert(shork.memoryCore.loadAbsolute(2).addressModeA == AddressMode.IMMEDIATE)
-        assert(shork.memoryCore.loadAbsolute(2).addressModeB == AddressMode.IMMEDIATE)
+
+        var movedInstruction = shork.memoryCore.loadAbsolute(2)
+
+        assert(movedInstruction is Dat)
+        assert(movedInstruction.aField == 0)
+        assert(movedInstruction.bField == 69)
+        assert(movedInstruction.addressModeA == AddressMode.IMMEDIATE)
+        assert(movedInstruction.addressModeB == AddressMode.IMMEDIATE)
     }
 
     @Test
@@ -56,11 +70,14 @@ internal class TestMov {
         shork.memoryCore.storeAbsolute(1, mov2)
 
         mov1.execute(process)
-        assert(shork.memoryCore.loadAbsolute(2) is Dat)
-        assert(shork.memoryCore.loadAbsolute(2).aField == 0)
-        assert(shork.memoryCore.loadAbsolute(2).bField == 42)
-        assert(shork.memoryCore.loadAbsolute(2).addressModeA == AddressMode.IMMEDIATE)
-        assert(shork.memoryCore.loadAbsolute(2).addressModeB == AddressMode.IMMEDIATE)
+
+        var movedInstruction = shork.memoryCore.loadAbsolute(2)
+
+        assert(movedInstruction is Dat)
+        assert(movedInstruction.aField == 0)
+        assert(movedInstruction.bField == 42)
+        assert(movedInstruction.addressModeA == AddressMode.IMMEDIATE)
+        assert(movedInstruction.addressModeB == AddressMode.IMMEDIATE)
     }
 
     @Test
@@ -71,11 +88,14 @@ internal class TestMov {
         shork.memoryCore.storeAbsolute(1, mov2)
 
         mov1.execute(process)
-        assert(shork.memoryCore.loadAbsolute(2) is Dat)
-        assert(shork.memoryCore.loadAbsolute(2).aField == 69)
-        assert(shork.memoryCore.loadAbsolute(2).bField == 0)
-        assert(shork.memoryCore.loadAbsolute(2).addressModeA == AddressMode.IMMEDIATE)
-        assert(shork.memoryCore.loadAbsolute(2).addressModeB == AddressMode.IMMEDIATE)
+
+        var movedInstruction = shork.memoryCore.loadAbsolute(2)
+
+        assert(movedInstruction is Dat)
+        assert(movedInstruction.aField == 69)
+        assert(movedInstruction.bField == 0)
+        assert(movedInstruction.addressModeA == AddressMode.IMMEDIATE)
+        assert(movedInstruction.addressModeB == AddressMode.IMMEDIATE)
     }
 
     @Test
@@ -86,9 +106,12 @@ internal class TestMov {
         shork.memoryCore.storeAbsolute(1, mov2)
 
         mov1.execute(process)
-        assert(shork.memoryCore.loadAbsolute(2) is Dat)
-        assert(shork.memoryCore.loadAbsolute(2).aField == 42)
-        assert(shork.memoryCore.loadAbsolute(2).bField == 69)
+
+        var movedInstruction = shork.memoryCore.loadAbsolute(2)
+
+        assert(movedInstruction is Dat)
+        assert(movedInstruction.aField == 42)
+        assert(movedInstruction.bField == 69)
     }
 
     @Test
@@ -97,11 +120,14 @@ internal class TestMov {
         shork.memoryCore.storeAbsolute(0, mov)
 
         mov.execute(process)
-        assert(shork.memoryCore.loadAbsolute(1) is Mov)
-        assert(shork.memoryCore.loadAbsolute(1).aField == 0)
-        assert(shork.memoryCore.loadAbsolute(1).bField == 1)
-        assert(shork.memoryCore.loadAbsolute(1).addressModeA == AddressMode.DIRECT)
-        assert(shork.memoryCore.loadAbsolute(1).addressModeB == AddressMode.DIRECT)
+
+        var movedInstruction = shork.memoryCore.loadAbsolute(1)
+
+        assert(movedInstruction is Mov)
+        assert(movedInstruction.aField == 0)
+        assert(movedInstruction.bField == 1)
+        assert(movedInstruction.addressModeA == AddressMode.DIRECT)
+        assert(movedInstruction.addressModeB == AddressMode.DIRECT)
     }
 
     @Test
@@ -110,10 +136,13 @@ internal class TestMov {
         shork.memoryCore.storeAbsolute(0, mov)
 
         mov.execute(process)
-        assert(shork.memoryCore.loadAbsolute(1) is Dat)
-        assert(shork.memoryCore.loadAbsolute(1).aField == 1)
-        assert(shork.memoryCore.loadAbsolute(1).bField == 0)
-        assert(shork.memoryCore.loadAbsolute(1).addressModeA == AddressMode.IMMEDIATE)
-        assert(shork.memoryCore.loadAbsolute(1).addressModeB == AddressMode.IMMEDIATE)
+
+        var movedInstruction = shork.memoryCore.loadAbsolute(1)
+
+        assert(movedInstruction is Dat)
+        assert(movedInstruction.aField == 1)
+        assert(movedInstruction.bField == 0)
+        assert(movedInstruction.addressModeA == AddressMode.IMMEDIATE)
+        assert(movedInstruction.addressModeB == AddressMode.IMMEDIATE)
     }
 }
