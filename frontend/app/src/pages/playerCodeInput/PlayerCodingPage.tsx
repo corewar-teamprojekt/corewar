@@ -4,9 +4,10 @@ import { useToast } from "@/hooks/use-toast";
 import { uploadPlayerCode } from "@/services/rest/RestService";
 import { useUser } from "@/services/userContext/UserContextHelpers";
 import { useState } from "react";
-import BasePage from "../basePage/BasePage";
+import { useNavigate } from "react-router-dom";
 
 export default function PlayerCodingPage() {
+	const navigate = useNavigate();
 	const user = useUser();
 	const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 	const [code, setCode] = useState("");
@@ -28,7 +29,7 @@ export default function PlayerCodingPage() {
 					title: "Success!",
 					description: "your code has been uploaded",
 				});
-				setTimeout(goToWaitingForResult, 1000);
+				setTimeout(() => navigate("/waiting-for-result"), 1000);
 			})
 			.catch((error) => {
 				toast({
@@ -39,12 +40,8 @@ export default function PlayerCodingPage() {
 			});
 	}
 
-	function goToWaitingForResult() {
-		window.location.href = "/waiting-for-result";
-	}
-
 	return (
-		<BasePage>
+		<>
 			<div className="flex flex-col justify-center items-center h-[100%] w-[100%]">
 				<h1 className="text-2xl font-bold mb-2">Start coding:</h1>
 				<ProgrammInput onProgramUploadClicked={setCodeAndOpenDialog} />
@@ -54,6 +51,6 @@ export default function PlayerCodingPage() {
 				setIsOpen={setIsConfirmDialogOpen}
 				onConfirm={triggerCodeUpload}
 			/>
-		</BasePage>
+		</>
 	);
 }

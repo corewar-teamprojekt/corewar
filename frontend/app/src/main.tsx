@@ -9,20 +9,32 @@ import WaitingForResultPage from "@/pages/waitingForResult/WaitingForResultPage.
 import { Toaster } from "./components/ui/toaster.tsx";
 import PlayerCodingPage from "./pages/playerCodeInput/PlayerCodingPage.tsx";
 import LandingPage from "@/pages/landingPage/LandingPage.tsx";
+import PlayerSelection from "@/pages/playerSelection/PlayerSelection.tsx";
+import BasePage from "@/pages/basePage/BasePage.tsx";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <LandingPage />,
+		element: <BasePage />,
 		errorElement: <ErrorPage />,
-	},
-	{
-		path: "/waiting-for-result",
-		element: <WaitingForResultPage />,
-	},
-	{
-		path: "/player-coding",
-		element: <PlayerCodingPage />,
+		children: [
+			{
+				index: true,
+				element: <LandingPage />,
+			},
+			{
+				path: "waiting-for-result",
+				element: <WaitingForResultPage />,
+			},
+			{
+				path: "player-coding",
+				element: <PlayerCodingPage />,
+			},
+			{
+				path: "/player-selection",
+				element: <PlayerSelection />,
+			},
+		],
 	},
 ]);
 

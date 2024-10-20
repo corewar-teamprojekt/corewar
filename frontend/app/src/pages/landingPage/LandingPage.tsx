@@ -1,12 +1,14 @@
-import BasePage from "@/pages/basePage/BasePage.tsx";
 import styles from "./LandingPage.module.css";
 import { Button } from "@/components/ui/button.tsx";
 import { Canvas } from "@react-three/fiber";
 import Signature from "@/components/three/signature.tsx";
+import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
+	const navigate = useNavigate();
+
 	return (
-		<BasePage>
+		<>
 			<div
 				className={styles["fullContentView"]}
 				id={styles["initialContentView"]}
@@ -16,7 +18,7 @@ function LandingPage() {
 					<h2 className="text-3xl font-semibold">
 						Competitively optimizing assembly code
 					</h2>
-					<Button>
+					<Button onClick={() => navigate("/player-selection")}>
 						<h2 className="text-2xl font-semibold">Play</h2>
 					</Button>
 				</div>
@@ -35,7 +37,7 @@ function LandingPage() {
 			<div className={styles["fullContentView"]}>
 				<h3>Infodump 2</h3>
 			</div>
-		</BasePage>
+		</>
 	);
 }
 

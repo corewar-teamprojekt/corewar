@@ -13,5 +13,8 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
+    setupFiles: [
+      "./__setups__/canvas.js"
+    ]
   }
 })

@@ -1,4 +1,3 @@
-import BasePage from "@/pages/basePage/BasePage.tsx";
 import LoadingSpinner from "@/components/loadingSpinner/LoadingSpinner.tsx";
 import styles from "./WaitingForResult.module.css";
 import { useEffect, useRef, useState } from "react";
@@ -52,14 +51,14 @@ function WaitingForResultPage() {
 	}, [isPageVisible, isPollingEnabled, navigate]);
 
 	return (
-		<BasePage>
+		<>
 			<div id={styles["waitingForResultHeadline"]}>
 				<h2 className="text-3xl font-semibold">Waiting for game result...</h2>
 			</div>
 			<div id={styles["loadingSpinnerContainer"]}>
 				<LoadingSpinner />
 			</div>
-		</BasePage>
+		</>
 	);
 }
 
