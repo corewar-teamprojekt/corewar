@@ -4,15 +4,12 @@ import { useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 
-// This is just some threejs design magic, which is pretty much only for the looks and not important to properly type
-// Plus its very unergonomic
-//eslint-disable-next-line
 function Electron({
 	torusProps,
 	rotation,
 }: {
-	torusProps: any;
-	rotation: any;
+	torusProps: unknown;
+	rotation: [number, number, number];
 }) {
 	const ref = useRef<THREE.Mesh>(null!);
 	let frameCount = (Math.random() - 1) * 60;
