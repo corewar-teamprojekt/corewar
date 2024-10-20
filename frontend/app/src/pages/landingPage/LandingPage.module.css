@@ -14,10 +14,10 @@
 }
 
 #initialBigTextContainer button {
-	margin-top: 50px;
+	margin-top: 25px;
 	height: 60px;
 	width: 200px;
-	align-self: center;
+	align-self: flex-start;
 
 	background-color: #ff006e;
 	color: white;
@@ -30,6 +30,8 @@
 }
 
 #initialAnimationContainer {
+	height: 600px;
+	width: 600px;
 }
 
 .fullContentView {

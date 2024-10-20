@@ -15,7 +15,10 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.2",
+    "@react-three/drei": "^9.114.6",
+    "@react-three/fiber": "^8.17.10",
     "@testing-library/jest-dom": "^6.5.0",
+    "@types/three": "^0.169.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "jsdom": "^25.0.1",
@@ -24,7 +27,8 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.169.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.8",

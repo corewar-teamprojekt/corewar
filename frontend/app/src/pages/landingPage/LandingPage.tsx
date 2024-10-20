@@ -1,6 +1,8 @@
 import BasePage from "@/pages/basePage/BasePage.tsx";
 import styles from "./LandingPage.module.css";
 import { Button } from "@/components/ui/button.tsx";
+import { Canvas } from "@react-three/fiber";
+import Signature from "@/components/three/signature.tsx";
 
 function LandingPage() {
 	return (
@@ -18,7 +20,11 @@ function LandingPage() {
 						<h2 className="text-2xl font-semibold">Play</h2>
 					</Button>
 				</div>
-				<div id={styles["initialAnimationContainer"]}></div>
+				<div id={styles["initialAnimationContainer"]}>
+					<Canvas camera={{ position: [0, 0, 100], zoom: 10 }}>
+						<Signature />
+					</Canvas>
+				</div>
 			</div>
 			<div className={styles["fullContentView"]}>
 				<h3>Infodump 0</h3>
