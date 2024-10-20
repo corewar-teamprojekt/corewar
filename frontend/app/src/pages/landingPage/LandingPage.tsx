@@ -4,7 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import Signature from "@/components/three/signature.tsx";
 import { useNavigate } from "react-router-dom";
 
-function LandingPage() {
+function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 	const navigate = useNavigate();
 
 	return (
@@ -22,11 +22,13 @@ function LandingPage() {
 						<h2 className="text-2xl font-semibold">Play</h2>
 					</Button>
 				</div>
-				<div id={styles["initialAnimationContainer"]}>
-					<Canvas camera={{ position: [0, 0, 100], zoom: 10 }}>
-						<Signature />
-					</Canvas>
-				</div>
+				{enableThreeJs && (
+					<div id={styles["initialAnimationContainer"]}>
+						<Canvas camera={{ position: [0, 0, 100], zoom: 10 }}>
+							<Signature />
+						</Canvas>
+					</div>
+				)}
 			</div>
 			<div className={styles["fullContentView"]}>
 				<h3>Infodump 0</h3>

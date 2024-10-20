@@ -15,6 +15,18 @@ export default defineConfig({
     globals: true,
     setupFiles: [
       "./__setups__/canvas.js"
-    ]
+    ],
+    deps: {
+      optimizer: {
+        web: {
+          include: ['vitest-canvas-mock']
+        }
+      }
+    },
+    environmentOptions: {
+      jsdom: {
+        resources: 'usable',
+      },
+    },
   }
 })

@@ -6,11 +6,27 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { act } from "react";
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import PlayerCodingPage from "./PlayerCodingPage";
+import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
 
 // Mock dependencies
 vi.mock("@/services/userContext/UserContextHelpers");
 vi.mock("@/services/rest/RestService");
 vi.mock("@/hooks/use-toast");
+
+const testRouterConfig = [
+	{
+		path: "/",
+		element: <Navigate to="/player-coding" replace={true} />,
+	},
+	{
+		path: "/player-coding",
+		element: <PlayerCodingPage />,
+	},
+	{
+		path: "/waiting-for-result",
+		element: <div>Waiting for result</div>,
+	},
+];
 
 describe("PlayerCodingPage", () => {
 	const mockUser = { name: "testUser" };
@@ -20,25 +36,6 @@ describe("PlayerCodingPage", () => {
 		(useUser as Mock).mockReturnValue(mockUser);
 		(useToast as Mock).mockReturnValue({ toast: mockToast });
 		global.window = Object.create(window);
-		global.window.location = {
-			ancestorOrigins: {
-				length: 0,
-				contains: () => false,
-				item: () => null,
-			} as unknown as DOMStringList,
-			hash: "",
-			host: "dummy.com",
-			port: "80",
-			protocol: "http:",
-			hostname: "dummy.com",
-			href: "http://dummy.com?page=1&name=testing",
-			origin: "http://dummy.com",
-			pathname: "",
-			search: "",
-			assign: () => {},
-			reload: () => {},
-			replace: () => {},
-		};
 	});
 
 	afterEach(() => {
@@ -46,8 +43,10 @@ describe("PlayerCodingPage", () => {
 	});
 
 	it("opens confirm dialog when code is set", async () => {
+		const router = createMemoryRouter(testRouterConfig);
+
 		act(() => {
-			render(<PlayerCodingPage />);
+			render(<RouterProvider router={router} />);
 		});
 
 		const programInput = screen.getByRole("textbox");
@@ -64,8 +63,9 @@ describe("PlayerCodingPage", () => {
 
 	it("uploads code and shows success toast on confirm", async () => {
 		(uploadPlayerCode as Mock).mockResolvedValueOnce({});
+		const router = createMemoryRouter(testRouterConfig);
 		act(() => {
-			render(<PlayerCodingPage />);
+			render(<RouterProvider router={router} />);
 		});
 
 		const programInput = screen.getByRole("textbox");
@@ -88,8 +88,9 @@ describe("PlayerCodingPage", () => {
 	it("shows error toast on upload failure", async () => {
 		const errorMessage = "Upload failed";
 		(uploadPlayerCode as Mock).mockRejectedValueOnce(new Error(errorMessage));
+		const router = createMemoryRouter(testRouterConfig);
 		act(() => {
-			render(<PlayerCodingPage />);
+			render(<RouterProvider router={router} />);
 		});
 
 		const programInput = screen.getByRole("textbox");
@@ -113,22 +114,27 @@ describe("PlayerCodingPage", () => {
 
 	it("redirects to waiting-for-result page on successful upload", async () => {
 		(uploadPlayerCode as Mock).mockResolvedValueOnce({});
+		const router = createMemoryRouter(testRouterConfig);
 		act(() => {
-			render(<PlayerCodingPage />);
+			render(<RouterProvider router={router} />);
 		});
 
 		const programInput = screen.getByRole("textbox");
 		act(() => {
 			fireEvent.change(programInput, { target: { value: "some code" } });
-			fireEvent.click(screen.getByText("upload"));
+			const uploadButton = screen.getByText("upload");
+			uploadButton.focus();
+			uploadButton.click();
 		});
 
 		act(() => {
-			fireEvent.click(screen.getByText("Confirm"));
+			const confirmButton = screen.getByText("Confirm");
+			confirmButton.focus();
+			confirmButton.click();
 		});
-		await new Promise((resolve) => setTimeout(resolve, 1000));
+
 		await waitFor(() => {
-			expect(window.location.href).toContain("/waiting-for-result");
+			expect(router.state.location.pathname).toEqual("/waiting-for-result");
 		});
 	});
 });

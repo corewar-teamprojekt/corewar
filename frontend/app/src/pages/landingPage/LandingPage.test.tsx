@@ -1,33 +1,26 @@
-import { it, describe, beforeEach, expect, vi, Mock } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { it, describe, beforeEach, expect } from "vitest";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import LandingPage from "@/pages/landingPage/LandingPage.tsx";
 import { act } from "react";
-import { useUser } from "@/services/userContext/UserContextHelpers.ts";
-
-vi.mock("@/services/userContext/UserContextHelpers");
+import PlayerSelection from "@/pages/playerSelection/PlayerSelection.tsx";
 
 const testRouterConfig = [
 	{
 		path: "/",
-		element: <LandingPage />,
+		element: <LandingPage enableThreeJs={false}></LandingPage>,
 	},
 	{
 		path: "/player-selection",
-		element: <div>Player Selection</div>,
+		element: <PlayerSelection />,
 	},
 ];
-
 describe("hero button", () => {
-	const mockUser = { name: "testUser" };
-
 	beforeEach(() => {
 		cleanup();
-		vi.restoreAllMocks();
-		(useUser as Mock).mockReturnValue(mockUser);
 	});
 
-	it("routes to player-selection", () => {
+	it("routes to player-selection", async () => {
 		const router = createMemoryRouter(testRouterConfig);
 		act(() => {
 			render(<RouterProvider router={router} />);
@@ -39,6 +32,8 @@ describe("hero button", () => {
 			heroButton.click();
 		});
 
-		expect(router.state.location.pathname).toEqual("/player-selection");
+		await waitFor(() => {
+			expect(router.state.location.pathname).toEqual("/player-selection");
+		});
 	});
 });

@@ -29,7 +29,7 @@ export default function PlayerCodingPage() {
 					title: "Success!",
 					description: "your code has been uploaded",
 				});
-				setTimeout(() => navigate("/waiting-for-result"), 1000);
+				navigate("/waiting-for-result");
 			})
 			.catch((error) => {
 				toast({
