@@ -1,5 +1,6 @@
 package instruction
 
+import kotlin.test.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import software.shonk.interpreter.InternalShork
@@ -144,5 +145,18 @@ internal class TestMov {
         assert(movedInstruction.bField == 0)
         assert(movedInstruction.addressModeA == AddressMode.IMMEDIATE)
         assert(movedInstruction.addressModeB == AddressMode.IMMEDIATE)
+    }
+
+    @Test
+    fun testDeepCopy() {
+        val mov = Mov(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val copy = mov.deepCopy()
+
+        assertEquals(mov.aField, copy.aField)
+        assertEquals(mov.bField, copy.bField)
+        assertEquals(mov.addressModeA, copy.addressModeA)
+        assertEquals(mov.addressModeB, copy.addressModeB)
+        assertEquals(mov.modifier, copy.modifier)
+        assert(mov !== copy)
     }
 }
