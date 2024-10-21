@@ -26,7 +26,7 @@ describe("hero button", () => {
 			render(<RouterProvider router={router} />);
 		});
 
-		const heroButton = screen.getByRole("button");
+		const heroButton = screen.getByText("Play");
 		act(() => {
 			heroButton.focus();
 			heroButton.click();

@@ -4,6 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import Signature from "@/components/three/signature.tsx";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card.tsx";
 
 function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 	const navigate = useNavigate();
@@ -50,13 +51,32 @@ function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 				<div id={styles["animationBlocker"]}></div>
 			</div>
 			<div className={styles["fullContentView"]}>
-				<h3>Infodump 0</h3>
+				<div id={styles["infodump0Layout"]}>
+					<Card className={styles["textCard"]}>
+						<CardContent>
+							<h2 className="text-3xl font-semibold">Hello World</h2>
+							<p>
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+								eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+								enim ad minim veniam, quis nostrud exercitation ullamco laboris
+								nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+								in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+								nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+								sunt in culpa qui officia deserunt mollit anim id est laborum.
+							</p>
+							<Button>READ MORE</Button>
+						</CardContent>
+					</Card>
+					<div id={styles["poster"]}></div>
+				</div>
 			</div>
-			<div className={styles["fullContentView"]}>
-				<h3>Infodump 1</h3>
-			</div>
-			<div className={styles["fullContentView"]}>
-				<h3>Infodump 2</h3>
+			<div id={styles["lastFullContentView"]}>
+				<div id={styles["infodump1Layout"]}>
+					<div id={styles["infodump1GridItem0"]}>abc</div>
+					<div id={styles["infodump1GridItem1"]}>def</div>
+					<div id={styles["infodump1GridItem2"]}>ghi</div>
+					<div id={styles["infodump1GridItem3"]}>abc</div>
+				</div>
 			</div>
 			{enableThreeJs && (
 				// just threejs styling

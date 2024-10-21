@@ -48,6 +48,102 @@
 	height: calc(100dvh - var(--HEADER-HEIGHT));
 }
 
-.fullContentView:last-of-type {
+#lastFullContentView {
+	width: 100%;
 	height: calc(100dvh - var(--HEADER-HEIGHT) - var(--FOOTER-HEIGHT));
+}
+
+#infodump0Layout {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+
+	height: 100%;
+	width: 100%;
+}
+
+.textCard {
+	background: none;
+	width: 30%;
+	line-height: 2rem;
+	margin-left: -100px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}
+
+.textCard h2 {
+	margin-bottom: 20px;
+}
+
+.textCard button {
+	margin-top: 25px;
+}
+
+#poster {
+	width: 450px;
+	height: 600px;
+
+	background-color: red;
+}
+
+#infodump1Layout {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
+	justify-items: center;
+	align-items: center;
+
+	height: 100%;
+	width: 100%;
+}
+
+#infodump1GridItem0 {
+	grid-column-start: 1;
+	grid-column-end: 2;
+	grid-row-start: 1;
+	grid-row-end: 2;
+
+	width: 100%;
+	height: 100%;
+
+	background-color: blue;
+}
+
+#infodump1GridItem1 {
+	grid-column-start: 2;
+	grid-column-end: 4;
+	grid-row-start: 1;
+	grid-row-end: 3;
+
+	width: 100%;
+	height: 100%;
+
+	background-color: orange;
+}
+
+#infodump1GridItem2 {
+	grid-column-start: 1;
+	grid-column-end: 2;
+	grid-row-start: 2;
+	grid-row-end: 4;
+
+	width: 100%;
+	height: 100%;
+
+	background-color: purple;
+}
+
+#infodump1GridItem3 {
+	grid-column-start: 2;
+	grid-column-end: 4;
+	grid-row-start: 3;
+	grid-row-end: 4;
+
+	width: 100%;
+	height: 100%;
+
+	background-color: lime;
 }
