@@ -30,6 +30,15 @@
 }
 
 #initialAnimationContainer {
+	position: fixed;
+	top: 130px;
+	left: 1050px;
+	height: 600px;
+	width: 600px;
+	transform: translateY(0) scale(1) translateX(0);
+}
+
+#animationBlocker {
 	height: 600px;
 	width: 600px;
 }

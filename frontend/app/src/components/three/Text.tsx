@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 function Text({ children }: { children: ReactNode }) {
 	return (
 		<mesh>
-			<Center rotation={[0, 0, 0]}>
+			<Center>
 				<Text3D
 					curveSegments={32}
 					bevelEnabled

@@ -1,13 +1,22 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { act, useEffect } from "react";
 import { UserProvider } from "@/services/userContext/UserContext.tsx";
 import Header from "@/components/header/Header.tsx";
 import { cleanup, render, screen } from "@testing-library/react";
 import { useDispatchUser } from "@/services/userContext/UserContextHelpers.ts";
+import { useLocation } from "react-router-dom";
+
+vi.mock("react-router-dom");
 
 beforeEach(() => {
+	(useLocation as Mock).mockReturnValue({ pathname: "/" });
 	cleanup();
 });
+
+afterEach(() => {
+	vi.clearAllMocks();
+});
+
 describe("playerIndicator", () => {
 	describe("doesn't display anything when user is null", () => {
 		it("playerName", () => {

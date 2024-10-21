@@ -12,19 +12,19 @@ function Electron({
 	rotation: [number, number, number];
 }) {
 	const ref = useRef<THREE.Mesh>(null!);
-	let frameCount = (Math.random() - 1) * 60;
-	const speed = Math.random() * 2; // Adjust this to control the speed of movement
+	const frameCount = useRef(/*(Math.random() - 1) * 60*/ 0);
+	const speed = /*Math.random() * 2; // Adjust this to control the speed of movement*/ 2;
 	useFrame((_state, delta) => {
-		frameCount += delta;
+		frameCount.current += delta;
 		// Adjust speed by multiplying with frameCount and delta
 
 		// Moving in X-Y plane with a fixed Z distance
 		const radius = 6; // The radius of the circular path
 
 		// Default circular path on the X-Y plane
-		const x = radius * Math.cos(frameCount * speed); // X component of the circle
-		const y = radius * Math.sin(frameCount * speed); // Y component of the circle
-		const z = 0; // Z is 0 because the circle starts in the X-Y plane
+		const internalX = radius * Math.cos(frameCount.current * speed); // X component of the circle
+		const internalY = radius * Math.sin(frameCount.current * speed); // Y component of the circle
+		const internalZ = 0; // Z is 0 because the circle starts in the X-Y plane
 
 		// Extract rotation angles for X, Y, and Z
 		const [rotX, rotY, rotZ] = rotation;
@@ -38,25 +38,29 @@ function Electron({
 			sinX = Math.sin(rotX);
 
 		// First, apply rotation around Z-axis (affects X and Y)
-		const x1 = x * cosZ - y * sinZ;
-		const y1 = x * sinZ + y * cosZ;
+		const x1 = internalX * cosZ - internalY * sinZ;
+		const y1 = internalX * sinZ + internalY * cosZ;
 
 		// Then, apply rotation around Y-axis (affects X1 and Z)
-		const x2 = x1 * cosY + z * sinY;
-		const z1 = -x1 * sinY + z * cosY;
+		ref.current.position.x = x1 * cosY + internalZ * sinY;
+		const z1 = -x1 * sinY + internalZ * cosY;
 
 		// Finally, apply rotation around X-axis (affects Y1 and Z1)
-		const y2 = y1 * cosX - z1 * sinX;
-		const z2 = y1 * sinX + z1 * cosX;
+		ref.current.position.y = y1 * cosX - z1 * sinX;
+		ref.current.position.z = y1 * sinX + z1 * cosX;
 
 		// Set the position of the sphere after applying all rotations
-		ref.current.position.set(x2, y2, z2);
+		ref.current.position.set(
+			ref.current.position.x,
+			ref.current.position.y,
+			ref.current.position.z,
+		);
 	});
 
 	return (
 		<>
 			<Torus torusProps={torusProps} rotation={rotation} />
-			<Sphere ref={ref} position={[0, 6, 0]} scale={[0.2, 0.2, 0.2]}>
+			<Sphere ref={ref} scale={[0.2, 0.2, 0.2]}>
 				<meshBasicMaterial color={"white"} />
 			</Sphere>
 		</>

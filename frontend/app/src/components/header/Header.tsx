@@ -1,14 +1,18 @@
 import "./Header.css";
 import { User } from "@/domain/user.ts";
 import { useUser } from "@/services/userContext/UserContextHelpers.ts";
+import { useLocation } from "react-router-dom";
 
 function Header() {
 	const user: User | null = useUser();
+	const location = useLocation();
 
 	return (
 		<div id="headerContainer">
 			<div id="headerText">
-				<h2 className="text-3xl font-semibold">Corewar</h2>
+				<h2 className="text-3xl font-semibold">
+					{location.pathname.length !== 1 && "Corewar"}
+				</h2>
 			</div>
 			<div id="player">
 				{user != null && (
