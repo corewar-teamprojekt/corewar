@@ -8,64 +8,93 @@ import { useDispatchUser } from "@/services/userContext/UserContextHelpers.ts";
 beforeEach(() => {
 	cleanup();
 });
+describe("playerIndicator", () => {
+	describe("doesn't display anything when user is null", () => {
+		it("playerName", () => {
+			act(() => {
+				render(
+					<UserProvider>
+						<UserDispatcherInteractor dispatcherCommand={null} />
+					</UserProvider>,
+				);
+			});
 
-describe("displays userName sourced from userContext", () => {
-	it("playerA", () => {
-		act(() => {
-			render(
-				<UserProvider>
-					<UserDispatcherInteractor dispatcherCommand={"setPlayerA"} />
-				</UserProvider>,
-			);
+			expect(screen.queryByText("Player")).toBeFalsy();
 		});
 
-		expect(screen.getByText("PlayerA")).toBeTruthy();
+		it("playerColor", () => {
+			act(() => {
+				render(
+					<UserProvider>
+						<UserDispatcherInteractor dispatcherCommand={null} />
+					</UserProvider>,
+				);
+			});
+
+			const circle = screen.queryByRole("img");
+
+			expect(circle).toBeFalsy();
+		});
 	});
 
-	it("playerB", () => {
-		act(() => {
-			render(
-				<UserProvider>
-					<UserDispatcherInteractor dispatcherCommand={"setPlayerB"} />
-				</UserProvider>,
-			);
+	describe("displays userName sourced from userContext", () => {
+		it("playerA", () => {
+			act(() => {
+				render(
+					<UserProvider>
+						<UserDispatcherInteractor dispatcherCommand={"setPlayerA"} />
+					</UserProvider>,
+				);
+			});
+
+			expect(screen.getByText("PlayerA")).toBeTruthy();
 		});
 
-		expect(screen.getByText("PlayerB")).toBeTruthy();
-	});
-});
+		it("playerB", () => {
+			act(() => {
+				render(
+					<UserProvider>
+						<UserDispatcherInteractor dispatcherCommand={"setPlayerB"} />
+					</UserProvider>,
+				);
+			});
 
-describe("displays correct playerColor", () => {
-	it("render correct color for playerA", () => {
-		act(() => {
-			render(
-				<UserProvider>
-					<UserDispatcherInteractor dispatcherCommand={"setPlayerA"} />
-				</UserProvider>,
-			);
+			expect(screen.getByText("PlayerB")).toBeTruthy();
 		});
-		const circle = screen.getByRole("img");
-
-		expect(circle).toBeTruthy();
-		expect(circle.querySelector("circle")?.getAttribute("fill")).toEqual(
-			"#FF0000",
-		);
 	});
 
-	it("render correct color for playerA", () => {
-		act(() => {
-			render(
-				<UserProvider>
-					<UserDispatcherInteractor dispatcherCommand={"setPlayerB"} />
-				</UserProvider>,
+	describe("displays correct playerColor", () => {
+		it("render correct color for playerA", () => {
+			act(() => {
+				render(
+					<UserProvider>
+						<UserDispatcherInteractor dispatcherCommand={"setPlayerA"} />
+					</UserProvider>,
+				);
+			});
+			const circle = screen.getByRole("img");
+
+			expect(circle).toBeTruthy();
+			expect(circle.querySelector("circle")?.getAttribute("fill")).toEqual(
+				"#FF0000",
 			);
 		});
-		const circle = screen.getByRole("img");
 
-		expect(circle).toBeTruthy();
-		expect(circle.querySelector("circle")?.getAttribute("fill")).toEqual(
-			"#0000FF",
-		);
+		it("render correct color for playerA", () => {
+			act(() => {
+				render(
+					<UserProvider>
+						<UserDispatcherInteractor dispatcherCommand={"setPlayerB"} />
+					</UserProvider>,
+				);
+			});
+			const circle = screen.getByRole("img");
+
+			expect(circle).toBeTruthy();
+			expect(circle.querySelector("circle")?.getAttribute("fill")).toEqual(
+				"#0000FF",
+			);
+		});
 	});
 });
 
@@ -73,13 +102,13 @@ describe("displays correct playerColor", () => {
 const UserDispatcherInteractor = ({
 	dispatcherCommand,
 }: {
-	dispatcherCommand: string;
+	dispatcherCommand: string | null;
 }) => {
 	const dispatch = useDispatchUser();
 
 	useEffect(() => {
 		act(() => {
-			if (dispatch) {
+			if (dispatch && dispatcherCommand) {
 				dispatch({
 					type: dispatcherCommand,
 					user: null,

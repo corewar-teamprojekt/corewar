@@ -11,18 +11,25 @@ function Header() {
 				<h2 className="text-3xl font-semibold">Corewar</h2>
 			</div>
 			<div id="player">
-				<svg
-					width="36"
-					height="36"
-					id="playerIcon"
-					role="img"
-					aria-label="A colored circle"
-				>
-					<circle cx="18" cy="18" r="18" fill={user?.colorHex || "red"} />
-				</svg>
-				<small className="text-sm font-semibold leading-none" id="playerName">
-					{user?.name}
-				</small>
+				{user != null && (
+					<>
+						<svg
+							width="36"
+							height="36"
+							id="playerIcon"
+							role="img"
+							aria-label="A colored circle"
+						>
+							<circle cx="18" cy="18" r="18" fill={user?.colorHex || "red"} />
+						</svg>
+						<small
+							className="text-sm font-semibold leading-none"
+							id="playerName"
+						>
+							{user?.name}
+						</small>
+					</>
+				)}
 			</div>
 		</div>
 	);

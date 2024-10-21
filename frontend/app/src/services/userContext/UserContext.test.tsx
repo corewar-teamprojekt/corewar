@@ -36,13 +36,30 @@ describe("mvp", () => {
 	});
 
 	describe("context", () => {
-		it("initializes as PlayerA", () => {
+		it("initializes as null", () => {
 			act(() => {
 				render(
 					<UserProvider>
 						<TestComponent></TestComponent>
 					</UserProvider>,
 				);
+			});
+
+			const playerName = screen.getByTestId("playerName").textContent;
+			expect(playerName).toBeFalsy();
+		});
+
+		it("can switch to PlayerA", () => {
+			act(() => {
+				render(
+					<UserProvider>
+						<TestComponent></TestComponent>
+					</UserProvider>,
+				);
+			});
+
+			act(() => {
+				screen.getByTestId("switchToA").click();
 			});
 
 			const playerName = screen.getByTestId("playerName").textContent;
