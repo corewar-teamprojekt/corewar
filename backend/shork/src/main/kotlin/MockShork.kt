@@ -1,11 +1,8 @@
 package software.shonk.interpreter
 
-import software.shonk.interpreter.settings.AbstractSettings
-
 class MockShork : IShork {
-    var longest = ""
-
-    override fun run(programs: Map<String, String>, settings: AbstractSettings) {
+    override fun run(settings: Settings, programs: Map<String, String>): String {
+        var longest = ""
         var length = 0
         for ((name, program) in programs) {
             if (program.length > length) {
@@ -13,9 +10,7 @@ class MockShork : IShork {
                 length = program.length
             }
         }
-    }
 
-    fun getResult(): String {
         return longest
     }
 }
