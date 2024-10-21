@@ -6,17 +6,13 @@ import software.shonk.domain.Result
 import software.shonk.domain.Status
 import software.shonk.domain.Winner
 import software.shonk.interpreter.MockShork
-import software.shonk.interpreter.settings.AbstractSettings // TODO
-import software.shonk.interpreter.settings.MockSettings
+import software.shonk.interpreter.Settings
 
-// Only do business logic on this layer, potentially calling into outgoing ports (e.g. DB, MARS
-// interpreter whatever)
-// Work with domain objects on this layer, only converting to DTO in the Controller if needed.
 class MockShorkInterpreterService() : ShorkInterpreterUseCase {
     val shork = MockShork()
 
     var programs = HashMap<String, String>()
-    var currentSettings: AbstractSettings = MockSettings()
+    var currentSettings: Settings = Settings(42, 100, "DAT", 100)
 
     var gameState = GameState.NOT_STARTED
     var winner = Winner.UNDECIDED
@@ -32,7 +28,7 @@ class MockShorkInterpreterService() : ShorkInterpreterUseCase {
         }
     }
 
-    override fun setSettings(settings: AbstractSettings) {
+    override fun setSettings(settings: Settings) {
         TODO("Not yet implemented")
     }
 
@@ -40,10 +36,7 @@ class MockShorkInterpreterService() : ShorkInterpreterUseCase {
         gameState = GameState.NOT_STARTED
         winner = Winner.UNDECIDED
 
-        shork.run(programs, currentSettings)
-        gameState = GameState.RUNNING
-
-        val result = shork.getResult()
+        val result = shork.run(currentSettings, programs)
         gameState = GameState.FINISHED
 
         if (result == "A") {
