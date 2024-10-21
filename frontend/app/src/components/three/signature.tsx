@@ -12,7 +12,7 @@ function Signature() {
 		_state.gl.setSize(600, 600);
 		frameCounter.current += delta;
 
-		const speed = 1.5;
+		const speed = 2;
 		const baseRotation = frameCounter.current * speed;
 		const easing = Math.sin((baseRotation % (2 * Math.PI)) + Math.PI);
 		ref.current.rotation.y = baseRotation + easing * 0.5;

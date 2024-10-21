@@ -27,7 +27,7 @@
 	left: -100px;
 	height: calc(100dvh + 200px);
 	width: calc(100dvw + 300px);
-	opacity: 0.2;
+	opacity: 0.1;
 
 	transform: rotateZ(15deg);
 }

@@ -26,9 +26,9 @@ function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 	useEffect(() => {
 		if (containerRef.current)
 			containerRef.current.style.transform = `
-		translateY(clamp(-350px, -${0.38 * scrollPosition}px, 0px))
-		translateX(clamp(-1200px, -${1.3 * scrollPosition}px, 0px))
-		scale(clamp(0.3, ${1 - (scrollPosition * 0.85) / 1080}, 1)
+		translateY(clamp(-350px, -${1.11 * 0.38 * scrollPosition}px, 0px))
+		translateX(clamp(-1200px, -${1.11 * 1.3 * scrollPosition}px, 0px))
+		scale(clamp(0.3, ${1 - (1.11 * scrollPosition * 0.85) / 1080}, 1)
 		`;
 	}, [scrollPosition]);
 
@@ -63,7 +63,7 @@ function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 				// eslint-disable-next-line
 				// @ts-ignore
 				<div id={styles["initialAnimationContainer"]} ref={containerRef}>
-					<Canvas camera={{ position: [0, 0, 100], zoom: 10 }}>
+					<Canvas camera={{ position: [0, 10, 100], zoom: 10 }}>
 						<Signature />
 					</Canvas>
 				</div>

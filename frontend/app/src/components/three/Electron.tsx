@@ -12,8 +12,8 @@ function Electron({
 	rotation: [number, number, number];
 }) {
 	const ref = useRef<THREE.Mesh>(null!);
-	const frameCount = useRef(/*(Math.random() - 1) * 60*/ 0);
-	const speed = /*Math.random() * 2; // Adjust this to control the speed of movement*/ 2;
+	const frameCount = useRef(0);
+	const speed = 2; // Adjust this to control the speed of movement
 	useFrame((_state, delta) => {
 		frameCount.current += delta;
 		// Adjust speed by multiplying with frameCount and delta

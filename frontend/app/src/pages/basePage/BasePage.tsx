@@ -13,10 +13,15 @@ function GridCell({ isRed, isBlue }: { isRed: boolean; isBlue: boolean }) {
 }
 
 function BasePage() {
+	const BACKGROUND_BLINKING_INTERVAL_MS: number = 1200;
+	const GRIDCELL_COUNT: number = 100;
+	const PINK_CELL_COUNT: number = 10;
+	const CYAN_CELL_COUNT: number = 10;
+
 	const [activeRedCells, setActiveRedCells] = useState<number[]>([]);
 	const [activeBlueCells, setActiveBlueCells] = useState<number[]>([]);
 	const gridCells: ReactNode[] = [];
-	for (let i = 0; i < 100; i++) {
+	for (let i = 0; i < GRIDCELL_COUNT; i++) {
 		gridCells.push(
 			<GridCell
 				key={i}
@@ -29,8 +34,8 @@ function BasePage() {
 	useEffect(() => {
 		const interval = setInterval(() => {
 			const newActiveRedCells: number[] = [];
-			while (newActiveRedCells.length < 10) {
-				const randomIndex = Math.floor(Math.random() * 100);
+			while (newActiveRedCells.length < PINK_CELL_COUNT) {
+				const randomIndex = Math.floor(Math.random() * GRIDCELL_COUNT);
 				if (!newActiveRedCells.includes(randomIndex)) {
 					newActiveRedCells.push(randomIndex);
 				}
@@ -38,8 +43,8 @@ function BasePage() {
 			setActiveRedCells(newActiveRedCells);
 
 			const newActiveBlueCells: number[] = [];
-			while (newActiveBlueCells.length < 10) {
-				const randomIndex = Math.floor(Math.random() * 100);
+			while (newActiveBlueCells.length < CYAN_CELL_COUNT) {
+				const randomIndex = Math.floor(Math.random() * GRIDCELL_COUNT);
 				if (
 					!newActiveBlueCells.includes(randomIndex) &&
 					!newActiveRedCells.includes(randomIndex)
@@ -48,7 +53,7 @@ function BasePage() {
 				}
 			}
 			setActiveBlueCells(newActiveBlueCells);
-		}, 600);
+		}, BACKGROUND_BLINKING_INTERVAL_MS);
 
 		// Clear interval on component unmount
 		return () => clearInterval(interval);
