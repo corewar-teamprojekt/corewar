@@ -18,7 +18,7 @@ class MockShorkInterpreterService() : ShorkInterpreterUseCase {
     var winner = Winner.UNDECIDED
 
     internal fun containsPlayerAAndB(): Boolean {
-        return programs.containsKey("A") && programs.containsKey("B")
+        return programs.containsKey("playerA") && programs.containsKey("playerB")
     }
 
     override fun addProgram(name: String, program: String) {
@@ -50,8 +50,8 @@ class MockShorkInterpreterService() : ShorkInterpreterUseCase {
 
     override fun getStatus(): Status {
         return Status(
-            programs.containsKey("A"),
-            programs.containsKey("B"),
+            programs.containsKey("playerA"),
+            programs.containsKey("playerB"),
             gameState,
             Result(winner),
         )
