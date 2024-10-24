@@ -16,6 +16,7 @@ function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 		const position = window.scrollY || document.documentElement.scrollTop;
 		setScrollPosition(position);
 	};
+
 	useEffect(() => {
 		window.addEventListener("scroll", handleScroll);
 
@@ -35,7 +36,7 @@ function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 	}, [scrollPosition]);
 
 	return (
-		<RequireLogout>
+		<RequireLogout blocked={false}>
 			<div
 				className={styles["fullContentView"]}
 				id={styles["initialContentView"]}
