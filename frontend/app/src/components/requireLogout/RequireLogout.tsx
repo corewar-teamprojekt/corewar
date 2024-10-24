@@ -5,17 +5,21 @@ import {
 import { ReactNode, useEffect } from "react";
 
 interface RequireUserProps {
+	blocked: boolean;
 	children: ReactNode;
 }
 
-export function RequireLogout({ children }: Readonly<RequireUserProps>) {
+export function RequireLogout({
+	blocked,
+	children,
+}: Readonly<RequireUserProps>) {
 	const user = useUser();
 	const dispatcher = useDispatchUser();
 
-	useEffect(handleUserChanges, [dispatcher, user]);
+	useEffect(handleUserChanges, [blocked, dispatcher, user]);
 
 	function handleUserChanges() {
-		if (user && dispatcher) {
+		if (user && dispatcher && !blocked) {
 			dispatcher({
 				type: "logout",
 				user: null,
