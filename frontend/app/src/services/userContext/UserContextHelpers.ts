@@ -24,6 +24,9 @@ export function userReducer(
 		case "setPlayerB": {
 			return playerB;
 		}
+		case "logout": {
+			return null;
+		}
 		default: {
 			throw Error("Unknown action: " + action.type);
 		}
