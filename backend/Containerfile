@@ -1,0 +1,4 @@
+FROM docker.io/openjdk:23-slim
+RUN mkdir /app
+COPY ./api/build/libs/api-all.jar /app/app.jar
+ENTRYPOINT ["java","-jar","/app/app.jar"]
