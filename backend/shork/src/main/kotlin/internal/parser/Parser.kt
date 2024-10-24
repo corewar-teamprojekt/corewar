@@ -9,7 +9,7 @@ import software.shonk.interpreter.internal.instruction.Dat
 import software.shonk.interpreter.internal.instruction.Mov
 import software.shonk.interpreter.internal.instruction.Split
 
-internal class Parser(val tokens: List<Token>) {
+internal class Parser(private val tokens: List<Token>) {
     private var current = 0
     private var instructions: MutableList<AbstractInstruction> = ArrayList()
     var errors: MutableList<Pair<String, Token>> = ArrayList()
@@ -67,7 +67,7 @@ internal class Parser(val tokens: List<Token>) {
                 advance()
             }
             else -> {
-                errors.add(Pair("Unexpected token", token))
+                addError("Unexpected token", token)
                 advance()
             }
         }
@@ -78,12 +78,7 @@ internal class Parser(val tokens: List<Token>) {
         var modifier = modifier()
         val (aField, modeA) = field()
         if (peek().type != TokenType.COMMA) {
-            errors.add(
-                Pair(
-                    "Expected comma after A Address but found ${peek().type} in line ${token.line}",
-                    token,
-                )
-            )
+            addError("Expected comma after A Address but found ${peek().type}", token)
             advanceToNextInstruction()
             return null
         }
@@ -138,7 +133,7 @@ internal class Parser(val tokens: List<Token>) {
                 }
                 else -> {
                     if (isInstructionToken(token)) {
-                        TODO("Default modifier handling not implemented for $token")
+                        addError("Default modifier handling not implemented for $token", token)
                     }
                     modifier = Modifier.I
                 }
@@ -148,23 +143,59 @@ internal class Parser(val tokens: List<Token>) {
         return when (token.type) {
             TokenType.DAT -> Dat(aField, bField, modeA, modeB, modifier)
             TokenType.MOV -> Mov(aField, bField, modeA, modeB, modifier)
-            TokenType.ADD -> TODO()
-            TokenType.SUB -> TODO()
-            TokenType.MUL -> TODO()
-            TokenType.DIV -> TODO()
-            TokenType.MOD -> TODO()
+            TokenType.ADD -> {
+                addError("ADD has not been implemented yet", token)
+                null
+            }
+            TokenType.SUB -> {
+                addError("SUB has not been implemented yet", token)
+                null
+            }
+            TokenType.MUL -> {
+                addError("MUL has not been implemented yet", token)
+                null
+            }
+            TokenType.DIV -> {
+                addError("DIV has not been implemented yet", token)
+                null
+            }
+            TokenType.MOD -> {
+                addError("MOD has not been implemented yet", token)
+                null
+            }
             TokenType.JMP -> Jump(aField, bField, modeA, modeB, modifier)
-            TokenType.JMZ -> TODO()
-            TokenType.JMN -> TODO()
-            TokenType.DJN -> TODO()
+            TokenType.JMZ -> {
+                addError("JMZ has not been implemented yet", token)
+                null
+            }
+            TokenType.JMN -> {
+                addError("JMN has not been implemented yet", token)
+                null
+            }
+            TokenType.DJN -> {
+                addError("DJN has not been implemented yet", token)
+                null
+            }
             TokenType.CMP -> Compare(aField, bField, modeA, modeB, modifier)
-            TokenType.SLT -> TODO()
+            TokenType.SLT -> {
+                addError("SLT has not been implemented yet", token)
+                null
+            }
             TokenType.SPL -> Split(aField, bField, modeA, modeB, modifier)
-            TokenType.ORG -> TODO()
-            TokenType.EQU -> TODO()
-            TokenType.END -> TODO()
+            TokenType.ORG -> {
+                addError("ORG has not been implemented yet", token)
+                null
+            }
+            TokenType.EQU -> {
+                addError("EQU has not been implemented yet", token)
+                null
+            }
+            TokenType.END -> {
+                addError("END has not been implemented yet", token)
+                null
+            }
             else -> {
-                errors.add(Pair("Expected an instruction type", token))
+                addError("Unexpected token, expected an instruction", token)
                 null
             }
         }
@@ -189,7 +220,7 @@ internal class Parser(val tokens: List<Token>) {
             TokenType.X -> Modifier.X
             TokenType.I -> Modifier.I
             else -> {
-                errors.add(Pair("Unexpected token", token))
+                addError("Unexpected token, expected modifier after dot", token)
                 null
             }
         }
@@ -211,7 +242,7 @@ internal class Parser(val tokens: List<Token>) {
                     TokenType.LOWER_THAN -> AddressMode.B_PRE_DECREMENT
                     TokenType.GREATER_THAN -> AddressMode.B_POST_INCREMENT
                     else -> {
-                        errors.add(Pair("Unexpected token, expected address mode", token))
+                        addError("Unexpected token, expected address mode", token)
                         AddressMode.DIRECT
                     }
                 }
@@ -225,13 +256,13 @@ internal class Parser(val tokens: List<Token>) {
                 try {
                     value = token.lexeme.toInt()
                 } catch (ex: NumberFormatException) {
-                    errors.add(Pair("Couldn't parse as number: `${token.lexeme}`", token))
+                    addError("Couldn't parse as number: `${token.lexeme}`", token)
                 }
 
                 Pair(value, addressMode)
             }
             else -> {
-                errors.add(Pair("Unexpected token, expected Field Value", token))
+                addError("Unexpected token, expected Field Value", token)
                 Pair(0, AddressMode.IMMEDIATE)
             }
         }
@@ -263,5 +294,9 @@ internal class Parser(val tokens: List<Token>) {
                 TokenType.EQU,
                 TokenType.END,
             )
+    }
+
+    private fun addError(message: String, token: Token) {
+        errors.add(Pair(message, token))
     }
 }
