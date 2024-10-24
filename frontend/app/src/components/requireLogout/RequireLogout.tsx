@@ -12,7 +12,7 @@ export function RequireLogout({ children }: Readonly<RequireUserProps>) {
 	const user = useUser();
 	const dispatcher = useDispatchUser();
 
-	useEffect(handleUserChanges, [user]);
+	useEffect(handleUserChanges, [dispatcher, user]);
 
 	function handleUserChanges() {
 		if (user && dispatcher) {
