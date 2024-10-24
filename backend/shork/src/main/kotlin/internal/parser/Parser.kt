@@ -10,8 +10,8 @@ import software.shonk.interpreter.internal.instruction.Mov
 import software.shonk.interpreter.internal.instruction.Split
 
 internal class Parser(val tokens: List<Token>) {
-    var current = 0
-    var instructions: MutableList<AbstractInstruction> = ArrayList()
+    private var current = 0
+    private var instructions: MutableList<AbstractInstruction> = ArrayList()
     var errors: MutableList<Pair<String, Token>> = ArrayList()
 
     fun parse(): List<AbstractInstruction> {
