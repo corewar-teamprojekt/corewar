@@ -10,8 +10,8 @@ import software.shonk.interpreter.internal.instruction.Mov
 import software.shonk.interpreter.internal.instruction.Split
 
 internal class Parser(val tokens: List<Token>) {
-    var current = 0
-    var instructions: MutableList<AbstractInstruction> = ArrayList()
+    private var current = 0
+    private var instructions: MutableList<AbstractInstruction> = ArrayList()
     var errors: MutableList<Pair<String, Token>> = ArrayList()
 
     fun parse(): List<AbstractInstruction> {
@@ -75,7 +75,7 @@ internal class Parser(val tokens: List<Token>) {
 
     private fun instruction(): AbstractInstruction? {
         val token = advance()
-        val modifier = modifier() ?: return null
+        var modifier = modifier()
         val (aField, modeA) = field()
         if (peek().type != TokenType.COMMA) {
             errors.add(
@@ -89,6 +89,61 @@ internal class Parser(val tokens: List<Token>) {
         }
         advance() // Skip the comma
         val (bField, modeB) = field()
+
+        // Handle if no modifier has been specified
+        if (modifier == null) {
+            when (token.type) {
+                TokenType.DAT -> {
+                    modifier = Modifier.F
+                }
+                TokenType.MOV,
+                TokenType.CMP -> {
+                    modifier =
+                        if (modeA == AddressMode.IMMEDIATE) {
+                            Modifier.AB
+                        } else if (modeB == AddressMode.IMMEDIATE) {
+                            Modifier.B
+                        } else {
+                            Modifier.I
+                        }
+                }
+                TokenType.ADD,
+                TokenType.SUB,
+                TokenType.MUL,
+                TokenType.DIV,
+                TokenType.MOD -> {
+                    modifier =
+                        if (modeA == AddressMode.IMMEDIATE) {
+                            Modifier.AB
+                        } else if (modeB == AddressMode.IMMEDIATE) {
+                            Modifier.B
+                        } else {
+                            Modifier.F
+                        }
+                }
+                TokenType.SLT -> {
+                    modifier =
+                        if (modeA == AddressMode.IMMEDIATE) {
+                            Modifier.AB
+                        } else {
+                            Modifier.B
+                        }
+                }
+                TokenType.JMP,
+                TokenType.JMZ,
+                TokenType.JMN,
+                TokenType.DJN,
+                TokenType.SPL -> {
+                    modifier = Modifier.B
+                }
+                else -> {
+                    if (isInstructionToken(token)) {
+                        TODO("Default modifier handling not implemented for $token")
+                    }
+                    modifier = Modifier.I
+                }
+            }
+        }
 
         return when (token.type) {
             TokenType.DAT -> Dat(aField, bField, modeA, modeB, modifier)
