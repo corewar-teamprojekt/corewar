@@ -1,10 +1,11 @@
-import styles from "./LandingPage.module.css";
-import { Button } from "@/components/ui/button.tsx";
-import { Canvas } from "@react-three/fiber";
+import { RequireLogout } from "@/components/requireLogout/RequireLogout";
 import Signature from "@/components/three/signature.tsx";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
+import { Canvas } from "@react-three/fiber";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./LandingPage.module.css";
 
 function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 	const navigate = useNavigate();
@@ -34,7 +35,7 @@ function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 	}, [scrollPosition]);
 
 	return (
-		<>
+		<RequireLogout>
 			<div
 				className={styles["fullContentView"]}
 				id={styles["initialContentView"]}
@@ -88,7 +89,7 @@ function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 					</Canvas>
 				</div>
 			)}
-		</>
+		</RequireLogout>
 	);
 }
 
