@@ -1,12 +1,13 @@
 import LoadingSpinner from "@/components/loadingSpinner/LoadingSpinner.tsx";
-import styles from "./WaitingForResult.module.css";
-import { useEffect, useRef, useState } from "react";
-import { usePageVisibility } from "@/lib/usePageVisibility.ts";
-import { useNavigate } from "react-router-dom";
-import { POLLING_INTERVAL_MS } from "@/pages/waitingForResult/consts.ts";
-import { StatusResponse } from "@/domain/StatusResponse.ts";
+import { RequireUser } from "@/components/requireUser.tsx/RequireUser";
 import { GameState } from "@/domain/GameState.ts";
+import { StatusResponse } from "@/domain/StatusResponse.ts";
 import { BACKEND_BASE_URL } from "@/domain/consts.ts";
+import { usePageVisibility } from "@/lib/usePageVisibility.ts";
+import { POLLING_INTERVAL_MS } from "@/pages/waitingForResult/consts.ts";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./WaitingForResult.module.css";
 
 function WaitingForResultPage() {
 	const isPageVisible = usePageVisibility();
@@ -51,14 +52,14 @@ function WaitingForResultPage() {
 	}, [isPageVisible, isPollingEnabled, navigate]);
 
 	return (
-		<>
+		<RequireUser>
 			<div id={styles["waitingForResultHeadline"]}>
 				<h2 className="text-3xl font-semibold">Waiting for game result...</h2>
 			</div>
 			<div id={styles["loadingSpinnerContainer"]}>
 				<LoadingSpinner />
 			</div>
-		</>
+		</RequireUser>
 	);
 }
 
