@@ -1,5 +1,6 @@
 import ConfirmActionDialog from "@/components/confirmActionDialog/ConfirmActionDialog";
 import ProgrammInput from "@/components/ProgramInput/ProgramInput";
+import { RequireUser } from "@/components/requireUser.tsx/RequireUser";
 import { useToast } from "@/hooks/use-toast";
 import { uploadPlayerCode } from "@/services/rest/RestService";
 import { useUser } from "@/services/userContext/UserContextHelpers";
@@ -41,7 +42,7 @@ export default function PlayerCodingPage() {
 	}
 
 	return (
-		<>
+		<RequireUser>
 			<div className="flex flex-col justify-center items-center h-[100%] w-[100%]">
 				<h1 className="text-2xl font-bold mb-2">Start coding:</h1>
 				<ProgrammInput onProgramUploadClicked={setCodeAndOpenDialog} />
@@ -51,6 +52,6 @@ export default function PlayerCodingPage() {
 				setIsOpen={setIsConfirmDialogOpen}
 				onConfirm={triggerCodeUpload}
 			/>
-		</>
+		</RequireUser>
 	);
 }
