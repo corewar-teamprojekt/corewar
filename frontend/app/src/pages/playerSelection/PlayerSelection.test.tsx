@@ -1,11 +1,15 @@
-import { useDispatchUser } from "@/services/userContext/UserContextHelpers.ts";
+import {
+	useDispatchUser,
+	useUser,
+} from "@/services/userContext/UserContextHelpers.ts";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, Mock, vi } from "vitest";
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import PlayerSelection from "./PlayerSelection";
 
 import "@testing-library/jest-dom";
 import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
 import PlayerCodingPage from "../playerCodeInput/PlayerCodingPage";
+import { User } from "@/domain/user";
 
 vi.mock("@/services/userContext/UserContextHelpers.ts", () => ({
 	useDispatchUser: vi.fn(),
@@ -26,7 +30,13 @@ const testRouterConfig = [
 	},
 ];
 
+vi.mock("@/services/userContext/UserContextHelpers");
+
 describe("PlayerSelection", () => {
+	beforeEach(() =>
+		(useUser as Mock).mockReturnValue(new User("PlayerA", "#ffeefff")),
+	);
+
 	it("renders Player A and Player B buttons", () => {
 		const router = createMemoryRouter(testRouterConfig);
 		render(<RouterProvider router={router} />);

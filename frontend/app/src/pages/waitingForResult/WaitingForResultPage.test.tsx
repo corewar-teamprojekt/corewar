@@ -1,9 +1,11 @@
-import { beforeEach, describe, it, vi, expect } from "vitest";
+import { beforeEach, describe, it, vi, expect, Mock } from "vitest";
 import { cleanup, render, waitFor } from "@testing-library/react";
 import { act } from "react";
 import WaitingForResultPage from "@/pages/waitingForResult/WaitingForResultPage.tsx";
 import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
 import { POLLING_INTERVAL_MS } from "@/pages/waitingForResult/consts.ts";
+import { useUser } from "@/services/userContext/UserContextHelpers";
+import { User } from "@/domain/user";
 
 const POLLING_BUFFER = 500;
 
@@ -27,8 +29,14 @@ beforeEach(() => {
 	vi.restoreAllMocks();
 });
 
+vi.mock("@/services/userContext/UserContextHelpers");
+
 // Might theoretically become flaky, since its working with actual timers
 describe("backend polling", () => {
+	beforeEach(() =>
+		(useUser as Mock).mockReturnValue(new User("PlayerA", "#ffeeff")),
+	);
+
 	it("starts polling correct endpoint once component gets rendered", async () => {
 		// Mock the fetch function
 		const mockFetch = vi.fn(() =>
