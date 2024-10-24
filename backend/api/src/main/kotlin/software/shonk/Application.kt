@@ -13,7 +13,6 @@ fun Application.module() {
         json(
             Json {
                 ignoreUnknownKeys = true
-                classDiscriminator = "jsonType"
                 prettyPrint = true
                 useArrayPolymorphism = false
             }
