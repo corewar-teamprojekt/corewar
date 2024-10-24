@@ -9,6 +9,7 @@ internal class Scanner(private val source: String) {
     private var current = 0
     private var line = 1
     private val keywordMap: HashMap<String, TokenType> = HashMap<String, TokenType>()
+    val errors: MutableList<Pair<Int, String>> = ArrayList()
 
     init {
         // Instructions
@@ -38,8 +39,6 @@ internal class Scanner(private val source: String) {
         keywordMap["X"] = TokenType.X
         keywordMap["I"] = TokenType.I
     }
-
-    val errors: MutableList<Pair<Int, String>> = ArrayList()
 
     fun scanTokens(): List<Token> {
         while (!isAtEnd()) {
