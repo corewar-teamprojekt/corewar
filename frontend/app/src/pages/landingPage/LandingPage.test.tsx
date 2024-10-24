@@ -1,9 +1,10 @@
-import { it, describe, beforeEach, expect } from "vitest";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
-import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import LandingPage from "@/pages/landingPage/LandingPage.tsx";
-import { act } from "react";
 import PlayerSelection from "@/pages/playerSelection/PlayerSelection.tsx";
+import { useUser } from "@/services/userContext/UserContextHelpers";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { act } from "react";
+import { createMemoryRouter, RouterProvider } from "react-router-dom";
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 
 const testRouterConfig = [
 	{
@@ -15,8 +16,12 @@ const testRouterConfig = [
 		element: <PlayerSelection />,
 	},
 ];
+
+vi.mock("@/services/userContext/UserContextHelpers");
+
 describe("hero button", () => {
 	beforeEach(() => {
+		(useUser as Mock).mockReturnValue(null);
 		cleanup();
 	});
 
