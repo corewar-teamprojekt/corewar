@@ -155,7 +155,9 @@ internal class Scanner(private val source: String) {
 }
 
 fun main() {
-    val scanner = Scanner("MOV.AB #10, $20\nADD.BA $10, $20")
+    // val input = "MOV.AB #10, $20\nADD.BA $10, $20"
+    val input = "MOV 42 <69"
+    val scanner = Scanner(input)
     val start = System.currentTimeMillis()
     val tokens = scanner.scanTokens()
     val end = System.currentTimeMillis()
