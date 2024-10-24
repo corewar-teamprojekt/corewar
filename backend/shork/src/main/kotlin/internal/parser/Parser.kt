@@ -67,7 +67,7 @@ internal class Parser(private val tokens: List<Token>) {
                 advance()
             }
             else -> {
-                addError("Unexpected token", token)
+                emitError("Unexpected token", token)
                 advance()
             }
         }
@@ -78,7 +78,7 @@ internal class Parser(private val tokens: List<Token>) {
         var modifier = modifier()
         val (aField, modeA) = field()
         if (peek().type != TokenType.COMMA) {
-            addError("Expected comma after A Address but found ${peek().type}", token)
+            emitError("Expected comma after A Address but found ${peek().type}", token)
             advanceToNextInstruction()
             return null
         }
@@ -133,7 +133,7 @@ internal class Parser(private val tokens: List<Token>) {
                 }
                 else -> {
                     if (isInstructionToken(token)) {
-                        addError("Default modifier handling not implemented for $token", token)
+                        emitError("Default modifier handling not implemented for $token", token)
                     }
                     modifier = Modifier.I
                 }
@@ -144,58 +144,58 @@ internal class Parser(private val tokens: List<Token>) {
             TokenType.DAT -> Dat(aField, bField, modeA, modeB, modifier)
             TokenType.MOV -> Mov(aField, bField, modeA, modeB, modifier)
             TokenType.ADD -> {
-                addError("ADD has not been implemented yet", token)
+                emitError("ADD has not been implemented yet", token)
                 null
             }
             TokenType.SUB -> {
-                addError("SUB has not been implemented yet", token)
+                emitError("SUB has not been implemented yet", token)
                 null
             }
             TokenType.MUL -> {
-                addError("MUL has not been implemented yet", token)
+                emitError("MUL has not been implemented yet", token)
                 null
             }
             TokenType.DIV -> {
-                addError("DIV has not been implemented yet", token)
+                emitError("DIV has not been implemented yet", token)
                 null
             }
             TokenType.MOD -> {
-                addError("MOD has not been implemented yet", token)
+                emitError("MOD has not been implemented yet", token)
                 null
             }
             TokenType.JMP -> Jump(aField, bField, modeA, modeB, modifier)
             TokenType.JMZ -> {
-                addError("JMZ has not been implemented yet", token)
+                emitError("JMZ has not been implemented yet", token)
                 null
             }
             TokenType.JMN -> {
-                addError("JMN has not been implemented yet", token)
+                emitError("JMN has not been implemented yet", token)
                 null
             }
             TokenType.DJN -> {
-                addError("DJN has not been implemented yet", token)
+                emitError("DJN has not been implemented yet", token)
                 null
             }
             TokenType.CMP -> Compare(aField, bField, modeA, modeB, modifier)
             TokenType.SLT -> {
-                addError("SLT has not been implemented yet", token)
+                emitError("SLT has not been implemented yet", token)
                 null
             }
             TokenType.SPL -> Split(aField, bField, modeA, modeB, modifier)
             TokenType.ORG -> {
-                addError("ORG has not been implemented yet", token)
+                emitError("ORG has not been implemented yet", token)
                 null
             }
             TokenType.EQU -> {
-                addError("EQU has not been implemented yet", token)
+                emitError("EQU has not been implemented yet", token)
                 null
             }
             TokenType.END -> {
-                addError("END has not been implemented yet", token)
+                emitError("END has not been implemented yet", token)
                 null
             }
             else -> {
-                addError("Unexpected token, expected an instruction", token)
+                emitError("Unexpected token, expected an instruction", token)
                 null
             }
         }
@@ -220,7 +220,7 @@ internal class Parser(private val tokens: List<Token>) {
             TokenType.X -> Modifier.X
             TokenType.I -> Modifier.I
             else -> {
-                addError("Unexpected token, expected modifier after dot", token)
+                emitError("Unexpected token, expected modifier after dot", token)
                 null
             }
         }
@@ -242,7 +242,7 @@ internal class Parser(private val tokens: List<Token>) {
                     TokenType.LOWER_THAN -> AddressMode.B_PRE_DECREMENT
                     TokenType.GREATER_THAN -> AddressMode.B_POST_INCREMENT
                     else -> {
-                        addError("Unexpected token, expected address mode", token)
+                        emitError("Unexpected token, expected address mode", token)
                         AddressMode.DIRECT
                     }
                 }
@@ -256,13 +256,13 @@ internal class Parser(private val tokens: List<Token>) {
                 try {
                     value = token.lexeme.toInt()
                 } catch (ex: NumberFormatException) {
-                    addError("Couldn't parse as number: `${token.lexeme}`", token)
+                    emitError("Couldn't parse as number: `${token.lexeme}`", token)
                 }
 
                 Pair(value, addressMode)
             }
             else -> {
-                addError("Unexpected token, expected Field Value", token)
+                emitError("Unexpected token, expected Field Value", token)
                 Pair(0, AddressMode.IMMEDIATE)
             }
         }
@@ -296,7 +296,7 @@ internal class Parser(private val tokens: List<Token>) {
             )
     }
 
-    private fun addError(message: String, token: Token) {
+    private fun emitError(message: String, token: Token) {
         errors.add(Pair(message, token))
     }
 }
