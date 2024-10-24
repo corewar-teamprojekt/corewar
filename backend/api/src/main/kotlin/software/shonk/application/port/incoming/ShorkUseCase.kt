@@ -3,7 +3,7 @@ package software.shonk.application.port.incoming
 import software.shonk.domain.Status
 import software.shonk.interpreter.Settings
 
-interface ShorkInterpreterUseCase {
+interface ShorkUseCase {
     fun addProgram(name: String, program: String)
 
     fun setSettings(settings: Settings)
