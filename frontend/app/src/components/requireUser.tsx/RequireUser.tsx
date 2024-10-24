@@ -12,7 +12,7 @@ export function RequireUser({ children }: Readonly<RequireUserProps>) {
 	const { toast } = useToast();
 	const navigate = useNavigate();
 
-	useEffect(handleAuthorizationAndReroute, [user]);
+	useEffect(handleAuthorizationAndReroute, [navigate, toast, user]);
 
 	function handleAuthorizationAndReroute() {
 		if (!user) {
