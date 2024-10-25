@@ -1,21 +1,23 @@
 package software.shonk.application.service
 
 import software.shonk.application.port.incoming.ShorkUseCase
-import software.shonk.application.port.outgoing.ShorkPort
 import software.shonk.domain.GameState
 import software.shonk.domain.Result
 import software.shonk.domain.Status
 import software.shonk.domain.Winner
+import software.shonk.interpreter.IShork
 import software.shonk.interpreter.Settings
 
-class ShorkService(val shorkPort: ShorkPort) : ShorkUseCase {
+class ShorkService(val shork: IShork) : ShorkUseCase {
     var programs = HashMap<String, String>()
 
-    var gameState = GameState.NOT_STARTED
-    var winner = Winner.UNDECIDED
+    var gameState: GameState = GameState.NOT_STARTED
+    var winner: Winner = Winner.UNDECIDED
 
-    internal fun containsPlayerAAndB(): Boolean {
-        return programs.containsKey("playerA") && programs.containsKey("playerB")
+    var currentSettings: Settings = Settings(42, 100, "DAT", 100)
+
+    override fun setSettings(settings: Settings) {
+        this.currentSettings = settings
     }
 
     override fun addProgram(name: String, program: String) {
@@ -25,20 +27,16 @@ class ShorkService(val shorkPort: ShorkPort) : ShorkUseCase {
         }
     }
 
-    override fun setSettings(settings: Settings) {
-        this.shorkPort.setSettings(settings)
-    }
-
     override fun run() {
-        gameState = GameState.NOT_STARTED
+        gameState = GameState.RUNNING
         winner = Winner.UNDECIDED
 
-        val result = shorkPort.run(programs)
+        val result: String? = shork.run(currentSettings, programs)
         gameState = GameState.FINISHED
 
-        if (result == "A") {
+        if (result == "playerA") {
             winner = Winner.A
-        } else if (result == "B") {
+        } else if (result == "playerB") {
             winner = Winner.B
         }
 
@@ -52,5 +50,9 @@ class ShorkService(val shorkPort: ShorkPort) : ShorkUseCase {
             gameState,
             Result(winner),
         )
+    }
+
+    internal fun containsPlayerAAndB(): Boolean {
+        return programs.containsKey("playerA") && programs.containsKey("playerB")
     }
 }
