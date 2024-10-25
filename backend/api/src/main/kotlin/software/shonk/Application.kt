@@ -9,7 +9,7 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 import org.koin.ktor.plugin.koin
-import software.shonk.adapters.incoming.configureShorkInterpreterController
+import software.shonk.adapters.incoming.configureShorkInterpreterControllerV0
 import software.shonk.application.port.incoming.ShorkUseCase
 import software.shonk.application.service.ShorkService
 import software.shonk.interpreter.IShork
@@ -38,7 +38,11 @@ fun Application.module() {
 }
 
 fun Application.moduleApiV0() {
-    routing { route("/api/v0") { configureShorkInterpreterController() } }
+    routing { route("/api/v0") { configureShorkInterpreterControllerV0() } }
+}
+
+fun Application.moduleApiV1() {
+    routing { route("/api/v1") {} }
 }
 
 fun Application.koinModule() {
