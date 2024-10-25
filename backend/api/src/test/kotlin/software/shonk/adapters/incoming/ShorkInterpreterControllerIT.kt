@@ -5,8 +5,6 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.config.*
 import io.ktor.server.testing.*
-import io.mockk.every
-import io.mockk.mockk
 import kotlin.test.junit5.JUnit5Asserter.assertNotEquals
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -20,14 +18,14 @@ import org.koin.core.context.stopKoin
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import org.koin.test.KoinTest
-import software.shonk.adapters.outgoing.shorkInterpreter.MockShorkAdapter
 import software.shonk.application.port.incoming.ShorkUseCase
-import software.shonk.application.port.outgoing.ShorkPort
 import software.shonk.application.service.ShorkService
+import software.shonk.interpreter.IShork
+import software.shonk.interpreter.MockShork
 import software.shonk.module
 import software.shonk.moduleApiV0
 
-class ShorkInterpreterControllerTest() : KoinTest {
+class ShorkInterpreterControllerIT() : KoinTest {
     private lateinit var testEngine: TestApplicationEngine
 
     @BeforeEach
@@ -50,7 +48,7 @@ class ShorkInterpreterControllerTest() : KoinTest {
         }
         configureCustomDI(
             module {
-                single<ShorkPort> { MockShorkAdapter(0) }
+                single<IShork> { MockShork() }
                 single<ShorkUseCase> { ShorkService(get()) }
             }
         )
@@ -185,26 +183,17 @@ class ShorkInterpreterControllerTest() : KoinTest {
         }
 
     @Test
-    fun testBothPlayersSubmittedAndGameStarts() {
-        val mockShork = mockk<MockShorkAdapter>()
-        every { mockShork.run(any()) } returns "A"
-        configureCustomDI(
-            module {
-                single<ShorkPort> { mockShork }
-                single<ShorkUseCase> { ShorkService(get()) }
-            }
-        )
-
+    fun testBothPlayersSubmittedAndGameStartsAndLongerProgramWins() {
         with(testEngine) {
             runBlocking {
                 client.post("/api/v0/code/playerA") {
                     contentType(ContentType.Application.Json)
-                    setBody("someString")
+                    setBody("looooooooong")
                 }
 
                 client.post("/api/v0/code/playerB") {
                     contentType(ContentType.Application.Json)
-                    setBody("someOtherString")
+                    setBody("short")
                 }
 
                 val response = client.get("/api/v0/status")

@@ -10,10 +10,10 @@ import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 import org.koin.ktor.plugin.koin
 import software.shonk.adapters.incoming.configureShorkInterpreterController
-import software.shonk.adapters.outgoing.shorkInterpreter.MockShorkAdapter
 import software.shonk.application.port.incoming.ShorkUseCase
-import software.shonk.application.port.outgoing.ShorkPort
 import software.shonk.application.service.ShorkService
+import software.shonk.interpreter.IShork
+import software.shonk.interpreter.MockShork
 
 fun main() {
     embeddedServer(Netty, port = 8080) {
@@ -45,7 +45,7 @@ fun Application.koinModule() {
     koin {
         modules(
             module {
-                single<ShorkPort> { MockShorkAdapter(0) }
+                single<IShork> { MockShork() }
                 single<ShorkUseCase> { ShorkService(get()) }
             }
         )
