@@ -1,7 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-val kotlin_version: String by project
-val ktor_version: String by project
+val kotlinVersion: String by project
+val ktorVersion: String by project
+val koinVersion: String by project
 
 plugins {
     application
@@ -26,6 +27,12 @@ dependencies { testImplementation(kotlin("test")) }
 
 dependencies { implementation(project(":shork")) }
 
+dependencies { implementation("io.insert-koin:koin-ktor:$koinVersion") }
+
+dependencies { implementation("io.insert-koin:koin-core:$koinVersion") }
+
+dependencies { implementation("io.insert-koin:koin-test-junit5:$koinVersion") }
+
 tasks.test {
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
@@ -40,13 +47,13 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
-    implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-    implementation("io.ktor:ktor-server-core:$ktor_version")
-    implementation("io.ktor:ktor-server-netty:$ktor_version")
-    testImplementation("io.ktor:ktor-server-test-host-jvm:$ktor_version")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    testImplementation("io.ktor:ktor-server-test-host-jvm:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
 
