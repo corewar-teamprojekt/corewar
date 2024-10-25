@@ -1,19 +1,20 @@
 package software.shonk.adapters.incoming
 
-import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.config.*
 import io.ktor.server.testing.*
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertNotEquals
+import io.mockk.every
+import io.mockk.mockk
+import kotlin.test.junit5.JUnit5Asserter.assertNotEquals
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.core.module.Module
@@ -29,7 +30,7 @@ import software.shonk.moduleApiV0
 class ShorkInterpreterControllerTest() : KoinTest {
     private lateinit var testEngine: TestApplicationEngine
 
-    @BeforeTest
+    @BeforeEach
     fun beforeTest() {
         testEngine =
             TestApplicationEngine(
@@ -185,9 +186,11 @@ class ShorkInterpreterControllerTest() : KoinTest {
 
     @Test
     fun testBothPlayersSubmittedAndGameStarts() {
+        val mockShork = mockk<MockShorkAdapter>()
+        every { mockShork.run(any()) } returns "A"
         configureCustomDI(
             module {
-                single<ShorkPort> { MockShorkAdapter(69) }
+                single<ShorkPort> { mockShork }
                 single<ShorkUseCase> { ShorkService(get()) }
             }
         )
@@ -205,11 +208,21 @@ class ShorkInterpreterControllerTest() : KoinTest {
                 }
 
                 val response = client.get("/api/v0/status")
+
                 assertNotEquals(
+                    "wrong gamestate, should be anything, but NOT_STARTED",
                     "NOT_STARTED",
                     Json.parseToJsonElement(response.bodyAsText())
                         .jsonObject["gameState"]
                         .toString(),
+                )
+                assertEquals(
+                    "A",
+                    Json.parseToJsonElement(response.bodyAsText())
+                        .jsonObject["result"]
+                        ?.jsonObject["winner"]
+                        ?.jsonPrimitive
+                        ?.content,
                 )
             }
         }
