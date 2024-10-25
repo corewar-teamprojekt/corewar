@@ -10,7 +10,7 @@ import io.ktor.server.routing.post
 import org.koin.ktor.ext.inject
 import software.shonk.application.port.incoming.ShorkUseCase
 
-fun Route.configureShorkInterpreterController() {
+fun Route.configureShorkInterpreterControllerV0() {
     val shorkUseCase by inject<ShorkUseCase>()
 
     get("/status") { call.respond(shorkUseCase.getStatus()) }
