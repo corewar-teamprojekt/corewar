@@ -2,10 +2,27 @@ package software.shonk
 
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
+import org.koin.dsl.module
+import org.koin.ktor.plugin.koin
+import software.shonk.adapters.incoming.configureShorkInterpreterController
+import software.shonk.adapters.outgoing.shorkInterpreter.MockShorkAdapter
+import software.shonk.application.port.incoming.ShorkUseCase
+import software.shonk.application.port.outgoing.ShorkPort
+import software.shonk.application.service.ShorkService
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main() {
+    embeddedServer(Netty, port = 8080) {
+            module()
+            moduleApiV0()
+            koinModule()
+        }
+        .start(wait = true)
+}
 
 fun Application.module() {
     // Install basic middleware like CORS and content negotiation here
@@ -18,6 +35,19 @@ fun Application.module() {
             }
         )
     }
+}
 
-    configureApi()
+fun Application.moduleApiV0() {
+    routing { route("/api/v0") { configureShorkInterpreterController() } }
+}
+
+fun Application.koinModule() {
+    koin {
+        modules(
+            module {
+                single<ShorkPort> { MockShorkAdapter(0) }
+                single<ShorkUseCase> { ShorkService(get()) }
+            }
+        )
+    }
 }
