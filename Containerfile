@@ -1,7 +1,7 @@
 FROM docker.io/openjdk:23-jdk-bookworm
 RUN apt update && apt upgrade -y
 
-RUN apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
+RUN apt install -y debian-keyring debian-archive-keyring apt-transport-https curl supervisor
 
 RUN bash -c "curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg"
 RUN bash -c "curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' > /etc/apt/sources.list.d/caddy-stable.list"
@@ -22,6 +22,6 @@ RUN mkdir /serve
 COPY ./frontend/app/dist /serve
 RUN mkdir /log
 
-COPY ./entrypoint.sh /entrypoint.sh
-RUN chmod a+x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+COPY ./misc/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
+
+ENTRYPOINT ["supervisord", "--configuration", "/etc/supervisor/conf.d/supervisor.conf"]
