@@ -12,5 +12,5 @@ interface IShork {
      * @return The name / id of the winning program / player
      * @see Settings.instructionLimit
      */
-    fun run(settings: Settings, programs: Map<String, String>): String
+    fun run(settings: Settings, programs: Map<String, String>): String?
 }
