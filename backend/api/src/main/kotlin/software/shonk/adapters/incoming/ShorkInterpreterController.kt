@@ -1,14 +1,18 @@
 package software.shonk.adapters.incoming
 
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.*
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import org.koin.ktor.ext.inject
 import software.shonk.application.port.incoming.ShorkUseCase
 
-fun Route.configureShorkInterpreterController(shorkUseCase: ShorkUseCase) {
+fun Route.configureShorkInterpreterController() {
+    val shorkUseCase by inject<ShorkUseCase>()
+
     get("/status") { call.respond(shorkUseCase.getStatus()) }
 
     post("/code/{player}") {
