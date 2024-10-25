@@ -66,8 +66,8 @@ internal class TestScanner {
                 Pair(">", TokenType.GREATER_THAN),
             )
 
-        @JvmStatic
-        private fun provideSingleLineValidPrograms(): List<Arguments> {
+        private fun generateAllPossibleInstructionPermutationsWithTokens():
+            List<Pair<String, List<Token>>> {
             val instructions = instructions
             val modifiers = modifiers
             val addressModes = addressModes
@@ -76,7 +76,7 @@ internal class TestScanner {
             val addressA = 10L
             val addressB = 20L
 
-            val programs = mutableListOf<Arguments>()
+            val programs = mutableListOf<Pair<String, List<Token>>>()
             for (instruction in instructions) {
                 for (modifier in modifiers) {
                     for (firstAddressMode in addressModes) {
@@ -119,13 +119,19 @@ internal class TestScanner {
 
                             expectedArgument += Token(TokenType.EOF, "", "", 1)
 
-                            programs.add(Arguments.of(program, expectedArgument))
+                            programs.add(Pair(program, expectedArgument))
                         }
                     }
                 }
             }
 
             return programs
+        }
+
+        @JvmStatic
+        private fun provideSingleLineValidPrograms(): List<Arguments> {
+            val instructionPermutations = generateAllPossibleInstructionPermutationsWithTokens()
+            return instructionPermutations.map { Arguments.of(it.first, it.second) }
         }
     }
 }
