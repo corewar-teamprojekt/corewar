@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 val kotlinVersion: String by project
 val ktorVersion: String by project
 val koinVersion: String by project
+val mockkVersion: String by project
 
 plugins {
     application
@@ -55,6 +56,7 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     testImplementation("io.ktor:ktor-server-test-host-jvm:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("io.mockk:mockk:${mockkVersion}")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
