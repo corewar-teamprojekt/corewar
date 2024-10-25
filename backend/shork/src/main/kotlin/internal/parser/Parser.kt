@@ -286,6 +286,7 @@ internal class Parser(private val tokens: List<Token>) {
                 TokenType.MOD,
                 TokenType.JMP,
                 TokenType.JMZ,
+                TokenType.JMN,
                 TokenType.DJN,
                 TokenType.CMP,
                 TokenType.SLT,
