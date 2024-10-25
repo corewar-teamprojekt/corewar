@@ -17,7 +17,7 @@ describe("RequireLogout", () => {
 		(useDispatchUser as Mock).mockReturnValue(vi.fn());
 
 		render(
-			<RequireLogout>
+			<RequireLogout blocked={false}>
 				<p>{requiredText}</p>
 			</RequireLogout>,
 		);
@@ -31,7 +31,7 @@ describe("RequireLogout", () => {
 		(useDispatchUser as Mock).mockReturnValue(mockDispatcher);
 
 		render(
-			<RequireLogout>
+			<RequireLogout blocked={false}>
 				<p>{requiredText}</p>
 			</RequireLogout>,
 		);
