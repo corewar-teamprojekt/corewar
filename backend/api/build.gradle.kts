@@ -47,6 +47,7 @@ repositories {
 }
 
 dependencies {
+    implementation("io.ktor:ktor-server-cors-jvm:2.3.12")
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
