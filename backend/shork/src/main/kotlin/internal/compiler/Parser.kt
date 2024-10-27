@@ -1,4 +1,4 @@
-package software.shonk.interpreter.internal.parser
+package software.shonk.interpreter.internal.compiler
 
 import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
