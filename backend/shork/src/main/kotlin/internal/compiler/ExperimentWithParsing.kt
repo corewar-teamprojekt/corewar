@@ -1,4 +1,4 @@
-package software.shonk.interpreter.internal.parser
+package software.shonk.interpreter.internal.compiler
 
 internal fun main() {
     // val input = "MOV.AB #10, $20"

@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import software.shonk.interpreter.internal.parser.Scanner
-import software.shonk.interpreter.internal.parser.Token
-import software.shonk.interpreter.internal.parser.TokenType
+import software.shonk.interpreter.internal.compiler.Scanner
+import software.shonk.interpreter.internal.compiler.Token
+import software.shonk.interpreter.internal.compiler.TokenType
 import software.shonk.interpreter.internal.util.CircularQueue
 
 internal class TestScanner {

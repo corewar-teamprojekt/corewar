@@ -1,4 +1,4 @@
-package software.shonk.interpreter.internal.parser
+package software.shonk.interpreter.internal.compiler
 
 import java.util.*
 import kotlin.collections.ArrayList
