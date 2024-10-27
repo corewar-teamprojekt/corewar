@@ -7,11 +7,22 @@ import org.junit.jupiter.params.provider.MethodSource
 import software.shonk.interpreter.internal.parser.Scanner
 import software.shonk.interpreter.internal.parser.Token
 import software.shonk.interpreter.internal.parser.TokenType
+import software.shonk.interpreter.internal.util.CircularQueue
 
 internal class TestScanner {
     @ParameterizedTest
     @MethodSource("provideSingleLineValidPrograms")
-    fun testScan(program: String, expected: List<Token>) {
+    fun testScanSingleLinePrograms(program: String, expected: List<Token>) {
+        val scanner = Scanner(program)
+        val tokens = scanner.scanTokens()
+
+        println("Program:\n$program")
+        assertEquals(expected, tokens)
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideMultiLineProgram")
+    fun testScanMultiLineProgram(program: String, expected: List<Token>) {
         val scanner = Scanner(program)
         val tokens = scanner.scanTokens()
 
@@ -132,6 +143,71 @@ internal class TestScanner {
         private fun provideSingleLineValidPrograms(): List<Arguments> {
             val instructionPermutations = generateAllPossibleInstructionPermutationsWithTokens()
             return instructionPermutations.map { Arguments.of(it.first, it.second) }
+        }
+
+        @JvmStatic
+        private fun provideMultiLineProgram(): List<Arguments> {
+            val allInstructionsAtLeastOnce = StringBuilder()
+            val theTokens = mutableListOf<Token>()
+
+            val modifiers = CircularQueue(modifiers)
+            val addressModes = CircularQueue(addressModes)
+            var line = 1
+
+            for (instruction in instructions) {
+                val modifier = modifiers.get()
+                var addressMode = addressModes.get()
+                val addressA = 10L
+                val addressB = 20L
+
+                // Instruction "DAT"
+                allInstructionsAtLeastOnce.append(instruction.first)
+                theTokens.add(Token(instruction.second, instruction.first, "", line))
+
+                // Modifier "DAT.I"
+                if (modifier.second != null) {
+                    allInstructionsAtLeastOnce.append(".${modifier.first} ")
+                    theTokens.add(Token(TokenType.DOT, ".", "", line))
+                    theTokens.add(Token(modifier.second!!, modifier.first, "", line))
+                }
+
+                // Space "DAT.I "
+                allInstructionsAtLeastOnce.append(" ")
+
+                // Address mode for first address "DAT.I $"
+                if (addressMode.second != null) {
+                    allInstructionsAtLeastOnce.append(addressMode.first)
+                    theTokens.add(Token(addressMode.second!!, addressMode.first, "", line))
+                }
+
+                // First address "DAT.I $10"
+                allInstructionsAtLeastOnce.append(addressA)
+                theTokens.add(Token(TokenType.NUMBER, addressA.toString(), addressA, line))
+
+                // Comma and space "DAT.I $10, "
+                allInstructionsAtLeastOnce.append(", ")
+                theTokens.add(Token(TokenType.COMMA, ",", "", line))
+
+                // Address mode for second address "DAT.I $10 <"
+                addressMode = addressModes.get()
+                if (addressMode.second != null) {
+                    allInstructionsAtLeastOnce.append(addressMode.first)
+                    theTokens.add(Token(addressMode.second!!, addressMode.first, "", line))
+                }
+
+                // Second address "DAT.I $10 <20"
+                allInstructionsAtLeastOnce.append(addressB)
+                theTokens.add(Token(TokenType.NUMBER, addressB.toString(), addressB, line))
+
+                // End of the line
+                allInstructionsAtLeastOnce.append("\n")
+                line++
+            }
+
+            // EOF token
+            theTokens.add(Token(TokenType.EOF, "", "", line))
+
+            return listOf(Arguments.of(allInstructionsAtLeastOnce.toString(), theTokens))
         }
     }
 }

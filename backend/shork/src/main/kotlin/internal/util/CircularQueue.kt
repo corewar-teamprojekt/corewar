@@ -4,6 +4,16 @@ package software.shonk.interpreter.internal.util
 internal class CircularQueue<T> {
     private val queue = ArrayDeque<T>()
 
+    constructor()
+
+    constructor(items: List<T>) {
+        queue.addAll(items)
+    }
+
+    constructor(vararg items: T) {
+        queue.addAll(items)
+    }
+
     /** Add an item to the queue. */
     fun add(item: T) {
         queue.add(item)
