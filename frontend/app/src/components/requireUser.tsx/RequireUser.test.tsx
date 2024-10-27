@@ -1,4 +1,4 @@
-import { User } from "@/domain/user";
+import { User } from "@/domain/User.ts";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/services/userContext/UserContextHelpers";
 import "@testing-library/jest-dom";
@@ -48,7 +48,7 @@ describe("RequireUser", () => {
 	});
 
 	it("renders children when user is present", async () => {
-		(useUser as Mock).mockReturnValue(new User("PlayerA", "#ffeeff"));
+		(useUser as Mock).mockReturnValue(new User("playerA", "#ffeeff"));
 
 		const router = createMemoryRouter(testRouterConfig);
 		render(<RouterProvider router={router} />);

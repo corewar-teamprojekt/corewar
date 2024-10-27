@@ -6,9 +6,9 @@ import { BACKEND_BASE_URL, BASE_POLLING_INTERVAL_MS } from "@/consts.ts";
 import { usePageVisibility } from "@/lib/usePageVisibility.ts";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./WaitingForResult.module.css";
+import styles from "./WaitingForOpponent.module.css";
 
-function WaitingForResultPage() {
+function WaitingForOpponentPage() {
 	const isPageVisible = usePageVisibility();
 	const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
 	const [isPollingEnabled, setIsPollingEnabled] = useState(true);
@@ -19,12 +19,17 @@ function WaitingForResultPage() {
 			console.debug("Polling game status...");
 
 			const response = await fetch(BACKEND_BASE_URL + "/v0/status");
+
+			if (response.status >= 500) {
+				return;
+			}
+
 			const data: StatusResponse = await response.json();
 
-			if (data.gameState === GameState.FINISHED) {
+			if (data.gameState != GameState.NOT_STARTED) {
 				setIsPollingEnabled(false);
-				console.log("Game finished. Stopped polling. Rerouting");
-				navigate("/result-display");
+				console.log("Game started. Stopped polling. Rerouting");
+				navigate("/waiting-for-result");
 			}
 		};
 
@@ -56,7 +61,7 @@ function WaitingForResultPage() {
 	return (
 		<RequireUser>
 			<div id={styles["waitingForResultHeadline"]}>
-				<h2 className="text-3xl font-semibold">Waiting for game result...</h2>
+				<h2 className="text-3xl font-semibold">Waiting for opponent...</h2>
 			</div>
 			<div id={styles["loadingSpinnerContainer"]}>
 				<LoadingSpinner />
@@ -65,4 +70,4 @@ function WaitingForResultPage() {
 	);
 }
 
-export default WaitingForResultPage;
+export default WaitingForOpponentPage;

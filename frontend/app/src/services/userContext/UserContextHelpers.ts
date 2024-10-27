@@ -3,7 +3,7 @@ import {
 	UserContext,
 	UserDispatchContext,
 } from "@/services/userContext/UserContext.tsx";
-import { User } from "@/domain/user.ts";
+import { User } from "@/domain/User.ts";
 
 export function useUser() {
 	return useContext(UserContext);
@@ -33,5 +33,5 @@ export function userReducer(
 	}
 }
 
-export const playerA: User = new User("PlayerA", "#FF0000");
-export const playerB: User = new User("PlayerB", "#0000FF");
+export const playerA: User = new User("playerA", "#FF0000");
+export const playerB: User = new User("playerB", "#0000FF");

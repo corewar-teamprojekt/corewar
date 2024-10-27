@@ -30,7 +30,7 @@ export default function PlayerCodingPage() {
 					title: "Success!",
 					description: "your code has been uploaded",
 				});
-				navigate("/waiting-for-result");
+				navigate("/waiting-for-opponent");
 			})
 			.catch((error) => {
 				toast({

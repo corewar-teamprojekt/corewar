@@ -9,7 +9,7 @@ import PlayerSelection from "./PlayerSelection";
 import "@testing-library/jest-dom";
 import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
 import PlayerCodingPage from "../playerCodeInput/PlayerCodingPage";
-import { User } from "@/domain/user";
+import { User } from "@/domain/User.ts";
 
 vi.mock("@/services/userContext/UserContextHelpers.ts", () => ({
 	useDispatchUser: vi.fn(),
@@ -34,7 +34,7 @@ vi.mock("@/services/userContext/UserContextHelpers");
 
 describe("PlayerSelection", () => {
 	beforeEach(() =>
-		(useUser as Mock).mockReturnValue(new User("PlayerA", "#ffeefff")),
+		(useUser as Mock).mockReturnValue(new User("playerA", "#ffeefff")),
 	);
 
 	it("renders Player A and Player B buttons", () => {

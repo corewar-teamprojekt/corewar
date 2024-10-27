@@ -6,7 +6,7 @@ import {
 	Reducer,
 	useReducer,
 } from "react";
-import { User } from "@/domain/user.ts";
+import { User } from "@/domain/User.ts";
 import { userReducer } from "@/services/userContext/UserContextHelpers.ts";
 
 export const UserContext: Context<User | null> = createContext<User | null>(

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { UserProvider } from "@/services/userContext/UserContext.tsx";
 import { cleanup, render, screen } from "@testing-library/react";
 import { act } from "react";
-import { User } from "@/domain/user.ts";
+import { User } from "@/domain/User.ts";
 import {
 	useDispatchUser,
 	userReducer,
@@ -17,20 +17,20 @@ describe("mvp", () => {
 	describe("reducer", () => {
 		it("returns playerA on setPlayerA", () => {
 			expect(userReducer(null, { type: "setPlayerA", user: null })).toEqual(
-				new User("PlayerA", "#FF0000"),
+				new User("playerA", "#FF0000"),
 			);
 		});
 
 		it("returns playerB on setPlayerB", () => {
 			expect(userReducer(null, { type: "setPlayerB", user: null })).toEqual(
-				new User("PlayerB", "#0000FF"),
+				new User("playerB", "#0000FF"),
 			);
 		});
 
 		it("returns playerB after initializing with playerA and then setting to playerB", () => {
 			const playerA = userReducer(null, { type: "setPlayerA", user: null });
 			expect(userReducer(playerA, { type: "setPlayerB", user: null })).toEqual(
-				new User("PlayerB", "#0000FF"),
+				new User("playerB", "#0000FF"),
 			);
 		});
 	});
@@ -63,7 +63,7 @@ describe("mvp", () => {
 			});
 
 			const playerName = screen.getByTestId("playerName").textContent;
-			expect(playerName).toEqual("PlayerA");
+			expect(playerName).toEqual("playerA");
 		});
 
 		it("can switch to PlayerB", () => {
@@ -80,7 +80,7 @@ describe("mvp", () => {
 			});
 
 			const playerName = screen.getByTestId("playerName").textContent;
-			expect(playerName).toEqual("PlayerB");
+			expect(playerName).toEqual("playerB");
 		});
 	});
 });
