@@ -23,7 +23,7 @@ const testRouterConfig = [
 		element: <PlayerCodingPage />,
 	},
 	{
-		path: "/waiting-for-result",
+		path: "/waiting-for-opponent",
 		element: <div>Waiting for result</div>,
 	},
 ];
@@ -57,7 +57,7 @@ describe("PlayerCodingPage", () => {
 		await waitFor(() =>
 			expect(
 				screen.getByText((content) => content.startsWith("Are you sure")),
-			).toBeInTheDocument(),
+			).toBeVisible(),
 		);
 	});
 
@@ -112,7 +112,7 @@ describe("PlayerCodingPage", () => {
 		});
 	});
 
-	it("redirects to waiting-for-result page on successful upload", async () => {
+	it("redirects to waiting-for-opponent page on successful upload", async () => {
 		(uploadPlayerCode as Mock).mockResolvedValueOnce({});
 		const router = createMemoryRouter(testRouterConfig);
 		act(() => {
@@ -134,7 +134,7 @@ describe("PlayerCodingPage", () => {
 		});
 
 		await waitFor(() => {
-			expect(router.state.location.pathname).toEqual("/waiting-for-result");
+			expect(router.state.location.pathname).toEqual("/waiting-for-opponent");
 		});
 	});
 });

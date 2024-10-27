@@ -1,6 +1,6 @@
 // later when more api endpoints are added, this can be split into multiple files
 
-import { BACKEND_BASE_URL } from "@/domain/consts";
+import { BACKEND_BASE_URL } from "@/consts.ts";
 
 export function uploadPlayerCode(
 	playerName: string,

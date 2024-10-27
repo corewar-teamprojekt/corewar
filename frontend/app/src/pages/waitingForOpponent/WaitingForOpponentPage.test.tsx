@@ -1,26 +1,26 @@
 import { beforeEach, describe, it, vi, expect, Mock } from "vitest";
 import { cleanup, render, waitFor } from "@testing-library/react";
 import { act } from "react";
-import WaitingForResultPage from "@/pages/waitingForResult/WaitingForResultPage.tsx";
 import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
 import { useUser } from "@/services/userContext/UserContextHelpers";
 import { User } from "@/domain/User.ts";
 import { BASE_POLLING_INTERVAL_MS } from "@/consts.ts";
+import WaitingForOpponentPage from "@/pages/waitingForOpponent/WaitingForOpponent.tsx";
 
 const POLLING_BUFFER = 500;
 
 const testRouterConfig = [
 	{
 		path: "/",
-		element: <Navigate to="/waiting-for-result" replace={true} />,
+		element: <Navigate to="/waiting-for-opponent" replace={true} />,
+	},
+	{
+		path: "/waiting-for-opponent",
+		element: <WaitingForOpponentPage />,
 	},
 	{
 		path: "/waiting-for-result",
-		element: <WaitingForResultPage />,
-	},
-	{
-		path: "/result-display",
-		element: <div>Result display</div>,
+		element: <div>Waiting for result</div>,
 	},
 ];
 
@@ -71,13 +71,13 @@ describe("backend polling", () => {
 		);
 	});
 
-	it("keeps polling when gameState is not FINISHED", async () => {
+	it("keeps polling when gameState is NOT_STARTED", async () => {
 		// Mock the fetch function
 		const mockFetch = vi.fn(() =>
 			Promise.resolve({
 				json: () =>
 					Promise.resolve({
-						gameState: "RUNNING",
+						gameState: "NOT_STARTED",
 					}),
 			}),
 		);
@@ -176,7 +176,7 @@ describe("backend polling", () => {
 			Promise.resolve({
 				json: () =>
 					Promise.resolve({
-						gameState: "FINISHED",
+						gameState: "RUNNING",
 					}),
 			}),
 		);
@@ -201,16 +201,16 @@ describe("backend polling", () => {
 			},
 		);
 
-		expect(router.state.location.pathname).toEqual("/result-display");
+		expect(router.state.location.pathname).toEqual("/waiting-for-result");
 	});
 
-	it("stops polling once game is finished", async () => {
+	it("stops polling once game is running", async () => {
 		// Mock the fetch function
 		const mockFetch = vi.fn(() =>
 			Promise.resolve({
 				json: () =>
 					Promise.resolve({
-						gameState: "FINISHED",
+						gameState: "RUNNING",
 					}),
 			}),
 		);

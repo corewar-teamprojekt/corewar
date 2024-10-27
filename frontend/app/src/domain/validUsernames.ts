@@ -1,1 +1,1 @@
-export type ValidUsernames = "PlayerA" | "PlayerB";
+export type ValidUsernames = "playerA" | "playerB";

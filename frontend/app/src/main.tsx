@@ -11,6 +11,7 @@ import PlayerCodingPage from "./pages/playerCodeInput/PlayerCodingPage.tsx";
 import LandingPage from "@/pages/landingPage/LandingPage.tsx";
 import PlayerSelection from "@/pages/playerSelection/PlayerSelection.tsx";
 import BasePage from "@/pages/basePage/BasePage.tsx";
+import WaitingForOpponent from "@/pages/waitingForOpponent/WaitingForOpponent.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -27,12 +28,20 @@ const router = createBrowserRouter([
 				element: <WaitingForResultPage />,
 			},
 			{
+				path: "waiting-for-opponent",
+				element: <WaitingForOpponent />,
+			},
+			{
 				path: "player-coding",
 				element: <PlayerCodingPage />,
 			},
 			{
 				path: "/player-selection",
 				element: <PlayerSelection />,
+			},
+			{
+				path: "/result-display",
+				element: <div>Result display</div>,
 			},
 		],
 	},

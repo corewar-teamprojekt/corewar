@@ -56,7 +56,7 @@ describe("playerIndicator", () => {
 				);
 			});
 
-			expect(screen.getByText("PlayerA")).toBeTruthy();
+			expect(screen.getByText("playerA")).toBeTruthy();
 		});
 
 		it("playerB", () => {
@@ -68,7 +68,7 @@ describe("playerIndicator", () => {
 				);
 			});
 
-			expect(screen.getByText("PlayerB")).toBeTruthy();
+			expect(screen.getByText("playerB")).toBeTruthy();
 		});
 	});
 

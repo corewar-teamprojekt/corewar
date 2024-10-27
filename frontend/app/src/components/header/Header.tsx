@@ -1,5 +1,5 @@
 import "./Header.css";
-import { User } from "@/domain/user.ts";
+import { User } from "@/domain/User.ts";
 import { useUser } from "@/services/userContext/UserContextHelpers.ts";
 import { useLocation } from "react-router-dom";
 
