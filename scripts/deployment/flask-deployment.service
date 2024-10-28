@@ -1,0 +1,11 @@
+[Unit]
+Description=Flask Deployment API
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/env gunicorn --bind 0.0.0.0:5000 --timeout 120 --workers 3 deployment:app
+Restart=always
+
+[Install]
+WantedBy=default.target
+
