@@ -4,7 +4,6 @@ import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.instruction.*
 import software.shonk.interpreter.internal.instruction.AbstractInstruction
-import software.shonk.interpreter.internal.instruction.Compare
 import software.shonk.interpreter.internal.instruction.Dat
 import software.shonk.interpreter.internal.instruction.Mov
 import software.shonk.interpreter.internal.instruction.Split
@@ -34,6 +33,9 @@ internal class Parser(private val tokens: List<Token>) {
     }
 
     private fun advance(): Token {
+        if (isAtEnd()) {
+            return Token(TokenType.EOF, "", "", 0)
+        }
         return tokens[current++]
     }
 
@@ -42,6 +44,7 @@ internal class Parser(private val tokens: List<Token>) {
         // We should always start with an instruction
         when (token.type) {
             TokenType.DAT,
+            TokenType.NOP,
             TokenType.MOV,
             TokenType.ADD,
             TokenType.SUB,
@@ -55,6 +58,8 @@ internal class Parser(private val tokens: List<Token>) {
             TokenType.CMP,
             TokenType.SLT,
             TokenType.SPL,
+            TokenType.SEQ,
+            TokenType.SNE,
             TokenType.ORG,
             TokenType.EQU,
             TokenType.END -> {
@@ -67,7 +72,7 @@ internal class Parser(private val tokens: List<Token>) {
                 advance()
             }
             else -> {
-                emitError("Unexpected token", token)
+                emitError("Unexpected token, expected instruction, found '${token.lexeme}'", token)
                 advance()
             }
         }
@@ -88,11 +93,14 @@ internal class Parser(private val tokens: List<Token>) {
         // Handle if no modifier has been specified
         if (modifier == null) {
             when (token.type) {
-                TokenType.DAT -> {
+                TokenType.DAT,
+                TokenType.NOP -> {
                     modifier = Modifier.F
                 }
                 TokenType.MOV,
-                TokenType.CMP -> {
+                TokenType.CMP,
+                TokenType.SEQ,
+                TokenType.SNE -> {
                     modifier =
                         if (modeA == AddressMode.IMMEDIATE) {
                             Modifier.AB
@@ -142,6 +150,7 @@ internal class Parser(private val tokens: List<Token>) {
 
         return when (token.type) {
             TokenType.DAT -> Dat(aField, bField, modeA, modeB, modifier)
+            TokenType.NOP -> Nop(aField, bField, modeA, modeB, modifier)
             TokenType.MOV -> Mov(aField, bField, modeA, modeB, modifier)
             TokenType.ADD -> {
                 emitError("ADD has not been implemented yet", token)
@@ -176,7 +185,9 @@ internal class Parser(private val tokens: List<Token>) {
                 emitError("DJN has not been implemented yet", token)
                 null
             }
-            TokenType.CMP -> Compare(aField, bField, modeA, modeB, modifier)
+            TokenType.CMP -> Seq(aField, bField, modeA, modeB, modifier)
+            TokenType.SEQ -> Seq(aField, bField, modeA, modeB, modifier)
+            TokenType.SNE -> Sne(aField, bField, modeA, modeB, modifier)
             TokenType.SLT -> {
                 emitError("SLT has not been implemented yet", token)
                 null
@@ -229,6 +240,11 @@ internal class Parser(private val tokens: List<Token>) {
     private fun field(): Pair<Int, AddressMode> {
         var addressMode = AddressMode.DIRECT
 
+        if (isAtEnd()) {
+            emitError("Unexpected end of file, expected addressmode and/or address", peek())
+            return Pair(0, addressMode)
+        }
+
         var token = advance()
         if (token.type != TokenType.NUMBER) {
             addressMode =
@@ -278,6 +294,7 @@ internal class Parser(private val tokens: List<Token>) {
         return token.type in
             arrayOf(
                 TokenType.DAT,
+                TokenType.NOP,
                 TokenType.MOV,
                 TokenType.ADD,
                 TokenType.SUB,
@@ -289,11 +306,15 @@ internal class Parser(private val tokens: List<Token>) {
                 TokenType.JMN,
                 TokenType.DJN,
                 TokenType.CMP,
+                TokenType.SEQ,
+                TokenType.SNE,
                 TokenType.SLT,
                 TokenType.SPL,
                 TokenType.ORG,
                 TokenType.EQU,
                 TokenType.END,
+                TokenType.LDP,
+                TokenType.STP,
             )
     }
 
