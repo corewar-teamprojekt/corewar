@@ -152,26 +152,11 @@ internal class Parser(private val tokens: List<Token>) {
             TokenType.DAT -> Dat(aField, bField, modeA, modeB, modifier)
             TokenType.NOP -> Nop(aField, bField, modeA, modeB, modifier)
             TokenType.MOV -> Mov(aField, bField, modeA, modeB, modifier)
-            TokenType.ADD -> {
-                emitError("ADD has not been implemented yet", token)
-                null
-            }
-            TokenType.SUB -> {
-                emitError("SUB has not been implemented yet", token)
-                null
-            }
-            TokenType.MUL -> {
-                emitError("MUL has not been implemented yet", token)
-                null
-            }
-            TokenType.DIV -> {
-                emitError("DIV has not been implemented yet", token)
-                null
-            }
-            TokenType.MOD -> {
-                emitError("MOD has not been implemented yet", token)
-                null
-            }
+            TokenType.ADD -> Add(aField, bField, modeA, modeB, modifier)
+            TokenType.SUB -> Sub(aField, bField, modeA, modeB, modifier)
+            TokenType.MUL -> Mul(aField, bField, modeA, modeB, modifier)
+            TokenType.DIV -> Div(aField, bField, modeA, modeB, modifier)
+            TokenType.MOD -> Mod(aField, bField, modeA, modeB, modifier)
             TokenType.JMP -> Jump(aField, bField, modeA, modeB, modifier)
             TokenType.JMZ -> {
                 emitError("JMZ has not been implemented yet", token)
