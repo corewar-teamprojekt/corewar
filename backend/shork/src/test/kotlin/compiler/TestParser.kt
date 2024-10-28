@@ -67,10 +67,10 @@ internal class TestParser {
                             Token(TokenType.DAT, "DAT", "", 1),
                             Token(TokenType.NUMBER, "42", 42, 1),
                             Token(TokenType.COMMA, ",", "", 1),
-                            Token(TokenType.NUMBER, "69", 69, 1),
+                            Token(TokenType.NUMBER, "1337", 1337, 1),
                             Token(TokenType.EOF, "", "", 1),
                         ),
-                        listOf(Dat(42, 69, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.F)),
+                        listOf(Dat(42, 1337, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.F)),
                     ),
                     Arguments.of(
                         listOf(
@@ -137,36 +137,160 @@ internal class TestParser {
                                 )
                             ),
                         ),
-                        Arguments.of(
-                            generateNeitherIsImmediate(TokenType.SEQ, 42, 1337),
-                            listOf(
-                                Seq(
-                                    42,
-                                    1337,
-                                    AddressMode.A_INDIRECT,
-                                    AddressMode.A_INDIRECT,
-                                    Modifier.I,
-                                )
-                            ),
+                    ),
+                    Arguments.of(
+                        generateNeitherIsImmediate(TokenType.SEQ, 42, 1337),
+                        listOf(
+                            Seq(
+                                42,
+                                1337,
+                                AddressMode.A_INDIRECT,
+                                AddressMode.A_INDIRECT,
+                                Modifier.I,
+                            )
                         ),
-                        Arguments.of(
-                            generateNeitherIsImmediate(TokenType.SNE, 42, 1337),
-                            listOf(
-                                Sne(
-                                    42,
-                                    1337,
-                                    AddressMode.A_INDIRECT,
-                                    AddressMode.A_INDIRECT,
-                                    Modifier.I,
-                                )
-                            ),
+                    ),
+                    Arguments.of(
+                        generateNeitherIsImmediate(TokenType.SNE, 42, 1337),
+                        listOf(
+                            Sne(
+                                42,
+                                1337,
+                                AddressMode.A_INDIRECT,
+                                AddressMode.A_INDIRECT,
+                                Modifier.I,
+                            )
                         ),
+                    ),
 
-                        // ADD, SUB, MUL, DIV, MOD get:
-                        // - AB if A-Mode is IMMEDIATE
-                        // - B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
-                        // - F if neither is IMMEDIATE
+                    // ADD, SUB, MUL, DIV, MOD get:
+                    // - AB if A-Mode is IMMEDIATE
+                    // - B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
+                    // - F if neither is IMMEDIATE
+                    // First the AB if A-Mode is IMMEDIATE
+                    Arguments.of(
+                        generateAImmediateThenAB(TokenType.ADD, 42, 1337),
+                        listOf(
+                            Add(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
+                        ),
+                    ),
+                    Arguments.of(
+                        generateAImmediateThenAB(TokenType.SUB, 42, 1337),
+                        listOf(
+                            Sub(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
+                        ),
+                    ),
+                    Arguments.of(
+                        generateAImmediateThenAB(TokenType.MUL, 42, 1337),
+                        listOf(
+                            Mul(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
+                        ),
+                    ),
+                    Arguments.of(
+                        generateAImmediateThenAB(TokenType.DIV, 42, 1337),
+                        listOf(
+                            Div(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
+                        ),
+                    ),
+                    Arguments.of(
+                        generateAImmediateThenAB(TokenType.MOD, 42, 1337),
+                        listOf(
+                            Mod(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
+                        ),
+                    ),
 
+                    // Now B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
+                    Arguments.of(
+                        generateBImmediateAndNotAThenB(TokenType.ADD, 42, 1337),
+                        listOf(
+                            Add(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
+                        ),
+                    ),
+                    Arguments.of(
+                        generateBImmediateAndNotAThenB(TokenType.SUB, 42, 1337),
+                        listOf(
+                            Sub(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
+                        ),
+                    ),
+                    Arguments.of(
+                        generateBImmediateAndNotAThenB(TokenType.MUL, 42, 1337),
+                        listOf(
+                            Mul(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
+                        ),
+                    ),
+                    Arguments.of(
+                        generateBImmediateAndNotAThenB(TokenType.DIV, 42, 1337),
+                        listOf(
+                            Div(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
+                        ),
+                    ),
+                    Arguments.of(
+                        generateBImmediateAndNotAThenB(TokenType.MOD, 42, 1337),
+                        listOf(
+                            Mod(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
+                        ),
+                    ),
+
+                    // Now neither is IMMEDIATE
+                    Arguments.of(
+                        generateNeitherIsImmediate(TokenType.ADD, 42, 1337),
+                        listOf(
+                            Add(
+                                42,
+                                1337,
+                                AddressMode.A_INDIRECT,
+                                AddressMode.A_INDIRECT,
+                                Modifier.F,
+                            )
+                        ),
+                    ),
+                    Arguments.of(
+                        generateNeitherIsImmediate(TokenType.SUB, 42, 1337),
+                        listOf(
+                            Sub(
+                                42,
+                                1337,
+                                AddressMode.A_INDIRECT,
+                                AddressMode.A_INDIRECT,
+                                Modifier.F,
+                            )
+                        ),
+                    ),
+                    Arguments.of(
+                        generateNeitherIsImmediate(TokenType.MUL, 42, 1337),
+                        listOf(
+                            Mul(
+                                42,
+                                1337,
+                                AddressMode.A_INDIRECT,
+                                AddressMode.A_INDIRECT,
+                                Modifier.F,
+                            )
+                        ),
+                    ),
+                    Arguments.of(
+                        generateNeitherIsImmediate(TokenType.DIV, 42, 1337),
+                        listOf(
+                            Div(
+                                42,
+                                1337,
+                                AddressMode.A_INDIRECT,
+                                AddressMode.A_INDIRECT,
+                                Modifier.F,
+                            )
+                        ),
+                    ),
+                    Arguments.of(
+                        generateNeitherIsImmediate(TokenType.MOD, 42, 1337),
+                        listOf(
+                            Mod(
+                                42,
+                                1337,
+                                AddressMode.A_INDIRECT,
+                                AddressMode.A_INDIRECT,
+                                Modifier.F,
+                            )
+                        ),
                     ),
                 )
 
