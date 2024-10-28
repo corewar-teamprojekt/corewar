@@ -7,6 +7,7 @@ import { usePageVisibility } from "@/lib/usePageVisibility.ts";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./WaitingForResult.module.css";
+import { getStatusV0 } from "@/services/rest/RestService.ts";
 
 function WaitingForResultPage() {
 	const isPageVisible = usePageVisibility();
@@ -18,9 +19,7 @@ function WaitingForResultPage() {
 		const pollingCallback = async () => {
 			console.debug("Polling game status...");
 
-			const response = await fetch(
-				`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v0/status`,
-			);
+			const response = await getStatusV0();
 			const data: StatusResponse = await response.json();
 
 			if (data.gameState === GameState.FINISHED) {

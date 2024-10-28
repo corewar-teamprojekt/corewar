@@ -7,6 +7,7 @@ import { usePageVisibility } from "@/lib/usePageVisibility.ts";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./WaitingForOpponent.module.css";
+import { getStatusV0 } from "@/services/rest/RestService.ts";
 
 function WaitingForOpponentPage() {
 	const isPageVisible = usePageVisibility();
@@ -18,9 +19,7 @@ function WaitingForOpponentPage() {
 		const pollingCallback = async () => {
 			console.debug("Polling game status...");
 
-			const response = await fetch(
-				`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v0/status`,
-			);
+			const response = await getStatusV0();
 
 			if (response.status >= 500) {
 				return;
@@ -62,7 +61,7 @@ function WaitingForOpponentPage() {
 
 	return (
 		<RequireUser>
-			<div id={styles["waitingForResultHeadline"]}>
+			<div id={styles["waitingForOpponentHeadline"]}>
 				<h2 className="text-3xl font-semibold">Waiting for opponent...</h2>
 			</div>
 			<div id={styles["loadingSpinnerContainer"]}>
