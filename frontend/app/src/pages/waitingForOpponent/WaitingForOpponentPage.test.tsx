@@ -62,7 +62,7 @@ describe("backend polling", () => {
 		await waitFor(
 			() => {
 				expect(mockFetch).toHaveBeenCalledWith(
-					"http://localhost:8080/api/v0/status",
+					`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v0/status`,
 				);
 			},
 			{

@@ -2,7 +2,7 @@ import LoadingSpinner from "@/components/loadingSpinner/LoadingSpinner.tsx";
 import { RequireUser } from "@/components/requireUser.tsx/RequireUser";
 import { GameState } from "@/domain/GameState.ts";
 import { StatusResponse } from "@/domain/StatusResponse.ts";
-import { BACKEND_BASE_URL, BASE_POLLING_INTERVAL_MS } from "@/consts.ts";
+import { BASE_POLLING_INTERVAL_MS } from "@/consts.ts";
 import { usePageVisibility } from "@/lib/usePageVisibility.ts";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,9 @@ function WaitingForResultPage() {
 		const pollingCallback = async () => {
 			console.debug("Polling game status...");
 
-			const response = await fetch(BACKEND_BASE_URL + "/v0/status");
+			const response = await fetch(
+				`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v0/status`,
+			);
 			const data: StatusResponse = await response.json();
 
 			if (data.gameState === GameState.FINISHED) {
