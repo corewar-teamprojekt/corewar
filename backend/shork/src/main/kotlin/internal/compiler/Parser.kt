@@ -62,6 +62,8 @@ internal class Parser(private val tokens: List<Token>) {
             TokenType.SNE,
             TokenType.ORG,
             TokenType.EQU,
+            TokenType.STP,
+            TokenType.LDP,
             TokenType.END -> {
                 val instruction = instruction()
                 if (instruction != null) {
@@ -124,7 +126,9 @@ internal class Parser(private val tokens: List<Token>) {
                             Modifier.F
                         }
                 }
-                TokenType.SLT -> {
+                TokenType.SLT,
+                TokenType.LDP,
+                TokenType.STP -> {
                     modifier =
                         if (modeA == AddressMode.IMMEDIATE) {
                             Modifier.AB
@@ -173,11 +177,10 @@ internal class Parser(private val tokens: List<Token>) {
             TokenType.CMP -> Seq(aField, bField, modeA, modeB, modifier)
             TokenType.SEQ -> Seq(aField, bField, modeA, modeB, modifier)
             TokenType.SNE -> Sne(aField, bField, modeA, modeB, modifier)
-            TokenType.SLT -> {
-                emitError("SLT has not been implemented yet", token)
-                null
-            }
+            TokenType.SLT -> Slt(aField, bField, modeA, modeB, modifier)
             TokenType.SPL -> Split(aField, bField, modeA, modeB, modifier)
+            TokenType.STP -> Stp(aField, bField, modeA, modeB, modifier)
+            TokenType.LDP -> Ldp(aField, bField, modeA, modeB, modifier)
             TokenType.ORG -> {
                 emitError("ORG has not been implemented yet", token)
                 null
