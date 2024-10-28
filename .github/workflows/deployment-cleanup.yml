@@ -1,0 +1,12 @@
+name: Branch or Tag Deleted
+on: delete
+
+jobs:
+  delete:
+    if: github.event.ref_type == 'branch' || github.event.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean up
+        run: |
+          echo "Clean up for branch ${{ github.event.ref }}"
+          curl -X DELETE https://corewar-deployment.schnelle.dev/deployments/${{ github.ref_name }} -H "Authorization: Bearer ${{ secrets.DEPLOYMENT_TOKEN }}"
