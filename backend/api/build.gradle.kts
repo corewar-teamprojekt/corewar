@@ -16,7 +16,7 @@ plugins {
 
 ktfmt { kotlinLangStyle() }
 
-application { mainClass.set("io.ktor.server.netty.EngineMain") }
+application { mainClass.set("software.shonk.ApplicationKt") }
 
 group = "software.shonk"
 
