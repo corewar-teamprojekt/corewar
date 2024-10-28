@@ -89,95 +89,44 @@ internal class TestParser {
                     // - I if neither is IMMEDIATE
                     // First the AB if A-Mode is IMMEDIATE
                     Arguments.of(
+                        generateAImmediateThenAB(TokenType.MOV, 42, 1337),
                         listOf(
-                            Token(TokenType.MOV, "MOV", "", 1),
-                            Token(TokenType.HASHTAG, "#", "", 1),
-                            Token(TokenType.NUMBER, "42", 42, 1),
-                            Token(TokenType.COMMA, ",", "", 1),
-                            Token(TokenType.NUMBER, "69", 69, 1),
-                            Token(TokenType.EOF, "", "", 1),
+                            Mov(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
                         ),
-                        listOf(Mov(42, 69, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)),
                     ),
                     Arguments.of(
-                        listOf(
-                            Token(TokenType.SEQ, "SEQ", "", 1),
-                            Token(TokenType.HASHTAG, "#", "", 1),
-                            Token(TokenType.NUMBER, "42", 42, 1),
-                            Token(TokenType.COMMA, ",", "", 1),
-                            Token(TokenType.NUMBER, "1337", 1337, 1),
-                            Token(TokenType.EOF, "", "", 1),
-                        ),
+                        generateAImmediateThenAB(TokenType.SEQ, 42, 1337),
                         listOf(
                             Seq(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
                         ),
                     ),
                     Arguments.of(
-                        listOf(
-                            Token(TokenType.SNE, "SNE", "", 1),
-                            Token(TokenType.HASHTAG, "#", "", 1),
-                            Token(TokenType.NUMBER, "42", 42, 1),
-                            Token(TokenType.COMMA, ",", "", 1),
-                            Token(TokenType.NUMBER, "1337", 1337, 1),
-                            Token(TokenType.EOF, "", "", 1),
-                        ),
+                        generateAImmediateThenAB(TokenType.SNE, 42, 1337),
                         listOf(
                             Sne(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
                         ),
                     ),
                     // Now B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
                     Arguments.of(
-                        listOf(
-                            Token(TokenType.MOV, "MOV", "", 1),
-                            Token(TokenType.STAR, "*", "", 1),
-                            Token(TokenType.NUMBER, "42", 42, 1),
-                            Token(TokenType.COMMA, ",", "", 1),
-                            Token(TokenType.HASHTAG, "#", "", 1),
-                            Token(TokenType.NUMBER, "1337", 1337, 1),
-                            Token(TokenType.EOF, "", "", 1),
-                        ),
+                        generateBImmediateAndNotAThenB(TokenType.MOV, 42, 1337),
                         listOf(
                             Mov(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
                         ),
                     ),
                     Arguments.of(
-                        listOf(
-                            Token(TokenType.SEQ, "SEQ", "", 1),
-                            Token(TokenType.STAR, "*", "", 1),
-                            Token(TokenType.NUMBER, "42", 42, 1),
-                            Token(TokenType.COMMA, ",", "", 1),
-                            Token(TokenType.HASHTAG, "#", "", 1),
-                            Token(TokenType.NUMBER, "1337", 1337, 1),
-                            Token(TokenType.EOF, "", "", 1),
-                        ),
+                        generateBImmediateAndNotAThenB(TokenType.SEQ, 42, 1337),
                         listOf(
                             Seq(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
                         ),
                     ),
                     Arguments.of(
-                        listOf(
-                            Token(TokenType.SNE, "SNE", "", 1),
-                            Token(TokenType.STAR, "*", "", 1),
-                            Token(TokenType.NUMBER, "42", 42, 1),
-                            Token(TokenType.COMMA, ",", "", 1),
-                            Token(TokenType.HASHTAG, "#", "", 1),
-                            Token(TokenType.NUMBER, "1337", 1337, 1),
-                            Token(TokenType.EOF, "", "", 1),
-                        ),
+                        generateBImmediateAndNotAThenB(TokenType.SNE, 42, 1337),
                         listOf(
                             Sne(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
                         ),
                         // Now neither is IMMEDIATE
                         Arguments.of(
-                            listOf(
-                                Token(TokenType.MOV, "MOV", "", 1),
-                                Token(TokenType.STAR, "*", "", 1),
-                                Token(TokenType.NUMBER, "42", 42, 1),
-                                Token(TokenType.COMMA, ",", "", 1),
-                                Token(TokenType.STAR, "*", "", 1),
-                                Token(TokenType.NUMBER, "1337", 1337, 1),
-                                Token(TokenType.EOF, "", "", 1),
-                            ),
+                            generateNeitherIsImmediate(TokenType.MOV, 42, 1337),
                             listOf(
                                 Mov(
                                     42,
@@ -189,15 +138,7 @@ internal class TestParser {
                             ),
                         ),
                         Arguments.of(
-                            listOf(
-                                Token(TokenType.SEQ, "SEQ", "", 1),
-                                Token(TokenType.STAR, "*", "", 1),
-                                Token(TokenType.NUMBER, "42", 42, 1),
-                                Token(TokenType.COMMA, ",", "", 1),
-                                Token(TokenType.STAR, "*", "", 1),
-                                Token(TokenType.NUMBER, "1337", 1337, 1),
-                                Token(TokenType.EOF, "", "", 1),
-                            ),
+                            generateNeitherIsImmediate(TokenType.SEQ, 42, 1337),
                             listOf(
                                 Seq(
                                     42,
@@ -209,15 +150,7 @@ internal class TestParser {
                             ),
                         ),
                         Arguments.of(
-                            listOf(
-                                Token(TokenType.SNE, "SNE", "", 1),
-                                Token(TokenType.STAR, "*", "", 1),
-                                Token(TokenType.NUMBER, "42", 42, 1),
-                                Token(TokenType.COMMA, ",", "", 1),
-                                Token(TokenType.STAR, "*", "", 1),
-                                Token(TokenType.NUMBER, "1337", 1337, 1),
-                                Token(TokenType.EOF, "", "", 1),
-                            ),
+                            generateNeitherIsImmediate(TokenType.SNE, 42, 1337),
                             listOf(
                                 Sne(
                                     42,
@@ -228,10 +161,63 @@ internal class TestParser {
                                 )
                             ),
                         ),
+
+                        // ADD, SUB, MUL, DIV, MOD get:
+                        // - AB if A-Mode is IMMEDIATE
+                        // - B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
+                        // - F if neither is IMMEDIATE
+
                     ),
                 )
 
             return arguments
+        }
+
+        private fun generateAImmediateThenAB(
+            instructionToken: TokenType,
+            firstAddress: Int,
+            secondAddress: Int,
+        ): List<Token> {
+            return listOf(
+                Token(instructionToken, instructionToken.toString(), "", 1),
+                Token(TokenType.HASHTAG, "#", "", 1),
+                Token(TokenType.NUMBER, firstAddress.toString(), firstAddress, 1),
+                Token(TokenType.COMMA, ",", "", 1),
+                Token(TokenType.NUMBER, secondAddress.toString(), secondAddress, 1),
+                Token(TokenType.EOF, "", "", 1),
+            )
+        }
+
+        private fun generateBImmediateAndNotAThenB(
+            instructionToken: TokenType,
+            firstAddress: Int,
+            secondAddress: Int,
+        ): List<Token> {
+            return listOf(
+                Token(instructionToken, instructionToken.toString(), "", 1),
+                Token(TokenType.STAR, "*", "", 1),
+                Token(TokenType.NUMBER, firstAddress.toString(), firstAddress, 1),
+                Token(TokenType.COMMA, ",", "", 1),
+                Token(TokenType.HASHTAG, "#", "", 1),
+                Token(TokenType.NUMBER, secondAddress.toString(), secondAddress, 1),
+                Token(TokenType.EOF, "", "", 1),
+            )
+        }
+
+        private fun generateNeitherIsImmediate(
+            instructionToken: TokenType,
+            firstAddress: Int,
+            secondAddress: Int,
+        ): List<Token> {
+            return listOf(
+                Token(instructionToken, instructionToken.toString(), "", 1),
+                Token(TokenType.STAR, "*", "", 1),
+                Token(TokenType.NUMBER, firstAddress.toString(), firstAddress, 1),
+                Token(TokenType.COMMA, ",", "", 1),
+                Token(TokenType.STAR, "*", "", 1),
+                Token(TokenType.NUMBER, secondAddress.toString(), secondAddress, 1),
+                Token(TokenType.EOF, "", "", 1),
+            )
         }
     }
 }
