@@ -8,7 +8,7 @@ RUN bash -c "curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb
 RUN apt update
 RUN apt install -y caddy
 
-RUN echo "http://localhost {\n\
+RUN echo ":80 {\n\
     root * /serve\n\
     file_server\n\
     reverse_proxy /api/* localhost:8080\n\
