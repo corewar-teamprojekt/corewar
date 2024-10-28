@@ -1,13 +1,14 @@
 // later when more api endpoints are added, this can be split into multiple files
 
-import { BACKEND_BASE_URL } from "@/consts.ts";
-
 export function uploadPlayerCode(
 	playerName: string,
 	code: string,
 ): Promise<Response> {
-	return fetch(BACKEND_BASE_URL + "/v0/code/" + playerName, {
-		method: "POST",
-		body: code,
-	});
+	return fetch(
+		`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v0/code/${playerName}`,
+		{
+			method: "POST",
+			body: code,
+		},
+	);
 }
