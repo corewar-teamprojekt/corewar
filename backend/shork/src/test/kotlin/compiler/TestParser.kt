@@ -292,6 +292,28 @@ internal class TestParser {
                             )
                         ),
                     ),
+
+                    // SLT, LDP, STP get:
+                    // - AB if A-Mode is IMMEDIATE
+                    // Always B otherwise
+                    Arguments.of(
+                        generateAImmediateThenAB(TokenType.SLT, 42, 1337),
+                        listOf(
+                            Slt(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
+                        ),
+                    ),
+                    Arguments.of(
+                        generateAImmediateThenAB(TokenType.LDP, 42, 1337),
+                        listOf(
+                            Ldp(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
+                        ),
+                    ),
+                    Arguments.of(
+                        generateAImmediateThenAB(TokenType.STP, 42, 1337),
+                        listOf(
+                            Stp(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
+                        ),
+                    ),
                 )
 
             return arguments
