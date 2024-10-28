@@ -125,7 +125,7 @@ jobs:
           path: ./frontend/app/dist
 
       - name: Login to ghcr.io
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3.3.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -173,7 +173,7 @@ jobs:
           response=$(curl -X POST https://corewar-deployment.schnelle.dev/deployments/${{ github.ref_name }} -H "Authorization: Bearer ${{ secrets.DEPLOYMENT_TOKEN }}")
           echo $response
           deployment_url=$(echo $response | jq -r '.url')
-          echo "::set-output name=url::$deployment_url"
+          echo "url=$deployment_url" >> $GITHUB_OUTPUT
 
   declare_environment:
     name: "Declare environment"
@@ -181,8 +181,11 @@ jobs:
     needs: [ deploy ]
     environment: 
       name: ${{ github.ref_name }}
-      url: ${{ steps.deploy.outputs.url }}
+      url: ${{ needs.deploy.outputs.url }}
     steps:
       - name: Deployed URL
+        env:
+          DEPLOYED_URL: ${{ needs.deploy.outputs.url }}
         run: | 
-          echo "Deployed URL: ${{ steps.deploy.outputs.url }}"
+          echo "Deployed URL: ${{ needs.deploy.outputs.url }}"
+          echo "Deployed URL: $DEPLOYED_URL"
