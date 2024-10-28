@@ -159,3 +159,30 @@ jobs:
       - name: Echo outputs
         run: |
           echo "${{ toJSON(steps.push.outputs) }}"
+
+  deploy:
+    name: "Deploy"
+    runs-on: ubuntu-latest
+    needs: [ build-container-image ]
+    steps:
+      - name: Install Curl
+        run: sudo apt-get install -y curl
+
+      - name: Deploy by calling API
+        run: | 
+          response=$(curl -X POST https://corewar-deployment.schnelle.dev/deployments/${{ github.ref_name }} -H "Authorization: Bearer ${{ secrets.DEPLOYMENT_TOKEN }}")
+          echo $response
+          deployment_url=$(echo $response | jq -r '.url')
+          echo "::set-output name=url::$deployment_url"
+
+  declare_environment:
+    name: "Declare environment"
+    runs-on: ubuntu-latest
+    needs: [ deploy ]
+    environment: 
+      name: ${{ github.ref_name }}
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - name: Deployed URL
+        run: | 
+          echo "Deployed URL: ${{ steps.deploy.outputs.url }}"
