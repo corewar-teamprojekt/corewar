@@ -93,32 +93,16 @@ describe("backend polling", () => {
 			render(<RouterProvider router={router} />);
 		});
 
-		await waitFor(
-			() => {
-				expect(mockFetch).toHaveBeenCalledTimes(1);
-			},
-			{
-				timeout: BASE_POLLING_INTERVAL_MS + POLLING_BUFFER,
-			},
-		);
-
-		await waitFor(
-			() => {
-				expect(mockFetch).toHaveBeenCalledTimes(2);
-			},
-			{
-				timeout: BASE_POLLING_INTERVAL_MS + POLLING_BUFFER,
-			},
-		);
-
-		await waitFor(
-			() => {
-				expect(mockFetch).toHaveBeenCalledTimes(3);
-			},
-			{
-				timeout: BASE_POLLING_INTERVAL_MS + POLLING_BUFFER,
-			},
-		);
+		for (let i = 0; i < 3; i++) {
+			await waitFor(
+				() => {
+					expect(mockFetch).toHaveBeenCalledTimes(1);
+				},
+				{
+					timeout: BASE_POLLING_INTERVAL_MS + POLLING_BUFFER,
+				},
+			);
+		}
 	});
 
 	it("keeps polling on server error", async () => {
@@ -142,32 +126,16 @@ describe("backend polling", () => {
 			render(<RouterProvider router={router} />);
 		});
 
-		await waitFor(
-			() => {
-				expect(mockFetch).toHaveBeenCalledTimes(1);
-			},
-			{
-				timeout: BASE_POLLING_INTERVAL_MS + POLLING_BUFFER,
-			},
-		);
-
-		await waitFor(
-			() => {
-				expect(mockFetch).toHaveBeenCalledTimes(2);
-			},
-			{
-				timeout: BASE_POLLING_INTERVAL_MS + POLLING_BUFFER,
-			},
-		);
-
-		await waitFor(
-			() => {
-				expect(mockFetch).toHaveBeenCalledTimes(3);
-			},
-			{
-				timeout: BASE_POLLING_INTERVAL_MS + POLLING_BUFFER,
-			},
-		);
+		for (let i = 0; i < 3; i++) {
+			await waitFor(
+				() => {
+					expect(mockFetch).toHaveBeenCalledTimes(1);
+				},
+				{
+					timeout: BASE_POLLING_INTERVAL_MS + POLLING_BUFFER,
+				},
+			);
+		}
 	});
 
 	it("routes to correct page once game is finished", async () => {

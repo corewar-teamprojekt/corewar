@@ -12,3 +12,7 @@ export function uploadPlayerCode(
 		},
 	);
 }
+
+export function getStatusV0(): Promise<Response> {
+	return fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v0/status`);
+}
