@@ -44,7 +44,14 @@ def authenticate(request):
 
 def get_domain_name(ref):
     """Generate the domain name for the deployment."""
-    ref = ref.replace("/", "-").replace(":", "-").replace(".", "-").replace("\\", "-")
+    ref = (
+        ref.replace("/", "-")
+        .replace(":", "-")
+        .replace(".", "-")
+        .replace("\\", "-")
+        .replace("+", "-")
+        .replace("_", "-")
+    )
     return DOMAIN_TEMPLATE.format(ref)
 
 
