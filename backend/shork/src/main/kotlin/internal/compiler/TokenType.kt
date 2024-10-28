@@ -28,6 +28,7 @@ internal enum class TokenType {
 
     // Opcodes
     DAT,
+    NOP,
     MOV,
     ADD,
     SUB,
@@ -41,9 +42,14 @@ internal enum class TokenType {
     CMP,
     SLT,
     SPL,
+    SEQ,
+    SNE,
     ORG,
     EQU,
     END,
+    // Those are for private space which will not be implemented until everything else is done
+    LDP,
+    STP,
 
     // Literals
     // STRING, // Doesn't exist here
@@ -78,6 +84,7 @@ internal enum class TokenType {
             LOWER_THAN -> "LOWER_THAN"
             GREATER_THAN -> "GREATER_THAN"
             DAT -> "DAT"
+            NOP -> "NOP"
             MOV -> "MOV"
             ADD -> "ADD"
             SUB -> "SUB"
@@ -94,6 +101,10 @@ internal enum class TokenType {
             ORG -> "ORG"
             EQU -> "EQU"
             END -> "END"
+            SEQ -> "SEQ"
+            SNE -> "SNE"
+            LDP -> "LDP"
+            STP -> "STP"
             // STRING -> "STRING"
             NUMBER -> "NUMBER"
             IDENTIFIER -> "IDENTIFIER"

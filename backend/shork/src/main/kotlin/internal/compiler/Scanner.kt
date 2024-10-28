@@ -14,6 +14,7 @@ internal class Scanner(private val source: String) {
     init {
         // Instructions
         keywordMap["DAT"] = TokenType.DAT
+        keywordMap["NOP"] = TokenType.NOP
         keywordMap["MOV"] = TokenType.MOV
         keywordMap["ADD"] = TokenType.ADD
         keywordMap["SUB"] = TokenType.SUB
@@ -30,6 +31,10 @@ internal class Scanner(private val source: String) {
         keywordMap["ORG"] = TokenType.ORG
         keywordMap["EQU"] = TokenType.EQU
         keywordMap["END"] = TokenType.END
+        keywordMap["SEQ"] = TokenType.SEQ
+        keywordMap["SNE"] = TokenType.SNE
+        keywordMap["LDP"] = TokenType.LDP
+        keywordMap["STP"] = TokenType.STP
         // Modifiers
         keywordMap["A"] = TokenType.A
         keywordMap["B"] = TokenType.B
