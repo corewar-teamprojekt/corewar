@@ -34,6 +34,7 @@ internal class TestScanner {
         private val instructions =
             listOf(
                 Pair("DAT", TokenType.DAT),
+                Pair("NOP", TokenType.NOP),
                 Pair("MOV", TokenType.MOV),
                 Pair("ADD", TokenType.ADD),
                 Pair("SUB", TokenType.SUB),
@@ -50,6 +51,10 @@ internal class TestScanner {
                 Pair("ORG", TokenType.ORG),
                 Pair("EQU", TokenType.EQU),
                 Pair("END", TokenType.END),
+                Pair("SEQ", TokenType.SEQ),
+                Pair("SNE", TokenType.SNE),
+                Pair("LDP", TokenType.LDP),
+                Pair("STP", TokenType.STP),
             )
 
         private val modifiers =
