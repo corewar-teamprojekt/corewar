@@ -12,6 +12,7 @@ import LandingPage from "@/pages/landingPage/LandingPage.tsx";
 import PlayerSelection from "@/pages/playerSelection/PlayerSelection.tsx";
 import BasePage from "@/pages/basePage/BasePage.tsx";
 import WaitingForOpponent from "@/pages/waitingForOpponent/WaitingForOpponent.tsx";
+import ResultDisplayPage from "./pages/resultDisplayPage/ResultDisplayPage.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -41,7 +42,7 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "/result-display",
-				element: <div>Result display</div>,
+				element: <ResultDisplayPage />,
 			},
 		],
 	},
