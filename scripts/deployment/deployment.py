@@ -109,7 +109,7 @@ def create_or_update_deployment(ref):
     return jsonify(
         {
             "message": f"Deployment created/updated for {ref}",
-            "URL:": "https://" + domain,
+            "url": "https://" + domain,
         }
     ), 200
 
