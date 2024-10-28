@@ -18,4 +18,8 @@ internal class Nop(
     override fun deepCopy(): AbstractInstruction {
         TODO("Not yet implemented")
     }
+
+    override fun toString(): String {
+        return "[NOP] $addressModeA $aField, $addressModeB $bField, $modifier"
+    }
 }

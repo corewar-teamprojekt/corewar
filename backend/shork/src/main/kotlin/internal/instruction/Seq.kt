@@ -18,4 +18,8 @@ internal class Seq(
     override fun deepCopy(): AbstractInstruction {
         TODO("Not yet implemented")
     }
+
+    override fun toString(): String {
+        return "[SEQ] $addressModeA $aField, $addressModeB $bField, $modifier"
+    }
 }
