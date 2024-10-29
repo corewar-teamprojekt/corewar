@@ -140,6 +140,17 @@ internal class TestMod {
     }
 
     @Test
+    fun testModByZero() {
+        val mod = Mod(1, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.F)
+        shork.memoryCore.storeAbsolute(0, mod)
+
+        program.createProcessAt(0)
+        program.tick()
+
+        assert(process.program.processes.isEmpty())
+    }
+
+    @Test
     fun div() {
         val mod = Mod(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
         val copy = mod.deepCopy()
