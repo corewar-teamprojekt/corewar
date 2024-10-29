@@ -9,4 +9,4 @@ jobs:
       - name: Clean up
         run: |
           echo "Clean up for branch ${{ github.event.ref }}"
-          curl -X DELETE https://corewar-deployment.schnelle.dev/deployments/${{ github.ref_name }} -H "Authorization: Bearer ${{ secrets.DEPLOYMENT_TOKEN }}"
+          curl -X DELETE https://corewar-deployment.schnelle.dev/deployments/${{ github.event.ref }} -H "Authorization: Bearer ${{ secrets.DEPLOYMENT_TOKEN }}"
