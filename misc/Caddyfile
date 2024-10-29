@@ -1,0 +1,5 @@
+:80 {
+    root * /serve
+    file_server
+    reverse_proxy /api/* localhost:8080
+}
