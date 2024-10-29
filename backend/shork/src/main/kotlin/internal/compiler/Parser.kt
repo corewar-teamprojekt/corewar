@@ -44,40 +44,23 @@ internal class Parser(private val tokens: List<Token>) {
     private fun parseInstruction() {
         val token = peek()
         // We should always start with an instruction
-        when (token.type) {
-            TokenType.DAT,
-            TokenType.NOP,
-            TokenType.MOV,
-            TokenType.ADD,
-            TokenType.SUB,
-            TokenType.MUL,
-            TokenType.DIV,
-            TokenType.MOD,
-            TokenType.JMP,
-            TokenType.JMZ,
-            TokenType.JMN,
-            TokenType.DJN,
-            TokenType.CMP,
-            TokenType.SLT,
-            TokenType.SPL,
-            TokenType.SEQ,
-            TokenType.SNE,
-            TokenType.ORG,
-            TokenType.EQU,
-            TokenType.STP,
-            TokenType.LDP,
-            TokenType.END -> {
-                val instruction = instruction()
-                if (instruction != null) {
-                    this.instructions.add(instruction)
+        if (isInstructionToken(token)) {
+            val instruction = instruction()
+            if (instruction != null) {
+                this.instructions.add(instruction)
+            }
+        } else {
+            when (token.type) {
+                TokenType.EOF -> {
+                    advance()
                 }
-            }
-            TokenType.EOF -> {
-                advance()
-            }
-            else -> {
-                emitError("Unexpected token, expected instruction, found '${token.lexeme}'", token)
-                advance()
+                else -> {
+                    emitError(
+                        "Unexpected token, expected instruction, found '${token.lexeme}'",
+                        token,
+                    )
+                    advance()
+                }
             }
         }
     }
