@@ -90,7 +90,7 @@ def create_or_update_deployment(ref):
         "--replace",
         "--network=web",
         "--expose=80",
-        "--restart=unless-stopped",
+        "--restart=always",
         "--pull",
         "always",
         "--label",
@@ -126,9 +126,12 @@ def delete_deployment(ref):
     if not is_valid:
         return jsonify({"error": error}), 400
 
+    image = IMAGE_URL.format(ref)
+
     # Run Podman command to stop and remove the container
-    stop_command = ["podman", "stop", ref]
-    remove_command = ["podman", "rm", ref]
+    stop_command = ["podman", "stop", "-i", ref]
+    remove_command = ["podman", "rm", "-i", ref]
+    delete_image_command = ["podman", "image", "rm", "-i", image]
 
     _, stop_error = run_command(stop_command)
     if stop_error:
@@ -140,6 +143,11 @@ def delete_deployment(ref):
         logging.error("Error deleting deployment: %s", remove_error)
         return jsonify("Internal Server Error"), 500
 
+    _, image_error = run_command(delete_image_command)
+    if image_error:
+        logging.error("Error deleting deployment: %s", image_error)
+        return jsonify("Internal Server Error"), 500
+
     return jsonify({"message": f"Deployment deleted for {ref}"}), 200
 
 
@@ -147,3 +155,4 @@ if __name__ == "__main__":
     # Set the Flask app to run on port 5000
     logging.basicConfig(level=logging.INFO, filename="deployment.log")
     app.run(host="0.0.0.0", port=5000)
+
