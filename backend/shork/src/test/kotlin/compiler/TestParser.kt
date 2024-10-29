@@ -71,186 +71,192 @@ internal class TestParser {
 
         @JvmStatic
         fun provideAbsentModifierArguments(): List<Arguments> {
-            val arguments =
-                listOf(
-                    // MOV, SEQ and SNE get:
-                    // - AB if A-Mode is IMMEDIATE
-                    // - B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
-                    // - I if neither is IMMEDIATE
-                    // First the AB if A-Mode is IMMEDIATE is handled in
-                    // generateAModeImmediateBModeAnyModifierAB
-
-                    // Now B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
-                    Arguments.of(
-                        generateBImmediateAndNotAThenB(TokenType.MOV, 42, 1337),
-                        listOf(
-                            Mov(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateBImmediateAndNotAThenB(TokenType.SEQ, 42, 1337),
-                        listOf(
-                            Seq(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateBImmediateAndNotAThenB(TokenType.SNE, 42, 1337),
-                        listOf(
-                            Sne(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateNeitherIsImmediate(TokenType.SEQ, 42, 1337),
-                        listOf(
-                            Seq(
-                                42,
-                                1337,
-                                AddressMode.A_INDIRECT,
-                                AddressMode.A_INDIRECT,
-                                Modifier.I,
-                            )
-                        ),
-                    ),
-                    // Now neither is IMMEDIATE
-                    Arguments.of(
-                        generateNeitherIsImmediate(TokenType.MOV, 42, 1337),
-                        listOf(
-                            Mov(
-                                42,
-                                1337,
-                                AddressMode.A_INDIRECT,
-                                AddressMode.A_INDIRECT,
-                                Modifier.I,
-                            )
-                        ),
-                    ),
-                    Arguments.of(
-                        generateNeitherIsImmediate(TokenType.SNE, 42, 1337),
-                        listOf(
-                            Sne(
-                                42,
-                                1337,
-                                AddressMode.A_INDIRECT,
-                                AddressMode.A_INDIRECT,
-                                Modifier.I,
-                            )
-                        ),
-                    ),
-
-                    // ADD, SUB, MUL, DIV, MOD get:
-                    // - AB if A-Mode is IMMEDIATE
-                    // - B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
-                    // - F if neither is IMMEDIATE
-                    // First the AB if A-Mode is IMMEDIATE (handled via
-                    // generateAModeImmediateBModeAnyModifierAB)
-
-                    // Now B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
-                    Arguments.of(
-                        generateBImmediateAndNotAThenB(TokenType.ADD, 42, 1337),
-                        listOf(
-                            Add(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateBImmediateAndNotAThenB(TokenType.SUB, 42, 1337),
-                        listOf(
-                            Sub(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateBImmediateAndNotAThenB(TokenType.MUL, 42, 1337),
-                        listOf(
-                            Mul(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateBImmediateAndNotAThenB(TokenType.DIV, 42, 1337),
-                        listOf(
-                            Div(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateBImmediateAndNotAThenB(TokenType.MOD, 42, 1337),
-                        listOf(
-                            Mod(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
-                        ),
-                    ),
-
-                    // Now neither is IMMEDIATE
-                    Arguments.of(
-                        generateNeitherIsImmediate(TokenType.ADD, 42, 1337),
-                        listOf(
-                            Add(
-                                42,
-                                1337,
-                                AddressMode.A_INDIRECT,
-                                AddressMode.A_INDIRECT,
-                                Modifier.F,
-                            )
-                        ),
-                    ),
-                    Arguments.of(
-                        generateNeitherIsImmediate(TokenType.SUB, 42, 1337),
-                        listOf(
-                            Sub(
-                                42,
-                                1337,
-                                AddressMode.A_INDIRECT,
-                                AddressMode.A_INDIRECT,
-                                Modifier.F,
-                            )
-                        ),
-                    ),
-                    Arguments.of(
-                        generateNeitherIsImmediate(TokenType.MUL, 42, 1337),
-                        listOf(
-                            Mul(
-                                42,
-                                1337,
-                                AddressMode.A_INDIRECT,
-                                AddressMode.A_INDIRECT,
-                                Modifier.F,
-                            )
-                        ),
-                    ),
-                    Arguments.of(
-                        generateNeitherIsImmediate(TokenType.DIV, 42, 1337),
-                        listOf(
-                            Div(
-                                42,
-                                1337,
-                                AddressMode.A_INDIRECT,
-                                AddressMode.A_INDIRECT,
-                                Modifier.F,
-                            )
-                        ),
-                    ),
-                    Arguments.of(
-                        generateNeitherIsImmediate(TokenType.MOD, 42, 1337),
-                        listOf(
-                            Mod(
-                                42,
-                                1337,
-                                AddressMode.A_INDIRECT,
-                                AddressMode.A_INDIRECT,
-                                Modifier.F,
-                            )
-                        ),
-                    ),
-
-                    // SLT, LDP, STP get:
-                    // - AB if A-Mode is IMMEDIATE
-                    // Always B otherwise
-                    // AB if A-Mode is IMMEDIATE is handled via
-                    // generateAModeImmediateBModeAnyModifierAB
-                )
-
-            return arguments +
-                generateAlwaysModifierXXX() +
-                generateAModeImmediateBModeAnyModifierAB()
+            return `generate modifier is always XXX`() +
+                `generate A-Mode is immediate, B-Mode is any then modifier is AB`() +
+                `generate modifier is B if B-Mode is immediate and A-Mode isn't`() +
+                `generate modifier is always B if A-Mode is not immediate`() +
+                `generate neither mode is immediate`()
         }
 
-        private fun generateAModeImmediateBModeAnyModifierAB(): List<Arguments> {
+        private fun `generate neither mode is immediate`(): List<Arguments> {
+            val firstAddress = 42
+            val secondAddress = 1337
+            val instructions =
+                listOf(
+                    // These are always I
+                    Triple(TokenType.MOV, Mov::class, Modifier.I),
+                    Triple(TokenType.SEQ, Seq::class, Modifier.I),
+                    Triple(TokenType.SNE, Sne::class, Modifier.I),
+                    Triple(TokenType.CMP, Seq::class, Modifier.I),
+                    // The arithmetic instructions are always F
+                    Triple(TokenType.ADD, Add::class, Modifier.F),
+                    Triple(TokenType.SUB, Sub::class, Modifier.F),
+                    Triple(TokenType.MUL, Mul::class, Modifier.F),
+                    Triple(TokenType.DIV, Div::class, Modifier.F),
+                    Triple(TokenType.MOD, Mod::class, Modifier.F),
+                )
+
+            val arguments = mutableListOf<Arguments>()
+            val addressModesWithoutImmediate =
+                this.addressModes.filter { it.first != AddressMode.IMMEDIATE }
+
+            for (instruction in instructions) {
+                for (firstMode in addressModesWithoutImmediate) {
+                    for (secondMode in addressModesWithoutImmediate) {
+                        val instance =
+                            instruction.second.constructors
+                                .first()
+                                .call(
+                                    firstAddress,
+                                    secondAddress,
+                                    firstMode.first,
+                                    secondMode.first,
+                                    instruction.third,
+                                )
+                        arguments.add(
+                            Arguments.of(
+                                listOf(
+                                    Token(instruction.first, instruction.first.toString(), "", 1),
+                                    Token(firstMode.third, firstMode.second, "", 1),
+                                    Token(
+                                        TokenType.NUMBER,
+                                        firstAddress.toString(),
+                                        firstAddress,
+                                        1,
+                                    ),
+                                    Token(TokenType.COMMA, ",", "", 1),
+                                    Token(secondMode.third, secondMode.second, "", 1),
+                                    Token(
+                                        TokenType.NUMBER,
+                                        secondAddress.toString(),
+                                        secondAddress,
+                                        1,
+                                    ),
+                                    Token(TokenType.EOF, "", "", 1),
+                                ),
+                                listOf(instance),
+                            )
+                        )
+                    }
+                }
+            }
+
+            return arguments
+        }
+
+        private fun `generate modifier is B if B-Mode is immediate and A-Mode isn't`():
+            List<Arguments> {
+            val firstAddress = 42
+            val secondAddress = 1337
+            val instructions =
+                listOf(
+                    Pair(TokenType.MOV, Mov::class),
+                    Pair(TokenType.SEQ, Seq::class),
+                    Pair(TokenType.SNE, Sne::class),
+                    Pair(TokenType.CMP, Seq::class),
+                    Pair(TokenType.ADD, Add::class),
+                    Pair(TokenType.SUB, Sub::class),
+                    Pair(TokenType.MUL, Mul::class),
+                    Pair(TokenType.DIV, Div::class),
+                    Pair(TokenType.MOD, Mod::class),
+                )
+
+            val arguments = mutableListOf<Arguments>()
+            val addressModesWithoutImmediate =
+                this.addressModes.filter { it.first != AddressMode.IMMEDIATE }
+
+            for (instruction in instructions) {
+                for (firstAddressMode in addressModesWithoutImmediate) {
+                    val secondAddressMode = Triple(AddressMode.IMMEDIATE, "#", TokenType.HASHTAG)
+                    val instance =
+                        instruction.second.constructors
+                            .first()
+                            .call(
+                                firstAddress,
+                                secondAddress,
+                                firstAddressMode.first,
+                                secondAddressMode.first,
+                                Modifier.B,
+                            )
+                    arguments.add(
+                        Arguments.of(
+                            listOf(
+                                Token(instruction.first, instruction.first.toString(), "", 1),
+                                Token(firstAddressMode.third, firstAddressMode.second, "", 1),
+                                Token(TokenType.NUMBER, firstAddress.toString(), firstAddress, 1),
+                                Token(TokenType.COMMA, ",", "", 1),
+                                Token(secondAddressMode.third, secondAddressMode.second, "", 1),
+                                Token(TokenType.NUMBER, secondAddress.toString(), secondAddress, 1),
+                                Token(TokenType.EOF, "", "", 1),
+                            ),
+                            listOf(instance),
+                        )
+                    )
+                }
+            }
+
+            return arguments
+        }
+
+        private fun `generate modifier is always B if A-Mode is not immediate`(): List<Arguments> {
+            val firstAddress = 42
+            val secondAddress = 1337
+            val instructions =
+                listOf(
+                    Pair(TokenType.SLT, Slt::class),
+                    Pair(TokenType.LDP, Ldp::class),
+                    Pair(TokenType.STP, Stp::class),
+                )
+            val arguments = mutableListOf<Arguments>()
+            val addressModesWithoutImmediate =
+                this.addressModes.filter { it.first != AddressMode.IMMEDIATE }
+
+            for (instruction in instructions) {
+                for (firstMode in addressModesWithoutImmediate) {
+                    for (secondMode in this.addressModes) {
+                        val instance =
+                            instruction.second.constructors
+                                .first()
+                                .call(
+                                    firstAddress,
+                                    secondAddress,
+                                    firstMode.first,
+                                    secondMode.first,
+                                    Modifier.B,
+                                )
+                        arguments.add(
+                            Arguments.of(
+                                listOf(
+                                    Token(instruction.first, instruction.first.toString(), "", 1),
+                                    Token(firstMode.third, firstMode.second, "", 1),
+                                    Token(
+                                        TokenType.NUMBER,
+                                        firstAddress.toString(),
+                                        firstAddress,
+                                        1,
+                                    ),
+                                    Token(TokenType.COMMA, ",", "", 1),
+                                    Token(secondMode.third, secondMode.second, "", 1),
+                                    Token(
+                                        TokenType.NUMBER,
+                                        secondAddress.toString(),
+                                        secondAddress,
+                                        1,
+                                    ),
+                                    Token(TokenType.EOF, "", "", 1),
+                                ),
+                                listOf(instance),
+                            )
+                        )
+                    }
+                }
+            }
+
+            return arguments
+        }
+
+        private fun `generate A-Mode is immediate, B-Mode is any then modifier is AB`():
+            List<Arguments> {
             val firstAddress = 42
             val secondAddress = 1337
             val instructions =
@@ -302,7 +308,7 @@ internal class TestParser {
             return arguments
         }
 
-        private fun generateAlwaysModifierXXX(): List<Arguments> {
+        private fun `generate modifier is always XXX`(): List<Arguments> {
             val firstAddress = 1337
             val secondAddress = 42
             val instructions =
@@ -361,53 +367,6 @@ internal class TestParser {
             }
 
             return arguments
-        }
-
-        private fun generateAImmediateThenAB(
-            instructionToken: TokenType,
-            firstAddress: Int,
-            secondAddress: Int,
-        ): List<Token> {
-            return listOf(
-                Token(instructionToken, instructionToken.toString(), "", 1),
-                Token(TokenType.HASHTAG, "#", "", 1),
-                Token(TokenType.NUMBER, firstAddress.toString(), firstAddress, 1),
-                Token(TokenType.COMMA, ",", "", 1),
-                Token(TokenType.NUMBER, secondAddress.toString(), secondAddress, 1),
-                Token(TokenType.EOF, "", "", 1),
-            )
-        }
-
-        private fun generateBImmediateAndNotAThenB(
-            instructionToken: TokenType,
-            firstAddress: Int,
-            secondAddress: Int,
-        ): List<Token> {
-            return listOf(
-                Token(instructionToken, instructionToken.toString(), "", 1),
-                Token(TokenType.STAR, "*", "", 1),
-                Token(TokenType.NUMBER, firstAddress.toString(), firstAddress, 1),
-                Token(TokenType.COMMA, ",", "", 1),
-                Token(TokenType.HASHTAG, "#", "", 1),
-                Token(TokenType.NUMBER, secondAddress.toString(), secondAddress, 1),
-                Token(TokenType.EOF, "", "", 1),
-            )
-        }
-
-        private fun generateNeitherIsImmediate(
-            instructionToken: TokenType,
-            firstAddress: Int,
-            secondAddress: Int,
-        ): List<Token> {
-            return listOf(
-                Token(instructionToken, instructionToken.toString(), "", 1),
-                Token(TokenType.STAR, "*", "", 1),
-                Token(TokenType.NUMBER, firstAddress.toString(), firstAddress, 1),
-                Token(TokenType.COMMA, ",", "", 1),
-                Token(TokenType.STAR, "*", "", 1),
-                Token(TokenType.NUMBER, secondAddress.toString(), secondAddress, 1),
-                Token(TokenType.EOF, "", "", 1),
-            )
         }
     }
 }
