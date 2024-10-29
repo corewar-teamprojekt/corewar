@@ -162,18 +162,9 @@ internal class Parser(private val tokens: List<Token>) {
             TokenType.DIV -> Div(aField, bField, modeA, modeB, modifier)
             TokenType.MOD -> Mod(aField, bField, modeA, modeB, modifier)
             TokenType.JMP -> Jump(aField, bField, modeA, modeB, modifier)
-            TokenType.JMZ -> {
-                emitError("JMZ has not been implemented yet", token)
-                null
-            }
-            TokenType.JMN -> {
-                emitError("JMN has not been implemented yet", token)
-                null
-            }
-            TokenType.DJN -> {
-                emitError("DJN has not been implemented yet", token)
-                null
-            }
+            TokenType.JMZ -> Jmz(aField, bField, modeA, modeB, modifier)
+            TokenType.JMN -> Jmn(aField, bField, modeA, modeB, modifier)
+            TokenType.DJN -> Djn(aField, bField, modeA, modeB, modifier)
             TokenType.CMP -> Seq(aField, bField, modeA, modeB, modifier)
             TokenType.SEQ -> Seq(aField, bField, modeA, modeB, modifier)
             TokenType.SNE -> Sne(aField, bField, modeA, modeB, modifier)

@@ -57,32 +57,22 @@ internal class TestParser {
     }
 
     companion object {
+        private val addressModes =
+            listOf(
+                Triple(AddressMode.DIRECT, "$", TokenType.DOLLAR),
+                Triple(AddressMode.IMMEDIATE, "#", TokenType.HASHTAG),
+                Triple(AddressMode.A_INDIRECT, "*", TokenType.STAR),
+                Triple(AddressMode.B_INDIRECT, "@", TokenType.AT),
+                Triple(AddressMode.A_PRE_DECREMENT, "{", TokenType.LEFT_BRACE),
+                Triple(AddressMode.A_POST_INCREMENT, "}", TokenType.RIGHT_BRACE),
+                Triple(AddressMode.B_PRE_DECREMENT, "<", TokenType.LOWER_THAN),
+                Triple(AddressMode.B_POST_INCREMENT, ">", TokenType.GREATER_THAN),
+            )
+
         @JvmStatic
         fun provideAbsentModifierArguments(): List<Arguments> {
             val arguments =
                 listOf(
-                    // DAT and NOP always get the F modifier
-                    Arguments.of(
-                        listOf(
-                            Token(TokenType.DAT, "DAT", "", 1),
-                            Token(TokenType.NUMBER, "42", 42, 1),
-                            Token(TokenType.COMMA, ",", "", 1),
-                            Token(TokenType.NUMBER, "1337", 1337, 1),
-                            Token(TokenType.EOF, "", "", 1),
-                        ),
-                        listOf(Dat(42, 1337, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.F)),
-                    ),
-                    Arguments.of(
-                        listOf(
-                            Token(TokenType.NOP, "NOP", "", 1),
-                            Token(TokenType.NUMBER, "42", 42, 1),
-                            Token(TokenType.COMMA, ",", "", 1),
-                            Token(TokenType.NUMBER, "1337", 1337, 1),
-                            Token(TokenType.EOF, "", "", 1),
-                        ),
-                        listOf(Nop(42, 1337, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.F)),
-                    ),
-
                     // MOV, SEQ and SNE get:
                     // - AB if A-Mode is IMMEDIATE
                     // - B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
@@ -316,7 +306,68 @@ internal class TestParser {
                     ),
                 )
 
-            return arguments
+            return arguments + generateAlwaysModifierXXX()
+        }
+
+        private fun generateAlwaysModifierXXX(): List<Arguments> {
+            val firstAddress = 1337
+            val secondAddress = 42
+            val instructions =
+                listOf(
+                    // These are always F
+                    Triple(TokenType.DAT, Dat::class, Modifier.F),
+                    Triple(TokenType.NOP, Nop::class, Modifier.F),
+                    // These are always B
+                    Triple(TokenType.JMP, Jump::class, Modifier.B),
+                    Triple(TokenType.JMZ, Jmz::class, Modifier.B),
+                    Triple(TokenType.JMN, Jmn::class, Modifier.B),
+                    Triple(TokenType.DJN, Djn::class, Modifier.B),
+                    Triple(TokenType.SPL, Split::class, Modifier.B),
+                )
+            val out = mutableListOf<Arguments>()
+
+            for (instruction in instructions) {
+                for (firstMode in addressModes) {
+                    for (secondMode in addressModes) {
+                        val instance =
+                            instruction.second.constructors
+                                .first()
+                                .call(
+                                    firstAddress,
+                                    secondAddress,
+                                    firstMode.first,
+                                    secondMode.first,
+                                    instruction.third,
+                                )
+                        out.add(
+                            Arguments.of(
+                                listOf(
+                                    Token(instruction.first, instruction.first.toString(), "", 1),
+                                    Token(firstMode.third, firstMode.second, "", 1),
+                                    Token(
+                                        TokenType.NUMBER,
+                                        firstAddress.toString(),
+                                        firstAddress,
+                                        1,
+                                    ),
+                                    Token(TokenType.COMMA, ",", "", 1),
+                                    Token(secondMode.third, secondMode.second, "", 1),
+                                    Token(
+                                        TokenType.NUMBER,
+                                        secondAddress.toString(),
+                                        secondAddress,
+                                        1,
+                                    ),
+                                    Token(TokenType.EOF, "", "", 1),
+                                ),
+                                listOf(instance),
+                            )
+                        )
+                    }
+                }
+            }
+
+            return out
         }
 
         private fun generateAImmediateThenAB(

@@ -19,4 +19,8 @@ internal class Jump(
     override fun deepCopy(): AbstractInstruction {
         return Jump(aField, bField, addressModeA, addressModeB, modifier)
     }
+
+    override fun toString(): String {
+        return "[JMP] $addressModeA $aField, $addressModeB $bField, $modifier"
+    }
 }

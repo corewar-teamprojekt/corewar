@@ -16,6 +16,8 @@ dependencies {
     testImplementation(kotlin("test"))
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.3")
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect
+    testImplementation("org.jetbrains.kotlin:kotlin-reflect:2.0.21")
 }
 
 tasks.test {
