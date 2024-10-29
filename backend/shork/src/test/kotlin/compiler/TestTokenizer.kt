@@ -4,17 +4,17 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import software.shonk.interpreter.internal.compiler.Scanner
 import software.shonk.interpreter.internal.compiler.Token
 import software.shonk.interpreter.internal.compiler.TokenType
+import software.shonk.interpreter.internal.compiler.Tokenizer
 import software.shonk.interpreter.internal.util.CircularQueue
 
-internal class TestScanner {
+internal class TestTokenizer {
     @ParameterizedTest
     @MethodSource("provideSingleLineValidPrograms")
     fun testScanSingleLinePrograms(program: String, expected: List<Token>) {
-        val scanner = Scanner(program)
-        val tokens = scanner.scanTokens()
+        val tokenizer = Tokenizer(program)
+        val tokens = tokenizer.scanTokens()
 
         println("Program:\n$program")
         assertEquals(expected, tokens)
@@ -23,8 +23,8 @@ internal class TestScanner {
     @ParameterizedTest
     @MethodSource("provideMultiLineProgram")
     fun testScanMultiLineProgram(program: String, expected: List<Token>) {
-        val scanner = Scanner(program)
-        val tokens = scanner.scanTokens()
+        val tokenizer = Tokenizer(program)
+        val tokens = tokenizer.scanTokens()
 
         println("Program:\n$program")
         assertEquals(expected, tokens)

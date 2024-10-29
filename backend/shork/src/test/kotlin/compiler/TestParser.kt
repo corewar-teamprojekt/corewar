@@ -48,9 +48,9 @@ internal class TestParser {
         val parser = Parser(program)
         val instructions = parser.parse()
 
-        if (parser.errors.isNotEmpty()) {
+        if (parser.parsingErrors.isNotEmpty()) {
             println("Errors while parsing:")
-            parser.errors.forEach { error(it) }
+            parser.parsingErrors.forEach { error(it) }
         }
 
         assertEquals(expected, instructions)

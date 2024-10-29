@@ -3,13 +3,15 @@ package software.shonk.interpreter.internal.compiler
 import java.util.*
 import kotlin.collections.ArrayList
 
-internal class Scanner(private val source: String) {
+// https://en.wikipedia.org/wiki/Lexical_analysis#Tokenization
+internal class Tokenizer(private val source: String) {
     private val tokens: MutableList<Token> = ArrayList()
     private var start = 0
     private var current = 0
     private var line = 1
     private val keywordMap: HashMap<String, TokenType> = HashMap<String, TokenType>()
-    val errors: MutableList<Pair<Int, String>> = ArrayList()
+    // Errors encountered while tokenizing, Pair of line number and error message
+    val tokenizingErrors: MutableList<Pair<Int, String>> = ArrayList()
 
     init {
         // Instructions
@@ -89,7 +91,7 @@ internal class Scanner(private val source: String) {
                 } else if (c.isLetter()) {
                     identifier()
                 } else {
-                    errors.add(Pair(line, "Unexpected character: ${c} at pos $current"))
+                    tokenizingErrors.add(Pair(line, "Unexpected character: ${c} at pos $current"))
                 }
             }
         }
@@ -104,23 +106,6 @@ internal class Scanner(private val source: String) {
             return '\u0000'
         }
         return source[current]
-    }
-
-    /**
-     * Used for lexemes like `++`, `--`, `==`, `!=`, `<=`, `>=`.
-     *
-     * Basically a conditional advance()
-     */
-    private fun match(expected: Char): Boolean {
-        if (isAtEnd()) {
-            return false
-        }
-        if (source[current] != expected) {
-            return false
-        }
-
-        current++
-        return true
     }
 
     private fun identifier() {
@@ -161,13 +146,13 @@ internal class Scanner(private val source: String) {
 fun main() {
     // val input = "MOV.AB #10, $20\nADD.BA $10, $20"
     val input = "MOV 42 <69\nDJN\nABC"
-    val scanner = Scanner(input)
+    val tokenizer = Tokenizer(input)
     val start = System.currentTimeMillis()
-    val tokens = scanner.scanTokens()
+    val tokens = tokenizer.scanTokens()
     val end = System.currentTimeMillis()
     println("Took ${end - start} ms")
     tokens.forEach { println(it) }
 
     println("Errors:")
-    scanner.errors.forEach { println(it) }
+    tokenizer.tokenizingErrors.forEach { println(it) }
 }

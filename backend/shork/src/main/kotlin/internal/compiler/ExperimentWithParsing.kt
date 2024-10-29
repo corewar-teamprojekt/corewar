@@ -11,15 +11,15 @@ internal fun main() {
             "JMP #42, {1337\n" + // Line 5
             "CMP $35, *69\n" + // No Modifier // Line 6
             ""
-    val scanner = Scanner(input)
+    val tokenizer = Tokenizer(input)
 
     val start = System.currentTimeMillis()
-    val tokens = scanner.scanTokens()
+    val tokens = tokenizer.scanTokens()
     val end = System.currentTimeMillis()
     println("Took ${end - start} ms")
 
     println("Errors while scanning:")
-    scanner.errors.forEach { println(it) }
+    tokenizer.tokenizingErrors.forEach { println(it) }
 
     val parser = Parser(tokens)
     val instructions = parser.parse()
@@ -31,5 +31,5 @@ internal fun main() {
     }
 
     println("Errors while parsing:")
-    parser.errors.forEach { println(it) }
+    parser.parsingErrors.forEach { println(it) }
 }
