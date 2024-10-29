@@ -49,4 +49,8 @@ internal class Mov(
     override fun deepCopy(): AbstractInstruction {
         return Mov(aField, bField, addressModeA, addressModeB, modifier)
     }
+
+    override fun toString(): String {
+        return "[MOV] $addressModeA $aField, $addressModeB $bField, $modifier"
+    }
 }

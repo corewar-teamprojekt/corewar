@@ -77,25 +77,9 @@ internal class TestParser {
                     // - AB if A-Mode is IMMEDIATE
                     // - B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
                     // - I if neither is IMMEDIATE
-                    // First the AB if A-Mode is IMMEDIATE
-                    Arguments.of(
-                        generateAImmediateThenAB(TokenType.MOV, 42, 1337),
-                        listOf(
-                            Mov(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateAImmediateThenAB(TokenType.SEQ, 42, 1337),
-                        listOf(
-                            Seq(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateAImmediateThenAB(TokenType.SNE, 42, 1337),
-                        listOf(
-                            Sne(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
-                        ),
-                    ),
+                    // First the AB if A-Mode is IMMEDIATE is handled in
+                    // generateAModeImmediateBModeAnyModifierAB
+
                     // Now B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
                     Arguments.of(
                         generateBImmediateAndNotAThenB(TokenType.MOV, 42, 1337),
@@ -114,24 +98,24 @@ internal class TestParser {
                         listOf(
                             Sne(42, 1337, AddressMode.A_INDIRECT, AddressMode.IMMEDIATE, Modifier.B)
                         ),
-                        // Now neither is IMMEDIATE
-                        Arguments.of(
-                            generateNeitherIsImmediate(TokenType.MOV, 42, 1337),
-                            listOf(
-                                Mov(
-                                    42,
-                                    1337,
-                                    AddressMode.A_INDIRECT,
-                                    AddressMode.A_INDIRECT,
-                                    Modifier.I,
-                                )
-                            ),
-                        ),
                     ),
                     Arguments.of(
                         generateNeitherIsImmediate(TokenType.SEQ, 42, 1337),
                         listOf(
                             Seq(
+                                42,
+                                1337,
+                                AddressMode.A_INDIRECT,
+                                AddressMode.A_INDIRECT,
+                                Modifier.I,
+                            )
+                        ),
+                    ),
+                    // Now neither is IMMEDIATE
+                    Arguments.of(
+                        generateNeitherIsImmediate(TokenType.MOV, 42, 1337),
+                        listOf(
+                            Mov(
                                 42,
                                 1337,
                                 AddressMode.A_INDIRECT,
@@ -157,37 +141,8 @@ internal class TestParser {
                     // - AB if A-Mode is IMMEDIATE
                     // - B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
                     // - F if neither is IMMEDIATE
-                    // First the AB if A-Mode is IMMEDIATE
-                    Arguments.of(
-                        generateAImmediateThenAB(TokenType.ADD, 42, 1337),
-                        listOf(
-                            Add(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateAImmediateThenAB(TokenType.SUB, 42, 1337),
-                        listOf(
-                            Sub(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateAImmediateThenAB(TokenType.MUL, 42, 1337),
-                        listOf(
-                            Mul(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateAImmediateThenAB(TokenType.DIV, 42, 1337),
-                        listOf(
-                            Div(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateAImmediateThenAB(TokenType.MOD, 42, 1337),
-                        listOf(
-                            Mod(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
-                        ),
-                    ),
+                    // First the AB if A-Mode is IMMEDIATE (handled via
+                    // generateAModeImmediateBModeAnyModifierAB)
 
                     // Now B if B-Mode is IMMEDIATE and A-Mode is not IMMEDIATE
                     Arguments.of(
@@ -286,27 +241,65 @@ internal class TestParser {
                     // SLT, LDP, STP get:
                     // - AB if A-Mode is IMMEDIATE
                     // Always B otherwise
-                    Arguments.of(
-                        generateAImmediateThenAB(TokenType.SLT, 42, 1337),
-                        listOf(
-                            Slt(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateAImmediateThenAB(TokenType.LDP, 42, 1337),
-                        listOf(
-                            Ldp(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
-                        ),
-                    ),
-                    Arguments.of(
-                        generateAImmediateThenAB(TokenType.STP, 42, 1337),
-                        listOf(
-                            Stp(42, 1337, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.AB)
-                        ),
-                    ),
+                    // AB if A-Mode is IMMEDIATE is handled via
+                    // generateAModeImmediateBModeAnyModifierAB
                 )
 
-            return arguments + generateAlwaysModifierXXX()
+            return arguments +
+                generateAlwaysModifierXXX() +
+                generateAModeImmediateBModeAnyModifierAB()
+        }
+
+        private fun generateAModeImmediateBModeAnyModifierAB(): List<Arguments> {
+            val firstAddress = 42
+            val secondAddress = 1337
+            val instructions =
+                listOf(
+                    Pair(TokenType.MOV, Mov::class),
+                    Pair(TokenType.SEQ, Seq::class),
+                    Pair(TokenType.SNE, Sne::class),
+                    Pair(TokenType.ADD, Add::class),
+                    Pair(TokenType.SUB, Sub::class),
+                    Pair(TokenType.MUL, Mul::class),
+                    Pair(TokenType.DIV, Div::class),
+                    Pair(TokenType.MOD, Mod::class),
+                    Pair(TokenType.SLT, Slt::class),
+                    Pair(TokenType.LDP, Ldp::class),
+                    Pair(TokenType.STP, Stp::class),
+                )
+            val arguments = mutableListOf<Arguments>()
+
+            for (instruction in instructions) {
+                val firstMode = Triple(AddressMode.IMMEDIATE, "#", TokenType.HASHTAG)
+                for (secondMode in addressModes) {
+                    val instance =
+                        instruction.second.constructors
+                            .first()
+                            .call(
+                                firstAddress,
+                                secondAddress,
+                                firstMode.first,
+                                secondMode.first,
+                                Modifier.AB,
+                            )
+                    arguments.add(
+                        Arguments.of(
+                            listOf(
+                                Token(instruction.first, instruction.first.toString(), "", 1),
+                                Token(firstMode.third, firstMode.second, "", 1),
+                                Token(TokenType.NUMBER, firstAddress.toString(), firstAddress, 1),
+                                Token(TokenType.COMMA, ",", "", 1),
+                                Token(secondMode.third, secondMode.second, "", 1),
+                                Token(TokenType.NUMBER, secondAddress.toString(), secondAddress, 1),
+                                Token(TokenType.EOF, "", "", 1),
+                            ),
+                            listOf(instance),
+                        )
+                    )
+                }
+            }
+
+            return arguments
         }
 
         private fun generateAlwaysModifierXXX(): List<Arguments> {
@@ -324,7 +317,7 @@ internal class TestParser {
                     Triple(TokenType.DJN, Djn::class, Modifier.B),
                     Triple(TokenType.SPL, Split::class, Modifier.B),
                 )
-            val out = mutableListOf<Arguments>()
+            val arguments = mutableListOf<Arguments>()
 
             for (instruction in instructions) {
                 for (firstMode in addressModes) {
@@ -339,7 +332,7 @@ internal class TestParser {
                                     secondMode.first,
                                     instruction.third,
                                 )
-                        out.add(
+                        arguments.add(
                             Arguments.of(
                                 listOf(
                                     Token(instruction.first, instruction.first.toString(), "", 1),
@@ -367,7 +360,7 @@ internal class TestParser {
                 }
             }
 
-            return out
+            return arguments
         }
 
         private fun generateAImmediateThenAB(
