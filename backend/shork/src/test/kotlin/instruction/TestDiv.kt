@@ -140,6 +140,17 @@ internal class TestDiv {
     }
 
     @Test
+    fun testDivideByZero() {
+        val div = Div(1, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.F)
+        shork.memoryCore.storeAbsolute(0, div)
+
+        program.createProcessAt(0)
+        program.tick()
+
+        assert(process.program.processes.isEmpty())
+    }
+
+    @Test
     fun div() {
         val div = Div(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
         val copy = div.deepCopy()
