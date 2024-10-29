@@ -8,10 +8,12 @@ import software.shonk.interpreter.internal.instruction.Dat
 import software.shonk.interpreter.internal.instruction.Mov
 import software.shonk.interpreter.internal.instruction.Split
 
+// https://en.wikipedia.org/wiki/Parsing#Parser
 internal class Parser(private val tokens: List<Token>) {
     private var current = 0
     private var instructions: MutableList<AbstractInstruction> = ArrayList()
-    var errors: MutableList<Pair<String, Token>> = ArrayList()
+    // Errors encountered while parsing, Pair of error message and token
+    var parsingErrors: MutableList<Pair<String, Token>> = ArrayList()
 
     fun parse(): List<AbstractInstruction> {
         while (!isAtEnd()) {
@@ -191,7 +193,7 @@ internal class Parser(private val tokens: List<Token>) {
         }
     }
 
-    // Grab the modifier, if it exists
+    /** Parses the modifier of an instruction, if it exists */
     private fun modifier(): Modifier? {
         if (peek().type != TokenType.DOT) {
             return null
@@ -298,6 +300,6 @@ internal class Parser(private val tokens: List<Token>) {
     }
 
     private fun emitError(message: String, token: Token) {
-        errors.add(Pair(message, token))
+        parsingErrors.add(Pair(message, token))
     }
 }
