@@ -4,6 +4,7 @@ import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.process.AbstractProcess
 
+/** Abstracts away common logic between all arithmetic instructions (ADD, SUB, MUL, DIV, MOD) */
 internal abstract class AbstractArithmeticInstruction(
     aField: Int,
     bField: Int,
@@ -19,8 +20,14 @@ internal abstract class AbstractArithmeticInstruction(
         val sourceInstruction = core.loadAbsolute(sourceAddress)
         val destinationInstruction = core.loadAbsolute(destinationAddress)
 
+        // Used to track if an error (such as divide by zero) has occured
+        // so that it may be handled later
         var errorOccured = false
 
+        // Wrapper function that executes the operation, but only
+        // sets the errorOccured flag when an exception was thrown.
+        // With this, even if an exception is thrown during an instruction that does two operations,
+        // the other operation still gets executed.
         fun executeWithHandling(f: () -> Int): Int? {
             try {
                 return f()
@@ -120,6 +127,7 @@ internal abstract class AbstractArithmeticInstruction(
             }
         }
 
+        // If any exception was thrown, remove the process.
         if (errorOccured) {
             process.program.removeProcess(process)
         }
