@@ -13,6 +13,23 @@ internal abstract class AbstractArithmeticInstruction(
     modifier: Modifier,
 ) : AbstractInstruction(aField, bField, addressModeA, addressModeB, modifier) {
 
+    // Used to track if an error (such as divide by zero) has occured
+    // so that it may be handled later
+    var errorOccured = false
+
+    // Wrapper function that executes the operation, but only
+    // sets the errorOccured flag when an exception was thrown.
+    // With this, even if an exception is thrown during an instruction that does two operations,
+    // the other operation still gets executed.
+    fun executeWithHandling(f: () -> Int): Int? {
+        try {
+            return f()
+        } catch (e: ArithmeticException) {
+            errorOccured = true
+            return null
+        }
+    }
+
     override fun execute(process: AbstractProcess) {
         val core = process.program.shork.memoryCore
         val sourceAddress = resolve(process, aField, addressModeA)
@@ -20,22 +37,7 @@ internal abstract class AbstractArithmeticInstruction(
         val sourceInstruction = core.loadAbsolute(sourceAddress)
         val destinationInstruction = core.loadAbsolute(destinationAddress)
 
-        // Used to track if an error (such as divide by zero) has occured
-        // so that it may be handled later
-        var errorOccured = false
-
-        // Wrapper function that executes the operation, but only
-        // sets the errorOccured flag when an exception was thrown.
-        // With this, even if an exception is thrown during an instruction that does two operations,
-        // the other operation still gets executed.
-        fun executeWithHandling(f: () -> Int): Int? {
-            try {
-                return f()
-            } catch (e: ArithmeticException) {
-                errorOccured = true
-                return null
-            }
-        }
+        errorOccured = false
 
         when (modifier) {
             Modifier.A -> {
@@ -47,7 +49,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result?.run({ destinationInstruction.aField = result })
+                result?.let({ destinationInstruction.aField = result })
             }
             Modifier.B -> {
                 val result =
@@ -58,7 +60,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result?.run({ destinationInstruction.bField = result })
+                result?.let({ destinationInstruction.bField = result })
             }
             Modifier.AB -> {
                 val result =
@@ -69,7 +71,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result?.run({ destinationInstruction.bField = result })
+                result?.let({ destinationInstruction.bField = result })
             }
             Modifier.BA -> {
                 val result =
@@ -80,7 +82,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result?.run({ destinationInstruction.aField = result })
+                result?.let({ destinationInstruction.aField = result })
             }
             Modifier.F,
             Modifier.I -> {
@@ -92,7 +94,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                resultA?.run({ destinationInstruction.aField = resultA })
+                resultA?.let({ destinationInstruction.aField = resultA })
 
                 val resultB =
                     executeWithHandling({
@@ -102,7 +104,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                resultB?.run({ destinationInstruction.bField = resultB })
+                resultB?.let({ destinationInstruction.bField = resultB })
             }
             Modifier.X -> {
                 val result1 =
@@ -113,7 +115,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result1?.run({ destinationInstruction.bField = result1 })
+                result1?.let({ destinationInstruction.bField = result1 })
 
                 val result2 =
                     executeWithHandling({
@@ -123,11 +125,10 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result2?.run({ destinationInstruction.aField = result2 })
+                result2?.let({ destinationInstruction.aField = result2 })
             }
         }
 
-        // If any exception was thrown, remove the process.
         if (errorOccured) {
             process.program.removeProcess(process)
         }
