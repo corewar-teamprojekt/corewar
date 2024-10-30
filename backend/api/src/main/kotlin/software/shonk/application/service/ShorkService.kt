@@ -21,6 +21,9 @@ class ShorkService(val shork: IShork) : ShorkUseCase {
     }
 
     override fun addProgram(name: String, program: String) {
+        if (gameState == GameState.FINISHED) {
+            cleanup()
+        }
         programs.put(name, program)
         if (containsPlayerAAndB()) {
             run()
@@ -39,7 +42,6 @@ class ShorkService(val shork: IShork) : ShorkUseCase {
         } else if (result == "playerB") {
             winner = Winner.B
         }
-
         programs.clear()
     }
 
@@ -54,5 +56,10 @@ class ShorkService(val shork: IShork) : ShorkUseCase {
 
     internal fun containsPlayerAAndB(): Boolean {
         return programs.containsKey("playerA") && programs.containsKey("playerB")
+    }
+
+    private fun cleanup() {
+        winner = Winner.UNDECIDED
+        gameState = GameState.NOT_STARTED
     }
 }
