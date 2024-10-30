@@ -209,9 +209,86 @@ class ShorkInterpreterControllerIT() : KoinTest {
                     "A",
                     Json.parseToJsonElement(response.bodyAsText())
                         .jsonObject["result"]
-                        ?.jsonObject["winner"]
+                        ?.jsonObject
+                        ?.get("winner")
                         ?.jsonPrimitive
                         ?.content,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun testBothPlayersSubmittedGameGetsSimulatedPlayerCodeAndFlagsResetAfterNewPlayerCodeGetsSubmitted() {
+        with(testEngine) {
+            runBlocking {
+                client.post("/api/v0/code/playerA") {
+                    contentType(ContentType.Application.Json)
+                    setBody("someString")
+                }
+
+                client.post("/api/v0/code/playerB") {
+                    contentType(ContentType.Application.Json)
+                    setBody("someOtherString")
+                }
+                client.post("/api/v0/code/playerA") {
+                    contentType(ContentType.Application.Json)
+                    setBody("someNewString")
+                }
+
+                // check if code/flags were reset after running and game hasn't started
+                val response = client.get("/api/v0/status")
+                assertEquals(
+                    """
+            {
+                "playerASubmitted": true,
+                "playerBSubmitted": false,
+                "gameState": "NOT_STARTED",
+                "result": {
+                    "winner": "UNDECIDED"
+                }
+            }
+        """
+                        .trimIndent(),
+                    response.bodyAsText(),
+                )
+            }
+        }
+    }
+
+    @Test
+    fun testBothPlayersSubmittedGameGetsSimulatedNewPlayerCodeGetsSubmitted() {
+        with(testEngine) {
+            runBlocking {
+                client.post("/api/v0/code/playerA") {
+                    contentType(ContentType.Application.Json)
+                    setBody("someString")
+                }
+
+                client.post("/api/v0/code/playerB") {
+                    contentType(ContentType.Application.Json)
+                    setBody("someOtherString")
+                }
+
+                client.post("/api/v0/code/playerA") {
+                    contentType(ContentType.Application.Json)
+                    setBody("someNewString")
+                }
+
+                val response = client.get("/api/v0/status")
+                assertEquals(
+                    """
+            {
+                "playerASubmitted": true,
+                "playerBSubmitted": false,
+                "gameState": "NOT_STARTED",
+                "result": {
+                    "winner": "UNDECIDED"
+                }
+            }
+        """
+                        .trimIndent(),
+                    response.bodyAsText(),
                 )
             }
         }
