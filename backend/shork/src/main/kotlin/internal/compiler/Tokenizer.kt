@@ -142,17 +142,3 @@ internal class Tokenizer(private val source: String) {
         addToken(TokenType.NUMBER, source.substring(start, current).toLong())
     }
 }
-
-fun main() {
-    // val input = "MOV.AB #10, $20\nADD.BA $10, $20"
-    val input = "MOV 42 <69\nDJN\nABC"
-    val tokenizer = Tokenizer(input)
-    val start = System.currentTimeMillis()
-    val tokens = tokenizer.scanTokens()
-    val end = System.currentTimeMillis()
-    println("Took ${end - start} ms")
-    tokens.forEach { println(it) }
-
-    println("Errors:")
-    tokenizer.tokenizingErrors.forEach { println(it) }
-}
