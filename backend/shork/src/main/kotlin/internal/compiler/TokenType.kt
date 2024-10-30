@@ -114,4 +114,33 @@ internal enum class TokenType {
             EOF -> "EOF"
         }
     }
+
+    companion object {
+        fun instructions(): List<TokenType> {
+            return listOf(
+                DAT,
+                NOP,
+                MOV,
+                ADD,
+                SUB,
+                MUL,
+                DIV,
+                MOD,
+                JMP,
+                JMZ,
+                JMN,
+                DJN,
+                CMP,
+                SEQ,
+                SNE,
+                SLT,
+                SPL,
+                ORG,
+                EQU,
+                END,
+                LDP,
+                STP,
+            )
+        }
+    }
 }

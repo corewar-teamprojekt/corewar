@@ -18,4 +18,8 @@ internal class Dat(
     override fun deepCopy(): AbstractInstruction {
         return Dat(aField, bField, addressModeA, addressModeB, modifier)
     }
+
+    override fun toString(): String {
+        return "[DAT] $addressModeA $aField, $addressModeB $bField, $modifier"
+    }
 }

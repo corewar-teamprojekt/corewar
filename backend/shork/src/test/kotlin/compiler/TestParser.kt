@@ -40,6 +40,23 @@ internal class TestParser {
     }
 
     @ParameterizedTest
+    @MethodSource("provideValidAllInstructionsWithAllModifiersAndAllAddressModesOnce")
+    fun `test if every instruction can be combined with every modifier`(
+        program: List<Token>,
+        expected: List<AbstractInstruction>,
+    ) {
+        val parser = Parser(program)
+        val instructions = parser.parse()
+
+        if (parser.parsingErrors.isNotEmpty()) {
+            println("Errors while parsing:")
+            parser.parsingErrors.forEach { error(it) }
+        }
+
+        assertEquals(expected, instructions)
+    }
+
+    @ParameterizedTest
     @MethodSource("provideAbsentModifierArguments")
     fun `test if absent modifiers are correctly filled in according to spec`(
         program: List<Token>,
@@ -67,6 +84,44 @@ internal class TestParser {
                 Triple(AddressMode.A_POST_INCREMENT, "}", TokenType.RIGHT_BRACE),
                 Triple(AddressMode.B_PRE_DECREMENT, "<", TokenType.LOWER_THAN),
                 Triple(AddressMode.B_POST_INCREMENT, ">", TokenType.GREATER_THAN),
+            )
+
+        private val modifiers =
+            listOf(
+                Triple(Modifier.A, "A", TokenType.A),
+                Triple(Modifier.B, "B", TokenType.B),
+                Triple(Modifier.AB, "AB", TokenType.AB),
+                Triple(Modifier.BA, "BA", TokenType.BA),
+                Triple(Modifier.F, "F", TokenType.F),
+                Triple(Modifier.X, "X", TokenType.X),
+                Triple(Modifier.I, "I", TokenType.I),
+            )
+
+        // Order does not matter, but for readability purposes, should be the same as in
+        // TokenType.instructions()
+        private val instructions =
+            listOf(
+                Triple(Dat::class, "DAT", TokenType.DAT),
+                Triple(Nop::class, "NOP", TokenType.NOP),
+                Triple(Mov::class, "MOV", TokenType.MOV),
+                Triple(Add::class, "ADD", TokenType.ADD),
+                Triple(Sub::class, "SUB", TokenType.SUB),
+                Triple(Mul::class, "MUL", TokenType.MUL),
+                Triple(Div::class, "DIV", TokenType.DIV),
+                Triple(Mod::class, "MOD", TokenType.MOD),
+                Triple(Jump::class, "JMP", TokenType.JMP),
+                Triple(Jmz::class, "JMZ", TokenType.JMZ),
+                Triple(Jmn::class, "JMN", TokenType.JMN),
+                Triple(Djn::class, "DJN", TokenType.DJN),
+                Triple(Seq::class, "CMP", TokenType.CMP),
+                Triple(Sne::class, "SNE", TokenType.SNE),
+                Triple(Slt::class, "SLT", TokenType.SLT),
+                Triple(Split::class, "SPL", TokenType.SPL),
+                // No Org here
+                // No EQU here
+                // No END here
+                // No LDP here (yet)
+                // No STP here (yet)
             )
 
         @JvmStatic
@@ -261,18 +316,19 @@ internal class TestParser {
             val secondAddress = 1337
             val instructions =
                 listOf(
-                    Pair(TokenType.MOV, Mov::class),
-                    Pair(TokenType.SEQ, Seq::class),
-                    Pair(TokenType.SNE, Sne::class),
-                    Pair(TokenType.ADD, Add::class),
-                    Pair(TokenType.SUB, Sub::class),
-                    Pair(TokenType.MUL, Mul::class),
-                    Pair(TokenType.DIV, Div::class),
-                    Pair(TokenType.MOD, Mod::class),
-                    Pair(TokenType.SLT, Slt::class),
-                    Pair(TokenType.LDP, Ldp::class),
-                    Pair(TokenType.STP, Stp::class),
-                )
+                        Pair(TokenType.MOV, Mov::class),
+                        Pair(TokenType.SEQ, Seq::class),
+                        Pair(TokenType.SNE, Sne::class),
+                        Pair(TokenType.ADD, Add::class),
+                        Pair(TokenType.SUB, Sub::class),
+                        Pair(TokenType.MUL, Mul::class),
+                        Pair(TokenType.DIV, Div::class),
+                        Pair(TokenType.MOD, Mod::class),
+                        Pair(TokenType.SLT, Slt::class),
+                        Pair(TokenType.LDP, Ldp::class),
+                        Pair(TokenType.STP, Stp::class),
+                    )
+                    .map { Triple(it.first, it.second, Modifier.AB) }
             val arguments = mutableListOf<Arguments>()
 
             for (instruction in instructions) {
@@ -362,6 +418,72 @@ internal class TestParser {
                                 listOf(instance),
                             )
                         )
+                    }
+                }
+            }
+
+            return arguments
+        }
+
+        @JvmStatic
+        private fun provideValidAllInstructionsWithAllModifiersAndAllAddressModesOnce():
+            List<Arguments> {
+            val firstAddress = 42
+            val secondAddress = 1337
+
+            val arguments = mutableListOf<Arguments>()
+            for (instruction in instructions) {
+                for (modifier in modifiers) {
+                    for (firstAddressMode in addressModes) {
+                        for (secondAddressMode in addressModes) {
+                            val instance =
+                                instruction.first.constructors
+                                    .first()
+                                    .call(
+                                        firstAddress,
+                                        secondAddress,
+                                        firstAddressMode.first,
+                                        secondAddressMode.first,
+                                        modifier.first,
+                                    )
+
+                            arguments.add(
+                                Arguments.of(
+                                    listOf(
+                                        Token(instruction.third, instruction.second, "", 1),
+                                        Token(TokenType.DOT, ".", "", 1),
+                                        Token(modifier.third, modifier.second, "", 1),
+                                        Token(
+                                            firstAddressMode.third,
+                                            firstAddressMode.second,
+                                            "",
+                                            1,
+                                        ),
+                                        Token(
+                                            TokenType.NUMBER,
+                                            firstAddress.toString(),
+                                            firstAddress,
+                                            1,
+                                        ),
+                                        Token(TokenType.COMMA, ",", "", 1),
+                                        Token(
+                                            secondAddressMode.third,
+                                            secondAddressMode.second,
+                                            "",
+                                            1,
+                                        ),
+                                        Token(
+                                            TokenType.NUMBER,
+                                            secondAddress.toString(),
+                                            secondAddress,
+                                            1,
+                                        ),
+                                        Token(TokenType.EOF, "", "", 1),
+                                    ),
+                                    listOf(instance),
+                                )
+                            )
+                        }
                     }
                 }
             }

@@ -255,31 +255,7 @@ internal class Parser(private val tokens: List<Token>) {
     }
 
     private fun isInstructionToken(token: Token): Boolean {
-        return token.type in
-            arrayOf(
-                TokenType.DAT,
-                TokenType.NOP,
-                TokenType.MOV,
-                TokenType.ADD,
-                TokenType.SUB,
-                TokenType.MUL,
-                TokenType.DIV,
-                TokenType.MOD,
-                TokenType.JMP,
-                TokenType.JMZ,
-                TokenType.JMN,
-                TokenType.DJN,
-                TokenType.CMP,
-                TokenType.SEQ,
-                TokenType.SNE,
-                TokenType.SLT,
-                TokenType.SPL,
-                TokenType.ORG,
-                TokenType.EQU,
-                TokenType.END,
-                TokenType.LDP,
-                TokenType.STP,
-            )
+        return token.type in TokenType.instructions()
     }
 
     private fun emitError(message: String, token: Token) {
