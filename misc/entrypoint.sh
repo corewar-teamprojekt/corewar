@@ -9,6 +9,10 @@ start_nginx() {
 
 # Function to start Java application
 start_java() {
+    echo "Unpacking JRE"
+    zstd --decompress /opt/jre-minimal.tar.zst
+    tar -xf /opt/jre-minimal.tar -C /opt
+    rm /opt/jre-minimal.tar /opt/jre-minimal.tar.zst
     echo "Starting Java application..."
     java -jar /backend/app.jar >> /log/backend.log 2>&1 &
     java_pid=$!
@@ -24,6 +28,8 @@ stop_services() {
         kill $java_pid
     fi
 }
+
+echo "Services running"
 
 # Trap SIGINT to stop services on exit
 trap stop_services SIGINT

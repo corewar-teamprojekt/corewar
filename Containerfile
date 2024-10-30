@@ -1,5 +1,5 @@
 FROM docker.io/alpine:latest as builder
-RUN apk add --no-cache openjdk21-jdk binutils
+RUN apk add --no-cache openjdk21-jdk binutils zstd
 
 ENV MODULES="java.base,java.logging,java.management,java.instrument,jdk.unsupported"
 ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk
@@ -8,15 +8,19 @@ RUN jlink \
 	--verbose \
 	--strip-debug \
 	--no-header-files \
-	--compress zip-9 \
+	--compress zip-0 \
 	--no-man-pages \
 	--add-modules $MODULES \
 	--output /opt/jre-minimal
 
-FROM docker.io/alpine:latest
-RUN apk add --no-cache nginx
+WORKDIR /opt
+RUN tar -cf jre-minimal.tar jre-minimal
+RUN zstd --ultra -22 /opt/jre-minimal.tar
 
-COPY --from=builder /opt/jre-minimal /opt/jre-minimal
+FROM docker.io/alpine:latest
+RUN apk add --no-cache nginx zstd
+
+COPY --from=builder /opt/jre-minimal.tar.zst /opt/jre-minimal.tar.zst
 ENV JAVA_HOME=/opt/jre-minimal
 ENV PATH="$PATH:$JAVA_HOME/bin"
 
