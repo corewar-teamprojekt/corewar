@@ -68,7 +68,7 @@ jobs:
 
     - name: Build project
       working-directory: frontend/app
-      run: VITE_REACT_APP_BACKEND_URL=/api npm run build
+      run: npm run build
 
     - name: Archive production artifacts
       uses: actions/upload-artifact@v4
