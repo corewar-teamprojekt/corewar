@@ -7,6 +7,7 @@ import software.shonk.domain.Result
 import software.shonk.domain.Status
 import software.shonk.domain.Winner
 import software.shonk.interpreter.MockShork
+import software.shonk.interpreter.Settings
 
 class ShorkServiceTest {
 
@@ -56,5 +57,13 @@ class ShorkServiceTest {
                 result = Result(winner = Winner.UNDECIDED),
             ),
         )
+    }
+
+    @Test
+    fun `set settings for the lobby`() {
+        val shorkService = ShorkService(MockShork())
+        val someSettings = Settings(69, 123, "NOP", 0)
+        shorkService.setLobbySettings(0, someSettings)
+        assertEquals(someSettings, shorkService.lobbies[0]?.getSettings())
     }
 }
