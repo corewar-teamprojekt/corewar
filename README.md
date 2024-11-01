@@ -6,7 +6,6 @@
 insert repo tags here
 
 # About Corewar
-<hr>
 insert infodump
 <ul>
 <li>a</li>
@@ -16,17 +15,13 @@ insert infodump
 </ul>
 
 # Start playing
-<hr>
 play here in modes
 
 # Contributing
-<hr>
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 # Code of conduct
-<hr>
 read more
 
 # License
-<hr>
 license
