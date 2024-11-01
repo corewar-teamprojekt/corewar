@@ -17,7 +17,9 @@ class ShorkService(val shork: IShork) : ShorkUseCase {
 
     override fun setLobbySettings(lobbyId: Long, settings: Settings) {}
 
-    override fun addProgramToLobby(lobbyId: Long, name: String, program: String) {}
+    override fun addProgramToLobby(lobbyId: Long, name: String, program: String) {
+        lobbies[0]?.addProgram(name, program)
+    }
 
     override fun getLobbyStatus(lobbyId: Long): Status? {
         return lobbies[0]?.getStatus()
