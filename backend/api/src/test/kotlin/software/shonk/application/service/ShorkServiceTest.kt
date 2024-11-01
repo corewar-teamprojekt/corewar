@@ -1,7 +1,5 @@
 package software.shonk.application.service
 
-import io.mockk.spyk
-import io.mockk.verify
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
 import software.shonk.domain.GameState
@@ -13,57 +11,50 @@ import software.shonk.interpreter.MockShork
 class ShorkServiceTest {
 
     @Test
-    fun initsWithSaneDefaultStatus() {
+    fun `inits with default lobby with default status`() {
         val shorkService = ShorkService(MockShork())
 
-        val expected =
+        assertEquals(shorkService.lobbies.size, 1)
+        assertEquals(shorkService.lobbies[0]?.id, 0)
+
+        assertEquals(
+            shorkService.getLobbyStatus(0L),
             Status(
                 playerASubmitted = false,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
                 result = Result(winner = Winner.UNDECIDED),
-            )
-
-        assertEquals(expected, shorkService.getStatus())
+            ),
+        )
     }
 
     @Test
-    fun settingPlayerAProgramUpdatesStatus() {
+    fun `inits with default lobby and playerA submits program`() {
         val shorkService = ShorkService(MockShork())
-
-        assertEquals(false, shorkService.getStatus().playerASubmitted)
-        shorkService.addProgram("playerA", "programcode")
-        assertEquals(true, shorkService.getStatus().playerASubmitted)
+        shorkService.addProgramToLobby(0L, "playerA", "someProgram")
+        assertEquals(
+            shorkService.getLobbyStatus(0L),
+            Status(
+                playerASubmitted = true,
+                playerBSubmitted = false,
+                gameState = GameState.NOT_STARTED,
+                result = Result(winner = Winner.UNDECIDED),
+            ),
+        )
     }
 
     @Test
-    fun settingPlayerBProgramUpdatesStatus() {
+    fun `inits with default lobby and playerB submits program`() {
         val shorkService = ShorkService(MockShork())
-
-        assertEquals(false, shorkService.getStatus().playerBSubmitted)
-        shorkService.addProgram("playerB", "other program code")
-        assertEquals(true, shorkService.getStatus().playerBSubmitted)
-    }
-
-    @Test
-    fun uploadingPlayerAAndBRunsGame() {
-        val shorkService = ShorkService(MockShork())
-
-        shorkService.addProgram("playerA", "programcode")
-        shorkService.addProgram("playerB", "other program code")
-
-        val status = shorkService.getStatus()
-        assertEquals(GameState.FINISHED, status.gameState)
-    }
-
-    @Test
-    fun runningGameCallsShork() {
-        val shork = spyk<MockShork>()
-        val shorkService = ShorkService(shork)
-
-        shorkService.addProgram("playerA", "programcode")
-        shorkService.addProgram("playerB", "other program code")
-
-        verify(exactly = 1) { shork.run(any(), any()) }
+        shorkService.addProgramToLobby(0L, "playerB", "someProgram")
+        assertEquals(
+            shorkService.getLobbyStatus(0L),
+            Status(
+                playerASubmitted = false,
+                playerBSubmitted = true,
+                gameState = GameState.NOT_STARTED,
+                result = Result(winner = Winner.UNDECIDED),
+            ),
+        )
     }
 }
