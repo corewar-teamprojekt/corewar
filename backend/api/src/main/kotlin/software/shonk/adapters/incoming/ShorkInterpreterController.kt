@@ -13,7 +13,14 @@ import software.shonk.application.port.incoming.ShorkUseCase
 fun Route.configureShorkInterpreterControllerV0() {
     val shorkUseCase by inject<ShorkUseCase>()
 
-    get("/status") { call.respond(shorkUseCase.getStatus()) }
+    get("/status") {
+        val useCaseResponse = shorkUseCase.getLobbyStatus(0L)
+        if (useCaseResponse == null) {
+            call.respond(HttpStatusCode.BadRequest)
+        } else {
+            call.respond(useCaseResponse)
+        }
+    }
 
     post("/code/{player}") {
         val player = call.parameters["player"]
@@ -29,7 +36,7 @@ fun Route.configureShorkInterpreterControllerV0() {
         }
 
         val program = call.receive<String>()
-        shorkUseCase.addProgram(player, program)
+        shorkUseCase.addProgramToLobby(0L, player, program)
         call.respond(HttpStatusCode.OK)
         return@post
     }
