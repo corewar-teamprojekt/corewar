@@ -14,7 +14,7 @@ tasks:
     cmds:
       - python --version || echo "Python not found, please install it"
       - pre-commit --version || python -m pip install pre-commit || echo "Pre-commit not found, please install it"
-      - python -m pre-commit install --hook-type commit-msg --hook-type pre-commit
+      - pre-commit install --hook-type commit-msg --hook-type pre-commit || python -m pre-commit install --hook-type commit-msg --hook-type pre-commit
   run:
     deps: [frontend:run, backend:run]
   build:
