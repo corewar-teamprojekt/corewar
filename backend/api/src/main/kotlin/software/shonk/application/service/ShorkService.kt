@@ -1,6 +1,7 @@
 package software.shonk.application.service
 
 import software.shonk.application.port.incoming.ShorkUseCase
+import software.shonk.domain.GameState
 import software.shonk.domain.Lobby
 import software.shonk.domain.Status
 import software.shonk.interpreter.IShork
@@ -25,5 +26,11 @@ class ShorkService(val shork: IShork) : ShorkUseCase {
 
     override fun getLobbyStatus(lobbyId: Long): Status? {
         return lobbies[0]?.getStatus()
+    }
+
+    fun closeLobby() {
+        if ((lobbies[0]?.getStatus()?.gameState ?: GameState.NOT_STARTED) == GameState.FINISHED) {
+            lobbies.remove(0)
+        }
     }
 }
