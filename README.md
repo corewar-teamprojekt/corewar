@@ -10,69 +10,20 @@
 </p>
 
 ## About Corewar
-insert infodump
-<ul>
-<li>a</li>
-<li>b</li>
-<li>c</li>
-<li>d</li>
-</ul>
+
+[Corewar](https://en.wikipedia.org/wiki/Core_War) is a game where two or more players write competing assembly programs in a [custom assembly language called Redcode](https://github.com/corewar-teamprojekt/corewar/wiki/Redcode), aiming to control a shared virtual memory space.
+
+The game concept originated in 1984 and was first introduced in [this article](https://corewar.co.uk/standards/cwg.txt). Since then, a few implementations have emerged, but most have grown outdated or lack the features needed for a modern experience, especially for easily playing against friends or competing online.
+
+This project aims to revitalize Corewar, bringing it to a whole new audience of tech enthusiasts. Happy hacking!
 
 ## Start playing
 The current production deployment can be found [here](https://corewar.shonk.software/).
 
 We deploy every active branch to https://$BRANCHNAME.corewar.shonk.software/ aswell.
 
-## Local setup
 
-### Prerequisites
- - Install [Node.js](https://nodejs.org/) and the [Node Package Manager](https://www.npmjs.com/get-npm)
- - Install [pre-commit](https://pre-commit.com/), for example with pip  
-    ```
-    pip install pre-commit
-    ```
- - We **recommend** you use [IntelliJ](https://www.jetbrains.com/idea/) as your IDE, since it provides some of the best support for [Kotlin](https://kotlinlang.org/) and [ktor](https://ktor.io/).
-
-### Setting up the project
-1. Clone the repo  
-    ```
-    git clone git@github.com:corewar-teamprojekt/corewar.git
-   ```
-2. Install our pre-commit hooks with
-   ```
-   pre-commit install --hook-type commit-msg --hook-type pre-commit
-   ```
-3. Run the backend tests in `backend` with
-   ```
-   ./gradlew test
-   ```
-4. Start the backend by running
-    ```
-    ./gradlew run
-    ```
-   in the `backend` directory.
-5. Install the frontend dependencies by running
-    ```
-    npm i
-    ```
-   in the `frontend` directory.
-6. Run the frontend tests by running
-   ```
-   npm run test
-   ```
-   in the `frontend` directory.
-7. Start the frontend
-    ```
-    npm run dev
-    ```
-8. E2E Tests with [Playwright](https://playwright.dev/): In the `e2e` directory, run 
-    ```
-    npm i
-    npm run test
-    ```
-   NOTE: Depending on your system, you might encounter problems, mostly with Webkit, since playwright only supports some linux distributions!
-
-## Contributing
+## Contributing / Local setup
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
