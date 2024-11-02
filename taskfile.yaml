@@ -1,0 +1,44 @@
+version: '3'
+
+includes:
+  frontend: 
+    taskfile: ./frontend/app/taskfile.yaml
+    dir: ./frontend/app
+  backend:
+    taskfile: ./backend/taskfile.yaml
+    dir: ./backend
+
+tasks:
+  setup:
+    deps: [frontend:setup, backend:setup]
+    cmds:
+      - python --version || echo "Python not found, please install it"
+      - pre-commit --version || python -m pip install pre-commit || echo "Pre-commit not found, please install it"
+      - python -m pre-commit install --hook-type commit-msg --hook-type pre-commit
+  run:
+    deps: [frontend:run, backend:run]
+  build:
+    deps: [frontend:build, backend:build]
+  test:
+    deps: [frontend:test, backend:test]
+  lint:
+    deps: [frontend:lint]
+  format:
+    deps: [frontend:format, backend:format]
+  format-check: 
+    deps: [frontend:format-check, backend:format-check]
+  clean:
+    deps: [frontend:clean, backend:clean]
+  build-container:
+    deps: [build]
+    sources:
+      - Containerfile
+      - frontend/**
+      - backend/**
+      - misc/**
+    cmds:
+      - buildah build -t corewar . || docker build -t corewar -f Containerfile .
+  run-container:
+    deps: [build-container]
+    cmds:
+      - podman run -p 3000:80 --replace --name corewar corewar || docker run -p 3000:80 --name corewar corewar

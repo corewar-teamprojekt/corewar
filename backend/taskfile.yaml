@@ -1,0 +1,33 @@
+version: '3'
+
+tasks:
+  setup:
+    cmds:
+      - java -version || echo "Java not found, please install at least Java 21"
+      - ./gradlew ktfmtCheck
+  run:
+    cmds:
+      - ./gradlew api:run
+  build:
+    sources:
+      - api/**
+      - shork/**
+      - build.gradle.kts
+      - settings.gradle.kts
+      - gradle.properties
+    generates:
+      - api/build/libs/api-all.jar
+    cmds:
+      - ./gradlew api:buildFatJar
+  test:
+    cmds:
+      - ./gradlew test
+  format:
+    cmds:
+      - ./gradlew ktfmtFormat
+  format-check:
+    cmds:
+      - ./gradlew ktfmtCheck
+  clean:
+    cmds:
+      - ./gradlew clean
