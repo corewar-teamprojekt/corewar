@@ -66,4 +66,13 @@ class ShorkServiceTest {
         shorkService.setLobbySettings(0, someSettings)
         assertEquals(someSettings, shorkService.lobbies[0]?.getSettings())
     }
+
+    @Test
+    fun `end lobby`() {
+        val shorkService = ShorkService(MockShork())
+        shorkService.addProgramToLobby(0L, "playerA", "someProgram")
+        shorkService.addProgramToLobby(0L, "playerB", "someOtherProgram")
+        shorkService.closeLobby()
+        assertEquals(shorkService.lobbies.size, 0)
+    }
 }
