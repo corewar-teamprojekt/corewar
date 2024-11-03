@@ -12,6 +12,7 @@ import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 import org.koin.ktor.plugin.koin
 import software.shonk.adapters.incoming.configureShorkInterpreterControllerV0
+import software.shonk.adapters.incoming.configureShorkInterpreterControllerV1
 import software.shonk.application.port.incoming.ShorkUseCase
 import software.shonk.application.service.ShorkService
 import software.shonk.interpreter.IShork
@@ -21,6 +22,7 @@ fun main() {
     embeddedServer(Netty, port = 8080) {
             module()
             moduleApiV0()
+            moduleApiV1()
             koinModule()
         }
         .start(wait = true)
@@ -52,7 +54,7 @@ fun Application.moduleApiV0() {
 }
 
 fun Application.moduleApiV1() {
-    routing { route("/api/v1") {} }
+    routing { route("/api/v1") { configureShorkInterpreterControllerV1() } }
 }
 
 fun Application.koinModule() {

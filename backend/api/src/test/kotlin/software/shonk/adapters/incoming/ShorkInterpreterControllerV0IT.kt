@@ -5,59 +5,21 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.config.*
 import io.ktor.server.testing.*
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
-import org.koin.core.module.Module
-import org.koin.dsl.module
-import org.koin.test.KoinTest
-import software.shonk.application.port.incoming.ShorkUseCase
-import software.shonk.application.service.ShorkService
-import software.shonk.interpreter.IShork
-import software.shonk.interpreter.MockShork
 import software.shonk.module
 import software.shonk.moduleApiV0
 
-class ShorkInterpreterControllerIT() : KoinTest {
-    private lateinit var testEngine: TestApplicationEngine
+class ShorkInterpreterControllerV0IT() : AbstractControllerTest() {
 
-    @BeforeEach
-    fun beforeTest() {
-        testEngine =
-            TestApplicationEngine(
-                createTestEnvironment {
-                    config =
-                        MapApplicationConfig(
-                            "ktor.environment" to "test",
-                            "ktor.deployments.port" to "8080",
-                        )
-                }
-            )
-
-        testEngine.start(wait = false)
+    override fun applyTestEngineApplication() {
         testEngine.application.apply {
             module()
             moduleApiV0()
-        }
-        configureCustomDI(
-            module {
-                single<IShork> { MockShork() }
-                single<ShorkUseCase> { ShorkService(get()) }
-            }
-        )
-    }
-
-    private fun configureCustomDI(module: Module) {
-        testEngine.application.apply {
-            stopKoin()
-            startKoin { modules(module) }
         }
     }
 
@@ -73,18 +35,11 @@ class ShorkInterpreterControllerIT() : KoinTest {
         )
     }
 
-    private fun runTest(testBlock: suspend TestApplicationEngine.() -> Unit) {
-        with(testEngine) { runBlocking { testBlock() } }
-    }
-
     @Test
-    fun testGetStatus() =
-        with(testEngine) {
-            runBlocking {
-                val response = client.get("/api/v0/status")
-                assertEquals(HttpStatusCode.OK, response.status)
-            }
-        }
+    fun testGetStatus() = runTest {
+        val response = client.get("/api/v0/status")
+        assertEquals(HttpStatusCode.OK, response.status)
+    }
 
     @Test
     fun testGetStatusDefault() = runTest {
@@ -197,36 +152,4 @@ class ShorkInterpreterControllerIT() : KoinTest {
             assertEquals("NOT_STARTED", resopnseData["gameState"])
             assertEquals("UNDECIDED", resopnseData["result.winner"])
         }
-
-    @Test
-    fun testGetPlayerCode() = runTest {
-        client.post("/api/v0/code/playerA") {
-            contentType(ContentType.Application.Json)
-            setBody("someString")
-        }
-
-        client.post("/api/v0/code/playerB") {
-            contentType(ContentType.Application.Json)
-            setBody("someOtherString")
-        }
-
-        val result = client.get("/api/v0/code/playerA")
-        assertEquals(
-            "someString",
-            Json.parseToJsonElement(result.bodyAsText()).jsonObject["code"]?.jsonPrimitive?.content,
-        )
-
-        val resultB = client.get("/api/v0/code/playerB")
-        assertEquals(
-            "someOtherString",
-            Json.parseToJsonElement(resultB.bodyAsText()).jsonObject["code"]?.jsonPrimitive?.content,
-        )
-    }
-
-    @Test
-    fun testGetPlayerCodeNotSubmitted() = runTest {
-        val result = client.get("/api/v0/code/playerA")
-        assertEquals(HttpStatusCode.BadRequest, result.status)
-        assert(result.bodyAsText().contains("No player with that name in the lobby"))
-    }
 }

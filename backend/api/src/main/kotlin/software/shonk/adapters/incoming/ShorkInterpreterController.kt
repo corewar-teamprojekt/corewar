@@ -36,14 +36,22 @@ fun Route.configureShorkInterpreterControllerV0() {
         result.onSuccess { call.respond(HttpStatusCode.OK) }
         return@post
     }
+}
 
-    get("/code/{player}") {
+fun Route.configureShorkInterpreterControllerV1() {
+    val shorkUseCase by inject<ShorkUseCase>()
+
+    get("/lobby/{lobbyId}/code/{player}") {
         val player = call.parameters["player"]
-        val program = shorkUseCase.getProgramFromLobby(defaultLobby, player)
+        val lobbyId =
+            call.parameters["lobbyId"]?.toLongOrNull()
+                ?: return@get call.respond(HttpStatusCode.BadRequest)
+        val program = shorkUseCase.getProgramFromLobby(lobbyId, player)
 
         program.onFailure {
             call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
         }
+
         program.onSuccess { call.respond(Program(it)) }
         return@get
     }
