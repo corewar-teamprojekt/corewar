@@ -199,15 +199,27 @@ class ShorkInterpreterControllerIT() : KoinTest {
         }
 
     @Test
-    fun testGetPlayerACode() = runTest {
+    fun testGetPlayerCode() = runTest {
         client.post("/api/v0/code/playerA") {
             contentType(ContentType.Application.Json)
             setBody("someString")
         }
+
+        client.post("/api/v0/code/playerB") {
+            contentType(ContentType.Application.Json)
+            setBody("someOtherString")
+        }
+
         val result = client.get("/api/v0/code/playerA")
         assertEquals(
             "someString",
             Json.parseToJsonElement(result.bodyAsText()).jsonObject["code"]?.jsonPrimitive?.content,
+        )
+
+        val resultB = client.get("/api/v0/code/playerB")
+        assertEquals(
+            "someOtherString",
+            Json.parseToJsonElement(resultB.bodyAsText()).jsonObject["code"]?.jsonPrimitive?.content,
         )
     }
 
