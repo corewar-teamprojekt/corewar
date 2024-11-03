@@ -4,9 +4,13 @@ import software.shonk.domain.Status
 import software.shonk.interpreter.Settings
 
 interface ShorkUseCase {
-    fun addProgramToLobby(lobbyId: Long, name: String, program: String)
+    fun addProgramToLobby(lobbyId: Long, name: String?, program: String): Result<Unit>
 
-    fun setLobbySettings(lobbyId: Long, settings: Settings)
+    fun setLobbySettings(lobbyId: Long, settings: Settings): Result<Unit>
 
-    fun getLobbyStatus(lobbyId: Long): Status?
+    fun createLobby(): Long
+
+    fun deleteLobby(lobbyId: Long): Result<Unit>
+
+    fun getLobbyStatus(lobbyId: Long): Result<Status>
 }
