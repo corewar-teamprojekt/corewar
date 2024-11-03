@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 tasks:
   setup:
@@ -21,16 +21,16 @@ tasks:
       - npm run build
   test:
     cmds:
-      - npm run test
+      - npm run test run
   lint:
     cmds:
       - npm run lint
   format:
     cmds:
-      - npx run prettier --write .
+      - npx prettier --write src
   format-check:
     cmds:
-      - npx run prettier --check .
+      - npx prettier --check src
   clean:
     cmds:
       - rm -rf node_modules
