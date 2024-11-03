@@ -45,7 +45,7 @@ abstract class AbstractControllerTest() : KoinTest {
 
     abstract fun applyTestEngineApplication()
 
-    private fun configureCustomDI(module: Module) {
+    open fun configureCustomDI(module: Module) {
         testEngine.application.apply {
             stopKoin()
             startKoin { modules(module) }
