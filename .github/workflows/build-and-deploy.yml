@@ -48,38 +48,32 @@ jobs:
       with:
         node-version: lts/*
 
+    - name: Install Task
+      uses: arduino/setup-task@v2
+      with:
+        version: 3.x
+
     - name: Install dependencies
       working-directory: frontend/app
       run: | 
-          npm ci
+          task setup
           npm install @microsoft/eslint-formatter-sarif@3.1.0
 
     - name: Run Prettier
       working-directory: frontend/app
-      run: npx prettier --check src
+      run: task format-check
 
     - name: Run ESLint
-      env:
-        SARIF_ESLINT_IGNORE_SUPPRESSED: "true"
       working-directory: frontend/app
-      run: npx eslint src
-        --format @microsoft/eslint-formatter-sarif
-        --output-file eslint-results.sarif
+      run: task lint
 
     - name: Build project
       working-directory: frontend/app
-      run: npm run build
-
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: dist
-        path: |
-          frontend/app/dist
+      run: task build
 
     - name: Run unit tests
       working-directory: frontend/app
-      run: npm test
+      run: task test
 
   build-backend:
     name: "Build and Test Backend"
@@ -93,12 +87,17 @@ jobs:
           java-version: 21
           distribution: 'temurin'
 
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run Format Check, Tests and Build
         working-directory: backend/
-        run: ./gradlew clean ktfmtCheck test build
+        run: task clean format-check test build
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
