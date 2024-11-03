@@ -48,6 +48,20 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
         return Result.success(Unit)
     }
 
+    override fun getProgramFromLobby(lobbyId: Long, name: String?): Result<String> {
+        val lobby =
+            getLobby(lobbyId).getOrElse {
+                return Result.failure(it)
+            }
+
+        val result = lobby.programs[name]
+        return if (result == null) {
+            Result.failure(IllegalArgumentException("No player with that name in the lobby"))
+        } else {
+            Result.success(result)
+        }
+    }
+
     override fun getLobbyStatus(lobbyId: Long): Result<Status> {
         val lobby =
             getLobby(lobbyId).getOrElse {
