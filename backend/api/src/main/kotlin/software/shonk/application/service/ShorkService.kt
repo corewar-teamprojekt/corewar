@@ -21,6 +21,9 @@ class ShorkService(val shork: IShork) : ShorkUseCase {
     }
 
     override fun addProgramToLobby(lobbyId: Long, name: String, program: String) {
+        if ((lobbies[0]?.getStatus()?.gameState ?: GameState.NOT_STARTED) == GameState.FINISHED) {
+            closeLobby()
+        }
         lobbies[0]?.addProgram(name, program)
     }
 
@@ -29,8 +32,7 @@ class ShorkService(val shork: IShork) : ShorkUseCase {
     }
 
     fun closeLobby() {
-        if ((lobbies[0]?.getStatus()?.gameState ?: GameState.NOT_STARTED) == GameState.FINISHED) {
-            lobbies.remove(0)
-        }
+        lobbies.remove(0)
+        lobbies.put(0L, Lobby(0L, HashMap<String, String>(), shork))
     }
 }
