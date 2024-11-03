@@ -1,5 +1,7 @@
 package software.shonk.application.service
 
+import io.mockk.spyk
+import io.mockk.verify
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
 import software.shonk.domain.GameState
@@ -68,11 +70,11 @@ class ShorkServiceTest {
     }
 
     @Test
-    fun `end lobby`() {
-        val shorkService = ShorkService(MockShork())
+    fun `check if a dead lobby gets closed after new code gets submitted by any player`() {
+        val shorkService = spyk(ShorkService(MockShork()))
         shorkService.addProgramToLobby(0L, "playerA", "someProgram")
         shorkService.addProgramToLobby(0L, "playerB", "someOtherProgram")
-        shorkService.closeLobby()
-        assertEquals(shorkService.lobbies.size, 0)
+        shorkService.addProgramToLobby(0L, "playerB", "someNewOtherProgram")
+        verify(exactly = 1) { shorkService.closeLobby() }
     }
 }

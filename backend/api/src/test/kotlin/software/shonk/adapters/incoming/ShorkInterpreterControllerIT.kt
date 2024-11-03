@@ -218,7 +218,6 @@ class ShorkInterpreterControllerIT() : KoinTest {
         }
     }
 
-    /*
     @Test
     fun testBothPlayersSubmittedGameGetsSimulatedPlayerCodeAndFlagsResetAfterNewPlayerCodeGetsSubmitted() {
         with(testEngine) {
@@ -256,5 +255,4 @@ class ShorkInterpreterControllerIT() : KoinTest {
             }
         }
     }
-    */
 }
