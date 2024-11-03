@@ -5,12 +5,12 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.config.*
 import io.ktor.server.testing.*
-import kotlin.test.junit5.JUnit5Asserter.assertNotEquals
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.koin.core.context.startKoin
@@ -61,6 +61,18 @@ class ShorkInterpreterControllerIT() : KoinTest {
         }
     }
 
+    private suspend fun parseStatus(response: HttpResponse): Map<String, String> {
+        val responseJson = Json.parseToJsonElement(response.bodyAsText()).jsonObject
+        val result = responseJson["result"]?.jsonObject
+        val resultWinner = result?.get("winner")?.jsonPrimitive?.content ?: "UNDECIDED"
+        return mapOf(
+            "playerASubmitted" to responseJson["playerASubmitted"]!!.jsonPrimitive.content,
+            "playerBSubmitted" to responseJson["playerBSubmitted"]!!.jsonPrimitive.content,
+            "gameState" to responseJson["gameState"]!!.jsonPrimitive.content,
+            "result.winner" to resultWinner,
+        )
+    }
+
     @Test
     fun testGetStatus() =
         with(testEngine) {
@@ -75,20 +87,11 @@ class ShorkInterpreterControllerIT() : KoinTest {
         with(testEngine) {
             runBlocking {
                 val response = client.get("/api/v0/status")
-                assertEquals(
-                    """
-            {
-                "playerASubmitted": false,
-                "playerBSubmitted": false,
-                "gameState": "NOT_STARTED",
-                "result": {
-                    "winner": "UNDECIDED"
-                }
-            }
-        """
-                        .trimIndent(),
-                    response.bodyAsText(),
-                )
+                val responseData = parseStatus(response)
+                assertEquals("false", responseData["playerASubmitted"])
+                assertEquals("false", responseData["playerBSubmitted"])
+                assertEquals("NOT_STARTED", responseData["gameState"])
+                assertEquals("UNDECIDED", responseData["result.winner"])
             }
         }
 
@@ -137,20 +140,11 @@ class ShorkInterpreterControllerIT() : KoinTest {
                 }
 
                 val response = client.get("/api/v0/status")
-                assertEquals(
-                    """
-            {
-                "playerASubmitted": true,
-                "playerBSubmitted": false,
-                "gameState": "NOT_STARTED",
-                "result": {
-                    "winner": "UNDECIDED"
-                }
-            }
-        """
-                        .trimIndent(),
-                    response.bodyAsText(),
-                )
+                val responseData = parseStatus(response)
+                assertEquals("true", responseData["playerASubmitted"])
+                assertEquals("false", responseData["playerBSubmitted"])
+                assertEquals("NOT_STARTED", responseData["gameState"])
+                assertEquals("UNDECIDED", responseData["result.winner"])
             }
         }
 
@@ -165,20 +159,11 @@ class ShorkInterpreterControllerIT() : KoinTest {
                 }
 
                 val response = client.get("/api/v0/status")
-                assertEquals(
-                    """
-            {
-                "playerASubmitted": false,
-                "playerBSubmitted": false,
-                "gameState": "NOT_STARTED",
-                "result": {
-                    "winner": "UNDECIDED"
-                }
-            }
-        """
-                        .trimIndent(),
-                    response.bodyAsText(),
-                )
+                val responseData = parseStatus(response)
+                assertEquals("false", responseData["playerASubmitted"])
+                assertEquals("false", responseData["playerBSubmitted"])
+                assertEquals("NOT_STARTED", responseData["gameState"])
+                assertEquals("UNDECIDED", responseData["result.winner"])
             }
         }
 
@@ -197,23 +182,10 @@ class ShorkInterpreterControllerIT() : KoinTest {
                 }
 
                 val response = client.get("/api/v0/status")
+                val responseData = parseStatus(response)
 
-                assertNotEquals(
-                    "wrong gamestate, should be anything, but NOT_STARTED",
-                    "NOT_STARTED",
-                    Json.parseToJsonElement(response.bodyAsText())
-                        .jsonObject["gameState"]
-                        .toString(),
-                )
-                assertEquals(
-                    "A",
-                    Json.parseToJsonElement(response.bodyAsText())
-                        .jsonObject["result"]
-                        ?.jsonObject
-                        ?.get("winner")
-                        ?.jsonPrimitive
-                        ?.content,
-                )
+                assertNotEquals("NOT_STARTED", responseData["gameState"])
+                assertEquals("A", responseData["result.winner"])
             }
         }
     }
@@ -238,20 +210,42 @@ class ShorkInterpreterControllerIT() : KoinTest {
 
                 // check if code/flags were reset after running and game hasn't started
                 val response = client.get("/api/v0/status")
-                assertEquals(
-                    """
-            {
-                "playerASubmitted": true,
-                "playerBSubmitted": false,
-                "gameState": "NOT_STARTED",
-                "result": {
-                    "winner": "UNDECIDED"
-                }
+                val resopnseData = parseStatus(response)
+                assertEquals("true", resopnseData["playerASubmitted"])
+                assertEquals("false", resopnseData["playerBSubmitted"])
+                assertEquals("NOT_STARTED", resopnseData["gameState"])
+                assertEquals("UNDECIDED", resopnseData["result.winner"])
             }
-        """
-                        .trimIndent(),
-                    response.bodyAsText(),
+        }
+    }
+
+    @Test
+    fun testGetPlayerACode() {
+        with(testEngine) {
+            runBlocking {
+                client.post("/api/v0/code/playerA") {
+                    contentType(ContentType.Application.Json)
+                    setBody("someString")
+                }
+                val result = client.get("/api/v0/code/playerA")
+                assertEquals(
+                    "someString",
+                    Json.parseToJsonElement(result.bodyAsText())
+                        .jsonObject["code"]
+                        ?.jsonPrimitive
+                        ?.content,
                 )
+            }
+        }
+    }
+
+    @Test
+    fun testGetPlayerCodeNotSubmitted() {
+        with(testEngine) {
+            runBlocking {
+                val result = client.get("/api/v0/code/playerA")
+                assertEquals(HttpStatusCode.BadRequest, result.status)
+                assert(result.bodyAsText().contains("No player with that name in the lobby"))
             }
         }
     }
