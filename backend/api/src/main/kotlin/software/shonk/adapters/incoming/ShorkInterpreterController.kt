@@ -7,9 +7,9 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import kotlinx.serialization.Serializable
 import org.koin.ktor.ext.inject
 import software.shonk.application.port.incoming.ShorkUseCase
-import software.shonk.domain.Program
 
 const val UNKNOWN_ERROR_MESSAGE = "Unknown Error"
 const val defaultLobby = 0L
@@ -56,3 +56,5 @@ fun Route.configureShorkInterpreterControllerV1() {
         return@get
     }
 }
+
+@Serializable data class Program(val code: String)
