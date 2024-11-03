@@ -9,14 +9,16 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import org.koin.ktor.ext.inject
 import software.shonk.application.port.incoming.ShorkUseCase
+import software.shonk.domain.Program
 
 const val UNKNOWN_ERROR_MESSAGE = "Unknown Error"
+const val defaultLobby = 0L
 
 fun Route.configureShorkInterpreterControllerV0() {
     val shorkUseCase by inject<ShorkUseCase>()
 
     get("/status") {
-        val useCaseResponse = shorkUseCase.getLobbyStatus(0L)
+        val useCaseResponse = shorkUseCase.getLobbyStatus(defaultLobby)
         useCaseResponse.onFailure {
             call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
         }
@@ -27,11 +29,22 @@ fun Route.configureShorkInterpreterControllerV0() {
         val player = call.parameters["player"]
         val program = call.receive<String>()
 
-        val result = shorkUseCase.addProgramToLobby(0L, player, program)
+        val result = shorkUseCase.addProgramToLobby(defaultLobby, player, program)
         result.onFailure {
             call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
         }
         result.onSuccess { call.respond(HttpStatusCode.OK) }
         return@post
+    }
+
+    get("/code/{player}") {
+        val player = call.parameters["player"]
+        val program = shorkUseCase.getProgramFromLobby(defaultLobby, player)
+
+        program.onFailure {
+            call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
+        }
+        program.onSuccess { call.respond(Program(it)) }
+        return@get
     }
 }
