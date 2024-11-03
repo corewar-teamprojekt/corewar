@@ -11,10 +11,10 @@ export default function CodeEditor({ setProgram }: Readonly<CodeEditorProps>) {
 	useEffect(() => {
 		if (monaco) {
 			// Register the custom language
-			monaco.languages.register({ id: "myLang" });
+			monaco.languages.register({ id: "redcode" });
 
 			// Set up the language configuration
-			monaco.languages.setLanguageConfiguration("myLang", {
+			monaco.languages.setLanguageConfiguration("redcode", {
 				comments: {
 					lineComment: "//",
 					blockComment: ["/*", "*/"],
@@ -41,11 +41,11 @@ export default function CodeEditor({ setProgram }: Readonly<CodeEditorProps>) {
 			});
 
 			// Define the language tokens and syntax highlighting
-			monaco.languages.setMonarchTokensProvider("myLang", {
+			monaco.languages.setMonarchTokensProvider("redcode", {
 				tokenizer: {
 					root: [
 						// Keywords
-						[/\b(keyword1|keyword2|keyword3)\b/, "keyword"],
+						[/\b(MOV|ADD|SUB|JMP|JMZ|JMN|DJN|CMP|SPL|DAT|NOP)\b/, "keyword"],
 
 						// Identifiers
 						[/[a-z_$][\w$]*/, "identifier"],
@@ -69,7 +69,7 @@ export default function CodeEditor({ setProgram }: Readonly<CodeEditorProps>) {
 		<Editor
 			height="30vh"
 			theme="vs-dark"
-			defaultLanguage="myLang"
+			defaultLanguage="redcode"
 			defaultValue="// heheheha, code here :D "
 			onChange={(value) => setProgram(value ?? "")}
 		/>
