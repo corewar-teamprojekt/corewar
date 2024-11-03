@@ -75,6 +75,13 @@ jobs:
       working-directory: frontend/app
       run: task test
 
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist
+        path: |
+          frontend/app/dist
+
   build-backend:
     name: "Build and Test Backend"
     runs-on: ubuntu-latest
