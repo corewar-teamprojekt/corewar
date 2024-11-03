@@ -21,7 +21,7 @@ class ShorkServiceTest {
         assertEquals(shorkService.lobbies[0]?.id, 0)
 
         assertEquals(
-            shorkService.getLobbyStatus(0L),
+            shorkService.getLobbyStatus(0L).getOrThrow(),
             Status(
                 playerASubmitted = false,
                 playerBSubmitted = false,
@@ -32,11 +32,17 @@ class ShorkServiceTest {
     }
 
     @Test
+    fun `inits with only one lobby`() {
+        val shorkService = ShorkService(MockShork())
+        assertEquals(shorkService.lobbies.size, 1)
+    }
+
+    @Test
     fun `inits with default lobby and playerA submits program`() {
         val shorkService = ShorkService(MockShork())
         shorkService.addProgramToLobby(0L, "playerA", "someProgram")
         assertEquals(
-            shorkService.getLobbyStatus(0L),
+            shorkService.getLobbyStatus(0L).getOrThrow(),
             Status(
                 playerASubmitted = true,
                 playerBSubmitted = false,
@@ -51,7 +57,7 @@ class ShorkServiceTest {
         val shorkService = ShorkService(MockShork())
         shorkService.addProgramToLobby(0L, "playerB", "someProgram")
         assertEquals(
-            shorkService.getLobbyStatus(0L),
+            shorkService.getLobbyStatus(0L).getOrThrow(),
             Status(
                 playerASubmitted = false,
                 playerBSubmitted = true,
@@ -59,6 +65,104 @@ class ShorkServiceTest {
                 result = Result(winner = Winner.UNDECIDED),
             ),
         )
+    }
+
+    @Test
+    fun `close lobby removes player code and resets the game state`() {
+        val shorkService = ShorkService(MockShork())
+        shorkService.addProgramToLobby(0L, "playerA", "someProgram")
+        shorkService.addProgramToLobby(0L, "playerB", "someProgram")
+        shorkService.resetLobby(0L)
+        assertEquals(
+            shorkService.getLobbyStatus(0L).getOrThrow(),
+            Status(
+                playerASubmitted = false,
+                playerBSubmitted = false,
+                gameState = GameState.NOT_STARTED,
+                result = Result(winner = Winner.UNDECIDED),
+            ),
+        )
+    }
+
+    @Test
+    fun `create lobby creates a new lobby`() {
+        val shorkService = ShorkService(MockShork())
+        val lobbyId = shorkService.createLobby()
+        assertEquals(shorkService.lobbies.size, 2)
+        assertEquals(lobbyId, 1)
+        assertEquals(
+            shorkService.getLobbyStatus(1L).getOrThrow(),
+            Status(
+                playerASubmitted = false,
+                playerBSubmitted = false,
+                gameState = GameState.NOT_STARTED,
+                result = Result(winner = Winner.UNDECIDED),
+            ),
+        )
+    }
+
+    @Test
+    fun `upload code in lobby 0 does not affect lobby 1`() {
+        val shorkService = ShorkService(MockShork())
+        val secondLobby = shorkService.createLobby()
+        shorkService.addProgramToLobby(0L, "playerA", "someProgram")
+        assertEquals(
+            shorkService.getLobbyStatus(0L).getOrThrow(),
+            Status(
+                playerASubmitted = true,
+                playerBSubmitted = false,
+                gameState = GameState.NOT_STARTED,
+                result = Result(winner = Winner.UNDECIDED),
+            ),
+        )
+        assertEquals(
+            shorkService.getLobbyStatus(secondLobby).getOrThrow(),
+            Status(
+                playerASubmitted = false,
+                playerBSubmitted = false,
+                gameState = GameState.NOT_STARTED,
+                result = Result(winner = Winner.UNDECIDED),
+            ),
+        )
+    }
+
+    @Test
+    fun `add code with playerName null`() {
+        val shorkService = ShorkService(MockShork())
+        val result = shorkService.addProgramToLobby(0L, null, "someProgram")
+        assertEquals(result.isFailure, true)
+        assertEquals(result.exceptionOrNull()?.message, "Invalid player name")
+    }
+
+    @Test
+    fun `delete lobby removes the lobby`() {
+        val shorkService = ShorkService(MockShork())
+        shorkService.deleteLobby(0L)
+        assertEquals(shorkService.lobbies.size, 0)
+    }
+
+    @Test
+    fun `delete lobby fails if lobby does not exist`() {
+        val shorkService = ShorkService(MockShork())
+        val result = shorkService.deleteLobby(1L)
+        assertEquals(result.isFailure, true)
+        assertEquals(result.exceptionOrNull()?.message, "No lobby with that id")
+    }
+
+    @Test
+    fun `get status for the lobby fails if lobby does not exist`() {
+        val shorkService = ShorkService(MockShork())
+        val result = shorkService.getLobbyStatus(1L)
+        assertEquals(result.isFailure, true)
+        assertEquals(result.exceptionOrNull()?.message, "No lobby with that id")
+    }
+
+    @Test
+    fun `add program to the lobby fails if lobby does not exist`() {
+        val shorkService = ShorkService(MockShork())
+        val result = shorkService.addProgramToLobby(1L, "playerA", "someProgram")
+        assertEquals(result.isFailure, true)
+        assertEquals(result.exceptionOrNull()?.message, "No lobby with that id")
     }
 
     @Test
@@ -72,9 +176,10 @@ class ShorkServiceTest {
     @Test
     fun `check if a dead lobby gets closed after new code gets submitted by any player`() {
         val shorkService = spyk(ShorkService(MockShork()))
-        shorkService.addProgramToLobby(0L, "playerA", "someProgram")
-        shorkService.addProgramToLobby(0L, "playerB", "someOtherProgram")
-        shorkService.addProgramToLobby(0L, "playerB", "someNewOtherProgram")
-        verify(exactly = 1) { shorkService.closeLobby() }
+        val lobbyId = 0L
+        shorkService.addProgramToLobby(lobbyId, "playerA", "someProgram")
+        shorkService.addProgramToLobby(lobbyId, "playerB", "someOtherProgram")
+        shorkService.addProgramToLobby(lobbyId, "playerB", "someNewOtherProgram")
+        verify(exactly = 1) { shorkService.resetLobby(lobbyId) }
     }
 }
