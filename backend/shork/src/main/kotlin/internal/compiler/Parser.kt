@@ -146,7 +146,7 @@ internal class Parser(private val tokens: List<Token>) {
             TokenType.MUL -> Mul(aField, bField, modeA, modeB, modifier)
             TokenType.DIV -> Div(aField, bField, modeA, modeB, modifier)
             TokenType.MOD -> Mod(aField, bField, modeA, modeB, modifier)
-            TokenType.JMP -> Jump(aField, bField, modeA, modeB, modifier)
+            TokenType.JMP -> Jmp(aField, bField, modeA, modeB, modifier)
             TokenType.JMZ -> Jmz(aField, bField, modeA, modeB, modifier)
             TokenType.JMN -> Jmn(aField, bField, modeA, modeB, modifier)
             TokenType.DJN -> Djn(aField, bField, modeA, modeB, modifier)
