@@ -4,7 +4,7 @@ import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.process.AbstractProcess
 
-internal class Split(
+internal class Spl(
     aField: Int,
     bField: Int,
     addressModeA: AddressMode,
@@ -17,6 +17,6 @@ internal class Split(
     }
 
     override fun deepCopy(): AbstractInstruction {
-        return Split(aField, bField, addressModeA, addressModeB, modifier)
+        return Spl(aField, bField, addressModeA, addressModeB, modifier)
     }
 }
