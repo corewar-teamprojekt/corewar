@@ -43,7 +43,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteAMatch() {
+    fun `test modifier A fields equal`() {
         val seq = setupSeq(Modifier.A)
         setupMemory(42, 0, 1)
         setupMemory(42, 69, 2)
@@ -51,7 +51,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteANoMatch() {
+    fun `test modifier A fields not equal`() {
         val seq = setupSeq(Modifier.A)
         setupMemory(40, 0, 1)
         setupMemory(42, 69, 2)
@@ -59,7 +59,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteBMatch() {
+    fun `test modifier B fields equal`() {
         val seq = setupSeq(Modifier.B)
         setupMemory(0, 69, 1)
         setupMemory(42, 69, 2)
@@ -67,7 +67,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteBNoMatch() {
+    fun `test modifier B fields not equal`() {
         val seq = setupSeq(Modifier.B)
         setupMemory(0, 40, 1)
         setupMemory(42, 69, 2)
@@ -75,7 +75,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteFMatch() {
+    fun `test modifier F fields equal`() {
         val seq = setupSeq(Modifier.F)
         setupMemory(42, 69, 1)
         setupMemory(42, 69, 2)
@@ -83,7 +83,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteFNoMatch() {
+    fun `test modifier F fields not equal`() {
         val seq = setupSeq(Modifier.F)
         setupMemory(42, 69, 1)
         setupMemory(69, 42, 2)
@@ -95,7 +95,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteIMatch() {
+    fun `test modifier I equal`() {
         val seq = setupSeq(Modifier.I)
         setupMemory(42, 69, 1)
         setupMemory(42, 69, 2)
@@ -103,7 +103,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteINoMatch() {
+    fun `test modifier I not equal`() {
         val seq = setupSeq(Modifier.I)
         setupMemory(42, 69, 1)
         setupMemory(69, 42, 2)
@@ -111,7 +111,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteABMatch() {
+    fun `test modifier AB equal`() {
         val seq = setupSeq(Modifier.AB)
         setupMemory(42, 69, 1)
         setupMemory(69, 42, 2)
@@ -119,7 +119,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteABNoMatch() {
+    fun `test modifier AB not equal`() {
         val seq = setupSeq(Modifier.AB)
         setupMemory(42, 69, 1)
         setupMemory(42, 69, 2)
@@ -127,7 +127,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteBAMatch() {
+    fun `test modifier BA equal`() {
         val seq = setupSeq(Modifier.BA)
         setupMemory(69, 42, 1)
         setupMemory(42, 69, 2)
@@ -135,7 +135,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteBANoMatch() {
+    fun `test modifier BA not equal`() {
         val seq = setupSeq(Modifier.BA)
         setupMemory(69, 42, 1)
         setupMemory(69, 42, 2)
@@ -143,7 +143,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteXMatch() {
+    fun `test modifier X equal`() {
         val seq = setupSeq(Modifier.X)
         setupMemory(42, 69, 1)
         setupMemory(69, 42, 2)
@@ -151,7 +151,7 @@ internal class TestSeq {
     }
 
     @Test
-    fun testExecuteXNoMatch() {
+    fun `test modifier X not equal`() {
         val seq = setupSeq(Modifier.X)
         setupMemory(42, 69, 1)
         setupMemory(42, 69, 2)
