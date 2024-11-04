@@ -1,17 +1,17 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ErrorPage from "@/pages/ErrorPage.tsx";
-import { UserProvider } from "@/services/userContext/UserContext.tsx";
 import { ThemeProvider } from "@/components/ui/ThemeProvider.tsx";
-import WaitingForResultPage from "@/pages/waitingForResult/WaitingForResultPage.tsx";
-import { Toaster } from "./components/ui/toaster.tsx";
-import PlayerCodingPage from "./pages/playerCodeInput/PlayerCodingPage.tsx";
+import BasePage from "@/pages/basePage/BasePage.tsx";
+import ErrorPage from "@/pages/ErrorPage.tsx";
 import LandingPage from "@/pages/landingPage/LandingPage.tsx";
 import PlayerSelection from "@/pages/playerSelection/PlayerSelection.tsx";
-import BasePage from "@/pages/basePage/BasePage.tsx";
 import WaitingForOpponent from "@/pages/waitingForOpponent/WaitingForOpponent.tsx";
+import WaitingForResultPage from "@/pages/waitingForResult/WaitingForResultPage.tsx";
+import { UserProvider } from "@/services/userContext/UserContext.tsx";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Toaster } from "./components/ui/toaster.tsx";
+import "./index.css";
+import PlayerCodingPageV2 from "./pages/playerCodeInputV2/PlayerCodingPageV2.tsx";
 import ResultDisplayPage from "./pages/resultDisplayPage/ResultDisplayPage.tsx";
 
 const router = createBrowserRouter([
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "player-coding",
-				element: <PlayerCodingPage />,
+				element: <PlayerCodingPageV2 />,
 			},
 			{
 				path: "/player-selection",
