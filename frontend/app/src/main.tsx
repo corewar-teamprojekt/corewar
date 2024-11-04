@@ -11,9 +11,9 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster.tsx";
 import "./index.css";
+import "./monacoConfig";
 import PlayerCodingPageV2 from "./pages/playerCodeInputV2/PlayerCodingPageV2.tsx";
 import ResultDisplayPage from "./pages/resultDisplayPage/ResultDisplayPage.tsx";
-
 const router = createBrowserRouter([
 	{
 		path: "/",
