@@ -4,10 +4,19 @@ tasks:
   setup:
     cmds:
       - java -version || echo "Java not found, please install at least Java 21"
-      - ./gradlew ktfmtCheck
+      - task: format-check
+
   run:
     cmds:
-      - ./gradlew api:run
+      - |
+        if [ "$(uname)" = "Linux" ] || [ "$(uname)" = "Darwin" ]; then
+          ./gradlew run
+        elif [ "$OS" = "Windows_NT" ]; then
+          gradlew.bat run
+        else
+          echo "Unsupported OS"
+        fi
+
   build:
     sources:
       - api/**
@@ -18,16 +27,56 @@ tasks:
     generates:
       - api/build/libs/api-all.jar
     cmds:
-      - ./gradlew api:buildFatJar
+      - |
+        if [ "$(uname)" = "Linux" ] || [ "$(uname)" = "Darwin" ]; then
+          ./gradlew buildFatJar
+        elif [ "$OS" = "Windows_NT" ]; then
+          gradlew.bat buildFatJar
+        else
+          echo "Unsupported OS"
+        fi
+
   test:
     cmds:
-      - ./gradlew test
+      - |
+        if [ "$(uname)" = "Linux" ] || [ "$(uname)" = "Darwin" ]; then
+          ./gradlew test
+        elif [ "$OS" = "Windows_NT" ]; then
+          gradlew.bat test
+        else
+          echo "Unsupported OS"
+        fi
+
   format:
     cmds:
-      - ./gradlew ktfmtFormat
+      - |
+        if [ "$(uname)" = "Linux" ] || [ "$(uname)" = "Darwin" ]; then
+          ./gradlew ktfmtFormat
+        elif [ "$OS" = "Windows_NT" ]; then
+          gradlew.bat ktfmtFormat
+        else
+          echo "Unsupported OS"
+        fi
+
   format-check:
     cmds:
-      - ./gradlew ktfmtCheck
+      - |
+        if [ "$(uname)" = "Linux" ] || [ "$(uname)" = "Darwin" ]; then
+          ./gradlew ktfmtCheck
+        elif [ "$OS" = "Windows_NT" ]; then
+          gradlew.bat ktfmtCheck
+        else
+          echo "Unsupported OS"
+        fi
+
   clean:
     cmds:
-      - ./gradlew clean
+      - |
+        if [ "$(uname)" = "Linux" ] || [ "$(uname)" = "Darwin" ]; then
+          ./gradlew clean
+        elif [ "$OS" = "Windows_NT" ]; then
+          gradlew.bat clean
+        else
+          echo "Unsupported OS"
+        fi
+
