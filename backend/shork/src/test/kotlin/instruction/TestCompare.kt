@@ -8,7 +8,7 @@ import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.instruction.Compare
 import software.shonk.interpreter.internal.instruction.Dat
-import software.shonk.interpreter.internal.instruction.Split
+import software.shonk.interpreter.internal.instruction.Spl
 import software.shonk.interpreter.internal.process.Process
 import software.shonk.interpreter.internal.program.Program
 import software.shonk.interpreter.internal.settings.InternalSettings
@@ -37,7 +37,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(42, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(42, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -54,7 +54,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(43524525, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(43524525, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -71,7 +71,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(42, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(42, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -88,7 +88,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(2144213, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(2144213, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -105,7 +105,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(234134, 42, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(234134, 42, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -122,7 +122,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(234134, 324124, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(234134, 324124, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -139,7 +139,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(1337, 42213, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(1337, 42213, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -156,7 +156,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(123, 42213, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(123, 42213, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -173,7 +173,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(42, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(42, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -190,7 +190,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(42, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(42, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -207,7 +207,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(41234, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(41234, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -224,7 +224,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(1337, 42, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(1337, 42, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -241,7 +241,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(1337, 324, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(1337, 324, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -258,7 +258,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(324143, 42, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(324143, 42, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
@@ -292,7 +292,7 @@ internal class TestCompare {
         )
         shork.memoryCore.storeAbsolute(
             2,
-            Split(42, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
+            Spl(42, 1337, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I),
         )
         process.tick()
 
