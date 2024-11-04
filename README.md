@@ -4,6 +4,7 @@
 </picture>
 
 <p align="center">
+    <a href="https://main.corewar.shonk.software"><img alt="Main Deployment Status" src="https://corewar-status.schnelle.dev/badge-main"></a>
     <a href="https://github.com/corewar-teamprojekt/corewar/actions"><img alt="build status" src="https://img.shields.io/github/actions/workflow/status/corewar-teamprojekt/corewar/build-and-deploy.yml"></a>
     <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/corewar-teamprojekt/corewar">
     <img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/corewar-teamprojekt/corewar">
