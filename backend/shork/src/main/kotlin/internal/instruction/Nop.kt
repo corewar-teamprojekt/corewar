@@ -11,12 +11,11 @@ internal class Nop(
     addressModeB: AddressMode,
     modifier: Modifier,
 ) : AbstractInstruction(aField, bField, addressModeA, addressModeB, modifier) {
-    override fun execute(process: AbstractProcess) {
-        TODO("Not yet implemented")
-    }
+
+    override fun execute(process: AbstractProcess) {}
 
     override fun deepCopy(): AbstractInstruction {
-        TODO("Not yet implemented")
+        return Nop(aField, bField, addressModeA, addressModeB, modifier)
     }
 
     override fun toString(): String {
