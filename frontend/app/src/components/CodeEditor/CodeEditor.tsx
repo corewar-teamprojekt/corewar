@@ -14,7 +14,7 @@ export default function CodeEditor({ setProgram }: Readonly<CodeEditorProps>) {
         	MOV bomb, @bomb_target ; Place a bomb at the new target location
         	JMP start             ; Loop back to start
 
-	bomb    	DAT #0                ; The bomb - this will terminate an enemy process if hit
+	bomb    	DAT #0                ; The bomb: will terminate an enemy process if hit
 	bomb_target DAT #0            ; Starting location for bombing (relative to start)`;
 
 	const keywordsList = [
@@ -136,7 +136,7 @@ export default function CodeEditor({ setProgram }: Readonly<CodeEditorProps>) {
 
 	return (
 		<Editor
-			height="30vh"
+			height="60vh"
 			theme="vs-dark"
 			defaultLanguage="redcode"
 			defaultValue={testProgram}
