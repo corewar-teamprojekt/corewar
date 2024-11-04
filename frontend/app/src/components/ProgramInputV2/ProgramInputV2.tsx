@@ -13,9 +13,9 @@ export default function ProgrammInputV2({
 	const [program, setProgram] = useState("");
 
 	return (
-		<Card className="w-1/3 min-w-[360px]">
+		<Card className="w-[50%] min-w-[360px]">
 			<CardContent className="flex flex-col items-center">
-				<div className="mt-3 w-[100%] l-[100%]">
+				<div className="mt-3 w-[100%] border-2 border-fuchsia-950">
 					<CodeEditor setProgram={setProgram} />
 				</div>
 			</CardContent>
