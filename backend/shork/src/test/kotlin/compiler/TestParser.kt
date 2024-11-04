@@ -116,7 +116,7 @@ internal class TestParser {
                 Triple(Seq::class, "CMP", TokenType.CMP),
                 Triple(Sne::class, "SNE", TokenType.SNE),
                 Triple(Slt::class, "SLT", TokenType.SLT),
-                Triple(Split::class, "SPL", TokenType.SPL),
+                Triple(Spl::class, "SPL", TokenType.SPL),
                 // No Org here
                 // No EQU here
                 // No END here
@@ -377,7 +377,7 @@ internal class TestParser {
                     Triple(TokenType.JMZ, Jmz::class, Modifier.B),
                     Triple(TokenType.JMN, Jmn::class, Modifier.B),
                     Triple(TokenType.DJN, Djn::class, Modifier.B),
-                    Triple(TokenType.SPL, Split::class, Modifier.B),
+                    Triple(TokenType.SPL, Spl::class, Modifier.B),
                 )
             val arguments = mutableListOf<Arguments>()
 
