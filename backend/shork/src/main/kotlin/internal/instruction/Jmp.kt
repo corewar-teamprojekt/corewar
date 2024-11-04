@@ -4,7 +4,7 @@ import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.process.AbstractProcess
 
-internal class Jump(
+internal class Jmp(
     aField: Int,
     bField: Int,
     addressModeA: AddressMode,
@@ -17,7 +17,7 @@ internal class Jump(
     }
 
     override fun deepCopy(): AbstractInstruction {
-        return Jump(aField, bField, addressModeA, addressModeB, modifier)
+        return Jmp(aField, bField, addressModeA, addressModeB, modifier)
     }
 
     override fun toString(): String {

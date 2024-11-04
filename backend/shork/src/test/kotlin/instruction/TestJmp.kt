@@ -6,12 +6,12 @@ import software.shonk.interpreter.InternalShork
 import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.instruction.Dat
-import software.shonk.interpreter.internal.instruction.Jump
+import software.shonk.interpreter.internal.instruction.Jmp
 import software.shonk.interpreter.internal.process.Process
 import software.shonk.interpreter.internal.program.Program
 import software.shonk.interpreter.internal.settings.InternalSettings
 
-internal class TestJump {
+internal class TestJmp {
     @Test
     fun testExecute() {
         val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
@@ -20,22 +20,22 @@ internal class TestJump {
         val program = Program("Jumpy :3", shork)
         val process = Process(program, 0)
 
-        val jump = Jump(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val jmp = Jmp(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
 
-        jump.execute(process)
+        jmp.execute(process)
         assert(process.programCounter == 42)
     }
 
     @Test
     fun testDeepCopy() {
-        val jump = Jump(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
-        val copy = jump.deepCopy()
+        val jmp = Jmp(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val copy = jmp.deepCopy()
 
-        assertEquals(jump.aField, copy.aField)
-        assertEquals(jump.bField, copy.bField)
-        assertEquals(jump.addressModeA, copy.addressModeA)
-        assertEquals(jump.addressModeB, copy.addressModeB)
-        assertEquals(jump.modifier, copy.modifier)
-        assert(jump !== copy)
+        assertEquals(jmp.aField, copy.aField)
+        assertEquals(jmp.bField, copy.bField)
+        assertEquals(jmp.addressModeA, copy.addressModeA)
+        assertEquals(jmp.addressModeB, copy.addressModeB)
+        assertEquals(jmp.modifier, copy.modifier)
+        assert(jmp !== copy)
     }
 }
