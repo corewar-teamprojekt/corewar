@@ -17,84 +17,122 @@ export default function CodeEditor({ setProgram }: Readonly<CodeEditorProps>) {
 	bomb    	DAT #0                ; The bomb - this will terminate an enemy process if hit
 	bomb_target DAT #0            ; Starting location for bombing (relative to start)`;
 
+	const keywordsList = [
+		"MOV",
+		"ADD",
+		"SUB",
+		"MUL",
+		"DIV",
+		"MOD",
+		"JMP",
+		"JMZ",
+		"JMN",
+		"DJN",
+		"CMP",
+		"SLT",
+		"SPL",
+		"DAT",
+		"NOP",
+	];
+
 	useEffect(() => {
 		if (monaco) {
 			// Register the custom language
 			monaco.languages.register({ id: "redcode" });
-
-			// Set up the language configuration
-			monaco.languages.setLanguageConfiguration("redcode", {
-				comments: {
-					lineComment: "//",
-					blockComment: ["/*", "*/"],
-				},
-				brackets: [
-					["{", "}"],
-					["[", "]"],
-					["(", ")"],
-				],
-				autoClosingPairs: [
-					{ open: "{", close: "}" },
-					{ open: "[", close: "]" },
-					{ open: "(", close: ")" },
-					{ open: '"', close: '"' },
-					{ open: "'", close: "'" },
-				],
-				surroundingPairs: [
-					{ open: "{", close: "}" },
-					{ open: "[", close: "]" },
-					{ open: "(", close: ")" },
-					{ open: '"', close: '"' },
-					{ open: "'", close: "'" },
-				],
-			});
-
-			// Define the language tokens and syntax highlighting
-			monaco.languages.setMonarchTokensProvider("redcode", {
-				tokenizer: {
-					root: [
-						// Keywords
-						[/\b(MOV|ADD|SUB|JMP|JMZ|JMN|DJN|CMP|SPL|DAT|NOP)\b/, "keyword"],
-
-						// Identifiers
-						[/[a-z_$][\w$]*/, "identifier"],
-
-						// Operators
-						[/[=+\-*/]/, "operator"],
-
-						// Numbers
-						[/\d+/, "number"],
-
-						// Strings
-						[/".*?"/, "string"],
-						[/'[^']*'/, "string"],
-					],
-				},
-			});
-			const model = monaco.editor.getModels()[0];
-			const markers = [
-				{
-					severity: monaco.MarkerSeverity.Warning,
-					startLineNumber: 2,
-					startColumn: 1,
-					endLineNumber: 2,
-					endColumn: 50,
-					message: "whoopsies there is an wornin in line 2 >w<",
-				},
-				{
-					severity: monaco.MarkerSeverity.Error,
-					startLineNumber: 4,
-					startColumn: 1,
-					endLineNumber: 4,
-					endColumn: 50,
-					message: "whoopsies there is an ewwor in line 4 >w<",
-				},
-			];
-
-			// Set markers on the model
-			monaco.editor.setModelMarkers(model, "customLinter", markers);
+			setUpTokenProvider();
+			setUpAutoCompletion();
+			setUpTestingLinterWarningsAndErrors();
 		}
 	}, [monaco]);
+
+	function setUpTokenProvider() {
+		if (!monaco) return;
+
+		// Define the language tokens and syntax highlighting
+		monaco.languages.setMonarchTokensProvider("redcode", {
+			keywords: keywordsList,
+			operators: ["#", "$", "@", "<", ">", "{", "}"],
+			symbols: /[@#$,]/,
+
+			// Define tokenizer rules
+			tokenizer: {
+				root: [
+					// Comments
+					[/(;.*$)/, "comment"],
+
+					// Labels
+					[/^[a-zA-Z_]\w*:/, "type.identifier"],
+
+					// Instructions (keywords)
+					[
+						/\b(MOV|ADD|SUB|MUL|DIV|MOD|JMP|JMZ|JMN|DJN|CMP|SLT|SPL|DAT|NOP)\b/,
+						"keyword",
+					],
+
+					// Numbers
+					[/\b\d+\b/, "number"],
+
+					// Operators (e.g., addressing modes)
+					[/[#$@<>]/, "operator"],
+
+					// Any other symbol
+					[/[.,]/, "delimiter"],
+				],
+			},
+		});
+	}
+
+	function setUpAutoCompletion() {
+		if (!monaco) return;
+		const model = monaco.editor.getModels()[0];
+		monaco.languages.registerCompletionItemProvider("redcode", {
+			provideCompletionItems: (_, position) => {
+				// Get the word until the current position to find the appropriate range
+				const wordInfo = model.getWordUntilPosition(position);
+
+				// Define the range for the completion item
+				const range = new monaco.Range(
+					position.lineNumber,
+					wordInfo.startColumn,
+					position.lineNumber,
+					wordInfo.endColumn,
+				);
+				const suggestions = keywordsList.map((keyword) => ({
+					label: keyword,
+					kind: monaco.languages.CompletionItemKind.Keyword,
+					insertText: keyword,
+					range: range,
+				}));
+				return { suggestions };
+			},
+		});
+	}
+
+	function setUpTestingLinterWarningsAndErrors() {
+		if (!monaco) return;
+		const model = monaco.editor.getModels()[0];
+		const markers = [
+			{
+				severity: monaco.MarkerSeverity.Warning,
+				startLineNumber: 2,
+				startColumn: 1,
+				endLineNumber: 2,
+				endColumn: 50,
+				message: "whoopsies there is an wornin in line 2 >w<",
+			},
+			{
+				severity: monaco.MarkerSeverity.Error,
+				startLineNumber: 4,
+				startColumn: 1,
+				endLineNumber: 4,
+				endColumn: 50,
+				message: "whoopsies there is an ewwor in line 4 >w<",
+			},
+		];
+
+		// Set markers on the model
+		monaco.editor.setModelMarkers(model, "customLinter", markers);
+	}
 
 	return (
 		<Editor
