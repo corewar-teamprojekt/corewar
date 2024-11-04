@@ -18,6 +18,10 @@ tasks:
     generates:
       - dist/**
     cmds:
+      - task: setup
+      - task: lint
+      - task: test
+      - task: format-check
       - npm run build
   test:
     cmds:
