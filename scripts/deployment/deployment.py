@@ -151,8 +151,12 @@ def delete_deployment(ref):
     return jsonify({"message": f"Deployment deleted for {ref}"}), 200
 
 
+@app.route("/status")
+def status():
+    return jsonify({"status": "OK"}), 200
+
+
 if __name__ == "__main__":
     # Set the Flask app to run on port 5000
     logging.basicConfig(level=logging.INFO, filename="deployment.log")
     app.run(host="0.0.0.0", port=5000)
-
