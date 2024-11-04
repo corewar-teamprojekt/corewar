@@ -6,7 +6,7 @@ import software.shonk.interpreter.internal.instruction.*
 import software.shonk.interpreter.internal.instruction.AbstractInstruction
 import software.shonk.interpreter.internal.instruction.Dat
 import software.shonk.interpreter.internal.instruction.Mov
-import software.shonk.interpreter.internal.instruction.Split
+import software.shonk.interpreter.internal.instruction.Spl
 
 // https://en.wikipedia.org/wiki/Parsing#Parser
 internal class Parser(private val tokens: List<Token>) {
@@ -154,7 +154,7 @@ internal class Parser(private val tokens: List<Token>) {
             TokenType.SEQ -> Seq(aField, bField, modeA, modeB, modifier)
             TokenType.SNE -> Sne(aField, bField, modeA, modeB, modifier)
             TokenType.SLT -> Slt(aField, bField, modeA, modeB, modifier)
-            TokenType.SPL -> Split(aField, bField, modeA, modeB, modifier)
+            TokenType.SPL -> Spl(aField, bField, modeA, modeB, modifier)
             TokenType.STP -> Stp(aField, bField, modeA, modeB, modifier)
             TokenType.LDP -> Ldp(aField, bField, modeA, modeB, modifier)
             TokenType.ORG -> {
