@@ -109,7 +109,7 @@ internal class TestParser {
                 Triple(Mul::class, "MUL", TokenType.MUL),
                 Triple(Div::class, "DIV", TokenType.DIV),
                 Triple(Mod::class, "MOD", TokenType.MOD),
-                Triple(Jump::class, "JMP", TokenType.JMP),
+                Triple(Jmp::class, "JMP", TokenType.JMP),
                 Triple(Jmz::class, "JMZ", TokenType.JMZ),
                 Triple(Jmn::class, "JMN", TokenType.JMN),
                 Triple(Djn::class, "DJN", TokenType.DJN),
@@ -373,7 +373,7 @@ internal class TestParser {
                     Triple(TokenType.DAT, Dat::class, Modifier.F),
                     Triple(TokenType.NOP, Nop::class, Modifier.F),
                     // These are always B
-                    Triple(TokenType.JMP, Jump::class, Modifier.B),
+                    Triple(TokenType.JMP, Jmp::class, Modifier.B),
                     Triple(TokenType.JMZ, Jmz::class, Modifier.B),
                     Triple(TokenType.JMN, Jmn::class, Modifier.B),
                     Triple(TokenType.DJN, Djn::class, Modifier.B),
