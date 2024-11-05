@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 import mocks.MockInstruction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import software.shonk.interpreter.InternalShork
+import software.shonk.interpreter.internal.InternalShork
 import software.shonk.interpreter.internal.program.Program
 import software.shonk.interpreter.internal.settings.InternalSettings
 
