@@ -16,7 +16,7 @@ import software.shonk.adapters.incoming.configureShorkInterpreterControllerV1
 import software.shonk.application.port.incoming.ShorkUseCase
 import software.shonk.application.service.ShorkService
 import software.shonk.interpreter.IShork
-import software.shonk.interpreter.MockShork
+import software.shonk.interpreter.Shork
 
 fun main() {
     embeddedServer(Netty, port = 8080) {
@@ -61,7 +61,7 @@ fun Application.koinModule() {
     koin {
         modules(
             module {
-                single<IShork> { MockShork() }
+                single<IShork> { Shork() }
                 single<ShorkUseCase> { ShorkService(get()) }
             }
         )
