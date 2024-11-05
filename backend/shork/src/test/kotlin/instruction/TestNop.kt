@@ -15,7 +15,7 @@ import software.shonk.interpreter.internal.settings.InternalSettings
 internal class TestNop {
 
     private val dat = Dat(5, 13, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-    private val settings = InternalSettings(8000, 1000, dat, 1000)
+    private val settings = InternalSettings(8000, 1000, dat, 1000, 100)
     private var shork = InternalShork(settings)
     private var program = Program("nop", shork)
     private var process = Process(program, 0)

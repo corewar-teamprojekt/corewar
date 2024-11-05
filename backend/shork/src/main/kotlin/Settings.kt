@@ -12,10 +12,22 @@ import software.shonk.interpreter.internal.instruction.Dat
  *   interpreter stops. -1 for no limit
  */
 class Settings(
-    val coreSize: Int,
-    val instructionLimit: Int,
-    val initialInstruction: String,
-    val maximumTicks: Int,
+    /** The size of the core, in number of instructions it will fit. */
+    val coreSize: Int = 8192,
+    /**
+     * The maximum number of instructions will be executed before the interpreter stops and a draw
+     * is called.
+     */
+    val instructionLimit: Int = 100000,
+    /** The initial instruction the core will be filled with. */
+    val initialInstruction: String = "DAT $0, $0",
+    /**
+     * The maximum number of cycles the interpreter will run before stopping. A cycle is an
+     * execution of a single instruction of every players' program.
+     */
+    val maximumTicks: Int = 80000,
+    /** The minimum separation between two processes. */
+    val mininumSeparation: Int = 100,
 ) {
     internal fun toInternalSettings() =
         software.shonk.interpreter.internal.settings.InternalSettings(
@@ -29,5 +41,6 @@ class Settings(
                 Modifier.I,
             ), // TODO: replace with actual instruction once the parser exists
             maximumTicks,
+            mininumSeparation,
         )
 }
