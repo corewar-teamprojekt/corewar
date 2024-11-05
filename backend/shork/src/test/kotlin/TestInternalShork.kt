@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test
 import software.shonk.interpreter.FinishedState
 import software.shonk.interpreter.GameStatus
 import software.shonk.interpreter.InternalShork
+import software.shonk.interpreter.internal.addressing.AddressMode
+import software.shonk.interpreter.internal.addressing.Modifier
+import software.shonk.interpreter.internal.instruction.Mov
 import software.shonk.interpreter.internal.program.Program
 import software.shonk.interpreter.internal.settings.InternalSettings
 
@@ -35,5 +38,31 @@ internal class TestInternalShork {
         val status = shork.run()
 
         assertEquals(GameStatus.FINISHED(FinishedState.DRAW), status)
+    }
+
+    @Test
+    fun `Player can win`() {
+        val settings = InternalSettings(8000, 100, KillProgramInstruction(), 1000)
+        val shork = InternalShork(settings)
+        val core = shork.memoryCore
+
+        val blahaj = Program("Blahaj \uD83E\uDD7A", shork)
+        val shorky = Program("Shork \uD83E\uDD88", shork)
+
+        // One imp please
+        val mov = Mov(0, 1, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I)
+        core.storeAbsolute(42, mov)
+
+        // Blahaj gets the imp
+        blahaj.createProcessAt(42)
+        // Shork gets the kill program instruction :(
+        shorky.createProcessAt(1337)
+
+        shork.addProgram(blahaj, shorky)
+
+        val status = shork.run()
+
+        // Shorks gonna loose qwq
+        assertEquals(GameStatus.FINISHED(FinishedState.WINNER(blahaj)), status)
     }
 }
