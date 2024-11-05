@@ -104,4 +104,11 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
         assertEquals("FINISHED", responseData["gameState"])
         assertEquals("B", responseData["result.winner"])
     }
+
+    @Test
+    fun `test create a new lobby`() = runTest {
+        val result = client.post("/api/v1/lobby")
+        assertEquals(HttpStatusCode.Created, result.status)
+        assertEquals("1", result.bodyAsText())
+    }
 }
