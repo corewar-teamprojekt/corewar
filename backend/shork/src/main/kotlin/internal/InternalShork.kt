@@ -14,7 +14,7 @@ internal class InternalShork(settings: InternalSettings) : AbstractInternalShork
 
     override fun run(): GameStatus {
         var ticks = 0
-        while (ticks < this.settings.maximumTicks) {
+        while (ticks < this.settings.maximumCycles) {
             for (program in programs) {
                 program.tick()
             }
