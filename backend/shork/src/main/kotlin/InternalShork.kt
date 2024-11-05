@@ -15,14 +15,14 @@ internal class InternalShork(settings: InternalSettings) : AbstractInternalShork
         var ticks = 0
         while (ticks < this.settings.maximumTicks) {
             for (program in programs) {
-                val stillRunningPrograms = getStillRunningPrograms()
-                if (stillRunningPrograms.size == 1) {
-                    val winner = stillRunningPrograms.first()
-                    return GameStatus.FINISHED(FinishedState.WINNER(winner))
-                }
-
                 program.tick()
             }
+            val stillRunningPrograms = getStillRunningPrograms()
+            if (stillRunningPrograms.size == 1) {
+                val winner = stillRunningPrograms.first()
+                return GameStatus.FINISHED(FinishedState.WINNER(winner))
+            }
+
             ticks++
         }
 
