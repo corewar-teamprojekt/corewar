@@ -15,7 +15,7 @@ import software.shonk.interpreter.internal.settings.InternalSettings
 internal class TestMov {
 
     private val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-    private val settings = InternalSettings(8000, 1000, dat, 1000)
+    private val settings = InternalSettings(8000, 1000, dat, 1000, 100)
     private var shork = InternalShork(settings)
     private var program = Program("mov", shork)
     private var process = Process(program, 0)

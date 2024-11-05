@@ -10,7 +10,7 @@ import software.shonk.interpreter.internal.program.Program
 import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestProcess {
-    private var settings = InternalSettings(8000, 100, MockInstruction(), 1000)
+    private var settings = InternalSettings(8000, 100, MockInstruction(), 1000, 100)
     private var shork = InternalShork(settings)
     private var program = Program("id", shork)
 

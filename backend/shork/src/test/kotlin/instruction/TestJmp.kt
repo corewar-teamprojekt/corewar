@@ -15,7 +15,7 @@ internal class TestJmp {
     @Test
     fun testExecute() {
         val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-        val settings = InternalSettings(8000, 1000, dat, 1000)
+        val settings = InternalSettings(8000, 1000, dat, 1000, 100)
         val shork = InternalShork(settings)
         val program = Program("Jumpy :3", shork)
         val process = Process(program, 0)
