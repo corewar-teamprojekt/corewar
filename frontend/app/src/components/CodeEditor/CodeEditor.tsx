@@ -40,9 +40,9 @@ export default function CodeEditor({ setProgram }: Readonly<CodeEditorProps>) {
 			// Register the custom language
 			monaco.languages.register({ id: "redcode" });
 			//can't tell you why yet, but this way it do worky :sunglasses:
-			setTimeout(setUpTokenProvider, 50);
-			setTimeout(setUpAutoCompletion, 100);
-			setTimeout(setUpTestingLinterWarningsAndErrors, 100);
+			setTimeout(setUpTokenProvider, 100);
+			setTimeout(setUpAutoCompletion, 200);
+			setTimeout(setUpTestingLinterWarningsAndErrors, 300);
 		}
 	}, [monaco]);
 
