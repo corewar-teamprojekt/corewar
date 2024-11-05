@@ -1,6 +1,6 @@
 import kotlin.test.assertEquals
 import mocks.KillProgramInstruction
-import mocks.MockInstruction
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import software.shonk.interpreter.FinishedState
 import software.shonk.interpreter.GameStatus
@@ -12,9 +12,16 @@ import software.shonk.interpreter.internal.program.Program
 import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestInternalShork {
+    var settings = InternalSettings(8000, 100, KillProgramInstruction(), 1000, 100)
+
+    @BeforeEach
+    fun setUp() {
+        settings = InternalSettings(8000, 100, KillProgramInstruction(), 1000, 100)
+    }
+
     @Test
     fun gameStatusIsDrawWithNoProgramsAndRunCalled() {
-        val shork = InternalShork(InternalSettings(8000, 100, MockInstruction(), 1000))
+        val shork = InternalShork(settings)
         val status: GameStatus = shork.run()
 
         assertEquals(GameStatus.FINISHED(FinishedState.DRAW), status)
@@ -22,7 +29,6 @@ internal class TestInternalShork {
 
     @Test
     fun `draw is correctly detected with nonzero amount of players`() {
-        val settings = InternalSettings(8000, 100, KillProgramInstruction(), 1000)
         val shork = InternalShork(settings)
 
         val program = Program("Blahaj \uD83E\uDD7A", shork)
@@ -41,8 +47,7 @@ internal class TestInternalShork {
     }
 
     @Test
-    fun `Player can win`() {
-        val settings = InternalSettings(8000, 100, KillProgramInstruction(), 1000)
+    fun `player can win`() {
         val shork = InternalShork(settings)
         val core = shork.memoryCore
 
@@ -50,19 +55,19 @@ internal class TestInternalShork {
         val shorky = Program("Shork \uD83E\uDD88", shork)
 
         // One imp please
-        val mov = Mov(0, 1, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I)
-        core.storeAbsolute(42, mov)
+        val impy = Mov(0, 1, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.I)
+        core.storeAbsolute(42, impy)
 
         // Blahaj gets the imp
         blahaj.createProcessAt(42)
-        // Shork gets the kill program instruction :(
+        // Shork gets a kill program instruction :(
         shorky.createProcessAt(1337)
 
         shork.addProgram(blahaj, shorky)
 
         val status = shork.run()
 
-        // Shorks gonna loose qwq
+        // Shork's gonna loose qwq
         assertEquals(GameStatus.FINISHED(FinishedState.WINNER(blahaj)), status)
     }
 }
