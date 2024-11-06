@@ -35,14 +35,13 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
     }
 
     @Test
-    fun testGetPlayerCode() = runTest {
-        // @TODO: "replace with v1 endpoint once it's implemented"
-        client.post("/api/v0/code/playerA") {
+    fun `test post and get player code`() = runTest {
+        client.post("/api/v1/lobby/0/code/playerA") {
             contentType(ContentType.Application.Json)
             setBody("someString")
         }
 
-        client.post("/api/v0/code/playerB") {
+        client.post("/api/v1/lobby/0/code/playerB") {
             contentType(ContentType.Application.Json)
             setBody("someOtherString")
         }
@@ -86,13 +85,12 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
 
     @Test
     fun `test get lobby status with valid custom ID`() = runTest {
-        // @TODO: "replace with v1 endpoint once it's implemented"
-        client.post("/api/v0/code/playerA") {
+        client.post("/api/v1/lobby/0/code/playerA") {
             contentType(ContentType.Application.Json)
             setBody("someString")
         }
 
-        client.post("/api/v0/code/playerB") {
+        client.post("/api/v1/lobby/0/code/playerB") {
             contentType(ContentType.Application.Json)
             setBody("someOtherString")
         }
@@ -103,6 +101,91 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
         assertEquals("true", responseData["playerBSubmitted"])
         assertEquals("FINISHED", responseData["gameState"])
         assertEquals("B", responseData["result.winner"])
+    }
+
+    @Test
+    fun `test player empty code submission`() = runTest {
+        val player = "playerA"
+        val result = client.post("/api/v1/lobby/0/code/$player")
+        assertEquals(HttpStatusCode.OK, result.status)
+    }
+
+    @Test
+    fun `test player code submission with invalid username does not change lobby status`() =
+        runTest {
+            val player = "playerC"
+            client.post("/api/v1/lobby/0/code/$player") {
+                contentType(ContentType.Application.Json)
+                setBody("someString")
+            }
+
+            val result = client.get("/api/v1/lobby/0/code/playerC")
+            assertEquals(HttpStatusCode.BadRequest, result.status)
+            assert(result.bodyAsText().contains("No player with that name in the lobby"))
+
+            val resultStatus = client.get("/api/v1/lobby/status/0")
+            val responseData = parseStatus(resultStatus)
+            assertEquals("false", responseData["playerASubmitted"])
+            assertEquals("false", responseData["playerBSubmitted"])
+            assertEquals("NOT_STARTED", responseData["gameState"])
+            assertEquals("UNDECIDED", responseData["result.winner"])
+        }
+
+    @Test
+    fun `test player code submission reflecting in lobby status`() = runTest {
+        val player = "playerA"
+        client.post("/api/v1/lobby/0/code/$player") {
+            contentType(ContentType.Application.Json)
+            setBody("someString")
+        }
+
+        val result = client.get("/api/v1/lobby/status/0")
+        val responseData = parseStatus(result)
+        assertEquals("true", responseData["playerASubmitted"])
+        assertEquals("false", responseData["playerBSubmitted"])
+        assertEquals("NOT_STARTED", responseData["gameState"])
+        assertEquals("UNDECIDED", responseData["result.winner"])
+    }
+
+    @Test
+    fun `test game starts when both players submit`() = runTest {
+        client.post("/api/v1/lobby/0/code/playerA") {
+            contentType(ContentType.Application.Json)
+            setBody("someVeryLongString")
+        }
+
+        client.post("/api/v1/lobby/0/code/playerB") {
+            contentType(ContentType.Application.Json)
+            setBody("someShortString")
+        }
+
+        val result = client.get("/api/v1/lobby/status/0")
+        val responseData = parseStatus(result)
+        assertEquals("FINISHED", responseData["gameState"])
+    }
+
+    @Test
+    fun `test lobby status resets after new code submission by player A`() = runTest {
+        client.post("/api/v1/lobby/0/code/playerA") {
+            contentType(ContentType.Application.Json)
+            setBody("someString")
+        }
+
+        client.post("/api/v1/lobby/0/code/playerB") {
+            contentType(ContentType.Application.Json)
+            setBody("someOtherString")
+        }
+        client.post("/api/v1/lobby/0/code/playerA") {
+            contentType(ContentType.Application.Json)
+            setBody("someNewString")
+        }
+
+        val result = client.get("/api/v1/lobby/status/0")
+        val responseData = parseStatus(result)
+        assertEquals("true", responseData["playerASubmitted"])
+        assertEquals("false", responseData["playerBSubmitted"])
+        assertEquals("NOT_STARTED", responseData["gameState"])
+        assertEquals("UNDECIDED", responseData["result.winner"])
     }
 
     @Test
