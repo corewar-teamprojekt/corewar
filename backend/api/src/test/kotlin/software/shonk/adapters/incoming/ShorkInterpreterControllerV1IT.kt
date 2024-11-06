@@ -74,7 +74,8 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
             "result": {
                 "winner": "UNDECIDED"
             }
-        }"""
+        }
+        """
                 .trimIndent()
         assertEquals(expectedStatus, result.bodyAsText())
     }
