@@ -21,6 +21,12 @@ const keywordsList = [
 	"NOP",
 ];
 
+[...keywordsList].forEach((keyword) =>
+	keywordsList.push(keyword.toLowerCase()),
+);
+
+const keywordListRegex = new RegExp(keywordsList.join("|"), "g");
+
 self.MonacoEnvironment = {
 	getWorker() {
 		return new editorWorker();
@@ -31,10 +37,6 @@ monaco.languages.register({ id: "redcode" });
 
 //setup tokenprovider
 monaco.languages.setMonarchTokensProvider("redcode", {
-	keywords: keywordsList,
-	operators: ["#", "$", "@", "<", ">", "{", "}"],
-	symbols: /[@#$,]/,
-
 	// Define tokenizer rules
 	tokenizer: {
 		root: [
@@ -45,10 +47,7 @@ monaco.languages.setMonarchTokensProvider("redcode", {
 			[/^[a-zA-Z_]\w*:/, "type.identifier"],
 
 			// Instructions (keywords)
-			[
-				/\b(MOV|ADD|SUB|MUL|DIV|MOD|JMP|JMZ|JMN|DJN|CMP|SLT|SPL|DAT|NOP)\b/,
-				"keyword",
-			],
+			[keywordListRegex, "keyword"],
 
 			// Numbers
 			[/\b\d+\b/, "number"],
