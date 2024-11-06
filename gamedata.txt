@@ -1,0 +1,43 @@
+What kind of data does the frontend need?
+program counter for each process + current one
+we need to know the content of every cell at each point in time
+-> pretty sure we will be resorting to diffs / commits
+
+players enter programs
+interpreter runs entire game
+interpreter trackt changes per tick
+ - a "commit" contains all changes in this turn
+ - also which player made them
+ - checkout GameResult below
+result would be a big list of changes that build on top of each other and that describe the entire game and enable reconstructing the game-> look at GameResult below
+
+via return from shork.run to api backend
+serialized as a big json blob to the frontend
+goes directly as is to the frontend
+frontend is responsible for displaying everything "stupidly"
+
+GameResult:
+{
+    outcome: {
+        kind: (WIN | DRAW),
+        player?: String,
+    },
+    blockchain: [
+        {
+            playerName: "playerA"
+            program_counter_before: int,
+            program_counter_after: int,
+            other_processes_of_your_player: [int],
+            reads: [int],
+            writes: [int],
+        },
+        .
+        .
+        .
+    ]
+}
+
+
+=> Backend runs the entire game once and send that to the frontend, which displays some kind of replay
+
+TPS Target 30 for the frontend, but we will have to check how that looks in practice. Make it easy to change
