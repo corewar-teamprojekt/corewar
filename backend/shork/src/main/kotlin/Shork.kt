@@ -1,5 +1,7 @@
 package software.shonk.interpreter
 
+import software.shonk.interpreter.internal.FinishedState
+import software.shonk.interpreter.internal.GameStatus
 import software.shonk.interpreter.internal.InternalShork
 import software.shonk.interpreter.internal.compiler.Parser
 import software.shonk.interpreter.internal.compiler.Tokenizer
