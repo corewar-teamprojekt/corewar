@@ -14,6 +14,7 @@ internal class Jmp(
     override fun execute(process: AbstractProcess) {
         val absoluteJumpDestination = resolve(process, aField, addressModeA)
         process.programCounter = absoluteJumpDestination
+        process.dontIncrementProgramCounter = true
     }
 
     override fun deepCopy(): AbstractInstruction {
