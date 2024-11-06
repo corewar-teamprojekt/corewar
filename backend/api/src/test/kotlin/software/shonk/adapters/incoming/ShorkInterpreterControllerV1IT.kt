@@ -75,12 +75,33 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
     }
 
     @Test
-    fun `test get lobby status with valid (default) ID`() = runTest {
+    fun `test get lobby status with valid default ID`() = runTest {
         val result = client.get("/api/v1/lobby/status/0")
         val responseData = parseStatus(result)
         assertEquals("false", responseData["playerASubmitted"])
         assertEquals("false", responseData["playerBSubmitted"])
         assertEquals("NOT_STARTED", responseData["gameState"])
         assertEquals("UNDECIDED", responseData["result.winner"])
+    }
+
+    @Test
+    fun `test get lobby status with valid custom ID`() = runTest {
+        // @TODO: "replace with v1 endpoint once it's implemented"
+        client.post("/api/v0/code/playerA") {
+            contentType(ContentType.Application.Json)
+            setBody("someString")
+        }
+
+        client.post("/api/v0/code/playerB") {
+            contentType(ContentType.Application.Json)
+            setBody("someOtherString")
+        }
+
+        val result = client.get("/api/v1/lobby/status/0")
+        val responseData = parseStatus(result)
+        assertEquals("true", responseData["playerASubmitted"])
+        assertEquals("true", responseData["playerBSubmitted"])
+        assertEquals("FINISHED", responseData["gameState"])
+        assertEquals("B", responseData["result.winner"])
     }
 }
