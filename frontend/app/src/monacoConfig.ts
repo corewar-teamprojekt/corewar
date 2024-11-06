@@ -85,6 +85,20 @@ monaco.languages.registerCompletionItemProvider("redcode", {
 	},
 });
 
+monaco.editor.defineTheme("corewarTheme", {
+	base: "vs-dark",
+	inherit: true,
+	rules: [
+		{ token: "comment", foreground: "#a67a4b", fontStyle: "italic" },
+		{ token: "keyword", foreground: "#53d62f" },
+		{ token: "number", foreground: "#bf7a98" },
+	],
+	colors: {
+		"editor.background": "#000000",
+	},
+});
+monaco.editor.setTheme("customTheme");
+
 loader.config({ monaco });
 
 loader.init();
