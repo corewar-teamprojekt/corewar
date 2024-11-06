@@ -17,6 +17,10 @@ NOTES:
 - Note 1
 - Note 2
 
+BLOCKERS:
+- [ ] #123
+- [ ] #456
+
 Acceptance Criteria:
 - [ ] Criteria 1
 - [ ] Criteria 2
