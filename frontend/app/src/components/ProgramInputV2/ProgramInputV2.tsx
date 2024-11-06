@@ -15,7 +15,7 @@ export default function ProgrammInputV2({
 	return (
 		<Card className="w-[50%] min-w-[360px]">
 			<CardContent className="flex flex-col items-center">
-				<div className="mt-3 w-[100%] border-2 border-fuchsia-950">
+				<div className="mt-3 w-[100%] border-2 border-slate-500">
 					<CodeEditor setProgram={setProgram} />
 				</div>
 			</CardContent>
