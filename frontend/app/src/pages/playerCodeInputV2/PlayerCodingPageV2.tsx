@@ -25,20 +25,34 @@ export default function PlayerCodingPageV2() {
 			return;
 		}
 		uploadPlayerCode(user.name, code)
-			.then(() => {
-				toast({
-					title: "Success!",
-					description: "your code has been uploaded",
-				});
-				navigate("/waiting-for-opponent");
+			.then((response) => {
+				if (response.status >= 200 && response.status < 300) {
+					displaySuccessToastAndNavigate();
+				} else {
+					displayErrorToast(
+						"Something went wrong while uploading your code :(",
+					);
+				}
 			})
 			.catch((error) => {
-				toast({
-					title: "Error uploading code: ",
-					description: error.message,
-					variant: "destructive",
-				});
+				displayErrorToast(error.message);
 			});
+	}
+
+	function displaySuccessToastAndNavigate() {
+		toast({
+			title: "Success!",
+			description: "your code has been uploaded",
+		});
+		navigate("/waiting-for-opponent");
+	}
+
+	function displayErrorToast(errorMessage: string) {
+		toast({
+			title: "Error uploading code: ",
+			description: errorMessage,
+			variant: "destructive",
+		});
 	}
 
 	return (
