@@ -1,68 +1,74 @@
+import { BASE_POLLING_INTERVAL_MS } from "@/consts";
+import { Linterlint } from "@/domain/LinterLint";
+import { usePageVisibility } from "@/lib/usePageVisibility";
+import { getLinterLintsV1 } from "@/services/rest/RestService";
 import { Editor, useMonaco } from "@monaco-editor/react";
-import { MarkerSeverity } from "monaco-editor/esm/vs/editor/editor.api";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface CodeEditorProps {
 	setProgram: (s: string) => void;
+	program: string;
 }
 
-export default function CodeEditor({ setProgram }: Readonly<CodeEditorProps>) {
+export default function CodeEditor({
+	setProgram,
+	program,
+}: Readonly<CodeEditorProps>) {
 	const monaco = useMonaco();
 	const linterOwner = "redCodeLinter";
-
-	const testProgram = `; heheheha, code here :D
-
-	start   ADD #4, bomb_target   ; Increment bomb target by 4
-        	MOV bomb, @bomb_target ; Place a bomb at the new target location
-        	JMP start             ; Loop back to start
-
-	bomb    	DAT #0                ; The bomb: will terminate an enemy process if hit
-	bomb_target DAT #0            ; Starting location for bombing (relative to start)`;
+	const isPageVisible = usePageVisibility();
+	const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
 	useEffect(() => {
-		if (monaco) {
-			//TODO: just for testing rn, will be deleted
-			setUpTestingLinterWarningsAndErrors();
+		const pollingCallback = async () => {
+			console.debug("Polling linter warnings...");
+
+			const responseLints = await getLinterLintsV1(program);
+			setLinterLinting(responseLints);
+		};
+
+		const startPolling = () => {
+			timerIdRef.current = setInterval(
+				pollingCallback,
+				BASE_POLLING_INTERVAL_MS,
+			);
+		};
+
+		const stopPolling = () => {
+			if (timerIdRef.current !== null) {
+				clearInterval(timerIdRef.current);
+				timerIdRef.current = null;
+			}
+		};
+
+		if (isPageVisible) {
+			startPolling();
+		} else {
+			stopPolling();
 		}
-	}, [monaco]);
 
-	function setUpTestingLinterWarningsAndErrors() {
-		setTimeout(
-			() =>
-				setLinterLinting(
-					MarkerSeverity.Error,
-					1,
-					1,
-					1,
-					10,
-					"This is an error1",
-				),
-			2000,
-		);
-	}
+		return () => {
+			stopPolling();
+		};
+	}, [isPageVisible]);
 
-	function setLinterLinting(
-		severity: MarkerSeverity,
-		startLineNumber: number,
-		endLineNumber: number,
-		startColumn: number,
-		endColumn: number,
-		message: string,
-	) {
+	function setLinterLinting(linterLints: Linterlint[]) {
 		if (!monaco) return;
 		const model = monaco.editor.getModels()[0];
-		const marker = {
-			severity: severity,
-			startLineNumber: startLineNumber,
-			startColumn: startColumn,
-			endLineNumber: endLineNumber,
-			endColumn: endColumn,
-			message: message,
-			owner: linterOwner,
-			resource: model.uri,
-		};
-		const markers = monaco.editor.getModelMarkers({ owner: linterOwner });
-		markers.push(marker);
+		const markers = [];
+		for (const ll of linterLints) {
+			const marker = {
+				severity: ll.severity,
+				startLineNumber: ll.startLineNumber,
+				startColumn: ll.startColumn,
+				endLineNumber: ll.endLineNumber,
+				endColumn: ll.endColumn,
+				message: ll.message,
+				owner: linterOwner,
+				resource: model.uri,
+			};
+			markers.push(marker);
+		}
 		monaco.editor.setModelMarkers(model, linterOwner, markers);
 	}
 
@@ -71,7 +77,6 @@ export default function CodeEditor({ setProgram }: Readonly<CodeEditorProps>) {
 			height="60vh"
 			theme="corewarTheme"
 			defaultLanguage="redcode"
-			defaultValue={testProgram}
 			onMount={(editor) => setProgram(editor.getValue())}
 			onChange={(value) => setProgram(value ?? "")}
 		/>
