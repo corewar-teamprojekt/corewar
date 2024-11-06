@@ -72,6 +72,7 @@ export default function CodeEditor({ setProgram }: Readonly<CodeEditorProps>) {
 			theme="vs-dark"
 			defaultLanguage="redcode"
 			defaultValue={testProgram}
+			onMount={(editor) => setProgram(editor.getValue())}
 			onChange={(value) => setProgram(value ?? "")}
 		/>
 	);
