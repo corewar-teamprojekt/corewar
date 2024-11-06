@@ -27,6 +27,23 @@ internal class TestJmp {
     }
 
     @Test
+    fun `test in conjunction with process`() {
+        val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val settings = InternalSettings(8000, 1000, dat, 1000, 100)
+        val shork = InternalShork(settings)
+        val core = shork.memoryCore
+        val program = Program("Jumpy :3", shork)
+        program.createProcessAt(0)
+        val jmp = Jmp(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+
+        core.storeAbsolute(0, jmp)
+
+        program.tick()
+
+        assertEquals(42, program.processes.get().programCounter)
+    }
+
+    @Test
     fun testDeepCopy() {
         val jmp = Jmp(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
         val copy = jmp.deepCopy()
