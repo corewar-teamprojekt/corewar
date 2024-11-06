@@ -9,17 +9,21 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import kotlinx.serialization.Serializable
 import org.koin.ktor.ext.inject
+import org.slf4j.LoggerFactory
 import software.shonk.application.port.incoming.ShorkUseCase
 
 const val UNKNOWN_ERROR_MESSAGE = "Unknown Error"
 const val defaultLobby = 0L
 
 fun Route.configureShorkInterpreterControllerV0() {
+    val logger = LoggerFactory.getLogger("ShorkInterpreterControllerV0")
+
     val shorkUseCase by inject<ShorkUseCase>()
 
     get("/status") {
         val useCaseResponse = shorkUseCase.getLobbyStatus(defaultLobby)
         useCaseResponse.onFailure {
+            logger.error("Failed to get lobby status", it)
             call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
         }
         useCaseResponse.onSuccess { call.respond(it) }
@@ -31,6 +35,7 @@ fun Route.configureShorkInterpreterControllerV0() {
 
         val result = shorkUseCase.addProgramToLobby(defaultLobby, player, program)
         result.onFailure {
+            logger.error("Failed to add program to lobby", it)
             call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
         }
         result.onSuccess { call.respond(HttpStatusCode.OK) }
@@ -39,6 +44,7 @@ fun Route.configureShorkInterpreterControllerV0() {
 }
 
 fun Route.configureShorkInterpreterControllerV1() {
+    val logger = LoggerFactory.getLogger("ShorkInterpreterControllerV1")
     val shorkUseCase by inject<ShorkUseCase>()
 
     get("/lobby/{lobbyId}/code/{player}") {
@@ -49,6 +55,7 @@ fun Route.configureShorkInterpreterControllerV1() {
         val program = shorkUseCase.getProgramFromLobby(lobbyId, player)
 
         program.onFailure {
+            logger.error("Failed to get program from lobby", it)
             call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
         }
 
