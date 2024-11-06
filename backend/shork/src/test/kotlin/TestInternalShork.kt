@@ -2,8 +2,8 @@ import kotlin.test.assertEquals
 import mocks.KillProgramInstruction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import software.shonk.interpreter.FinishedState
-import software.shonk.interpreter.GameStatus
+import software.shonk.interpreter.internal.FinishedState
+import software.shonk.interpreter.internal.GameStatus
 import software.shonk.interpreter.internal.InternalShork
 import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier

@@ -1,7 +1,5 @@
 package software.shonk.interpreter.internal
 
-import software.shonk.interpreter.FinishedState
-import software.shonk.interpreter.GameStatus
 import software.shonk.interpreter.internal.program.AbstractProgram
 import software.shonk.interpreter.internal.settings.InternalSettings
 

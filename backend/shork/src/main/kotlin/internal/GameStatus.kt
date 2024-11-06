@@ -1,4 +1,4 @@
-package software.shonk.interpreter
+package software.shonk.interpreter.internal
 
 import software.shonk.interpreter.internal.program.AbstractProgram
 
