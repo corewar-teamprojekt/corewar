@@ -111,4 +111,17 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
         assertEquals(HttpStatusCode.Created, result.status)
         assertEquals("1", result.bodyAsText())
     }
+
+    @Test
+    fun `test create a multiple new lobbies`() = runTest {
+        val result = client.post("/api/v1/lobby")
+        val result2 = client.post("/api/v1/lobby")
+        val result3 = client.post("/api/v1/lobby")
+        assertEquals(HttpStatusCode.Created, result.status)
+        assertEquals("1", result.bodyAsText())
+        assertEquals(HttpStatusCode.Created, result2.status)
+        assertEquals("2", result2.bodyAsText())
+        assertEquals(HttpStatusCode.Created, result3.status)
+        assertEquals("3", result3.bodyAsText())
+    }
 }
