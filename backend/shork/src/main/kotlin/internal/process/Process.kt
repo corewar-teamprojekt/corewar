@@ -10,5 +10,7 @@ internal class Process(program: AbstractProgram, programCounter: Int) :
         if (!this.dontIncrementProgramCounter) {
             this.programCounter++
         }
+
+        this.dontIncrementProgramCounter = false
     }
 }
