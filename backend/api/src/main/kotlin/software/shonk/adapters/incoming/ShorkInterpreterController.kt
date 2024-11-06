@@ -57,26 +57,17 @@ fun Route.configureShorkInterpreterControllerV1() {
         return@get
     }
 
-    post("/lobby") {
-        val lobbyId = shorkUseCase.createLobby()
-        val result = shorkUseCase.getLobbyStatus(lobbyId)
-
-        result.onFailure {
-            call.respond(HttpStatusCode.InternalServerError, it.message ?: UNKNOWN_ERROR_MESSAGE)
-        }
-        result.onSuccess { call.respond(HttpStatusCode.Created, lobbyId.toString()) }
-        return@post
-    }
-
     get("lobby/status/{lobbyId}") {
         val lobbyId =
             call.parameters["lobbyId"]?.toLongOrNull()
                 ?: return@get call.respond(HttpStatusCode.BadRequest)
+
         val lobbyStatus = shorkUseCase.getLobbyStatus(lobbyId)
         lobbyStatus.onFailure {
             call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
         }
         lobbyStatus.onSuccess { call.respond(HttpStatusCode.OK, it) }
+        return@get
     }
 }
 

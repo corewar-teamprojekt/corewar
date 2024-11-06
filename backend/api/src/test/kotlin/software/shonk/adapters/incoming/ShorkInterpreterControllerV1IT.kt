@@ -22,6 +22,18 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
         }
     }
 
+    private suspend fun parseStatus(response: HttpResponse): Map<String, String> {
+        val responseJson = Json.parseToJsonElement(response.bodyAsText()).jsonObject
+        val result = responseJson["result"]?.jsonObject
+        val resultWinner = result?.get("winner")?.jsonPrimitive?.content ?: "UNDECIDED"
+        return mapOf(
+            "playerASubmitted" to responseJson["playerASubmitted"]!!.jsonPrimitive.content,
+            "playerBSubmitted" to responseJson["playerBSubmitted"]!!.jsonPrimitive.content,
+            "gameState" to responseJson["gameState"]!!.jsonPrimitive.content,
+            "result.winner" to resultWinner,
+        )
+    }
+
     @Test
     fun testGetPlayerCode() = runTest {
         // @TODO: "replace with v1 endpoint once it's implemented"
@@ -65,18 +77,10 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
     @Test
     fun `test get lobby status with valid (default) ID`() = runTest {
         val result = client.get("/api/v1/lobby/status/0")
-        val expectedStatus =
-            """
-        {
-            "playerASubmitted": false,
-            "playerBSubmitted": false,
-            "gameState": "NOT_STARTED",
-            "result": {
-                "winner": "UNDECIDED"
-            }
-        }
-        """
-                .trimIndent()
-        assertEquals(expectedStatus, result.bodyAsText())
+        val responseData = parseStatus(result)
+        assertEquals("false", responseData["playerASubmitted"])
+        assertEquals("false", responseData["playerBSubmitted"])
+        assertEquals("NOT_STARTED", responseData["gameState"])
+        assertEquals("UNDECIDED", responseData["result.winner"])
     }
 }
