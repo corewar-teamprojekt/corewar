@@ -3,15 +3,11 @@ package software.shonk.adapters.incoming
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.server.config.*
-import io.ktor.server.testing.*
-import io.netty.handler.codec.http2.HttpConversionUtil.parseStatus
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.koin.dsl.module
 import software.shonk.module
 import software.shonk.moduleApiV0
 import software.shonk.moduleApiV1
@@ -24,18 +20,6 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
             moduleApiV0() // @TODO: delete once v0 functionality is implemented in v1
             moduleApiV1()
         }
-    }
-
-    private suspend fun parseStatus(response: HttpResponse): Map<String, String> {
-        val responseJson = Json.parseToJsonElement(response.bodyAsText()).jsonObject
-        val result = responseJson["result"]?.jsonObject
-        val resultWinner = result?.get("winner")?.jsonPrimitive?.content ?: "UNDECIDED"
-        return mapOf(
-            "playerASubmitted" to responseJson["playerASubmitted"]!!.jsonPrimitive.content,
-            "playerBSubmitted" to responseJson["playerBSubmitted"]!!.jsonPrimitive.content,
-            "gameState" to responseJson["gameState"]!!.jsonPrimitive.content,
-            "result.winner" to resultWinner,
-        )
     }
 
     @Test
@@ -81,10 +65,17 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
     @Test
     fun `test get lobby status with valid (default) ID`() = runTest {
         val result = client.get("/api/v1/lobby/status/0")
-        val responseData = parseStatus(result)
-        assertEquals("false", responseData["playerASubmitted"])
-        assertEquals("false", responseData["playerBSubmitted"])
-        assertEquals("NOT_STARTED", responseData["gameState"])
-        assertEquals("UNDECIDED", responseData["result.winner"])
+        val expectedStatus =
+            """
+        {
+            "playerASubmitted": false,
+            "playerBSubmitted": false,
+            "gameState": "NOT_STARTED",
+            "result": {
+                "winner": "UNDECIDED"
+            }
+        }"""
+                .trimIndent()
+        assertEquals(expectedStatus, result.bodyAsText())
     }
 }
