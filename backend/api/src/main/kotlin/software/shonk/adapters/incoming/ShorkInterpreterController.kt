@@ -79,12 +79,7 @@ fun Route.configureShorkInterpreterControllerV1() {
 
     post("/lobby") {
         val lobbyId = shorkUseCase.createLobby()
-        val result = shorkUseCase.getLobbyStatus(lobbyId)
-
-        result.onFailure {
-            call.respond(HttpStatusCode.InternalServerError, it.message ?: UNKNOWN_ERROR_MESSAGE)
-        }
-        result.onSuccess { call.respond(HttpStatusCode.Created, lobbyId.toString()) }
+        call.respond(HttpStatusCode.Created, lobbyId.toString())
         return@post
     }
 }
