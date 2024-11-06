@@ -28,6 +28,27 @@ internal class TestSpl {
     }
 
     @Test
+    fun `test in conjunction with program`() {
+        val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val settings = InternalSettings(8000, 1000, dat, 1000, 100)
+        val shork = InternalShork(settings)
+        val core = shork.memoryCore
+        val program = Program("Splitty", shork)
+
+        val spl = Spl(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        core.storeAbsolute(0, spl)
+        program.createProcessAt(0)
+
+        program.tick()
+
+        assertEquals(2, program.processes.size())
+        // Execution should first continue from the next instruction after SPL
+        assertEquals(1, program.processes.get().programCounter)
+        // The new process should have been created at the address specified by the SPL instruction
+        assertEquals(42, program.processes.get().programCounter)
+    }
+
+    @Test
     fun testDeepCopy() {
         val spl = Spl(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
         val copy = spl.deepCopy()
