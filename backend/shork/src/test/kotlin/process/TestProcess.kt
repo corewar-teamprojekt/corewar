@@ -3,6 +3,7 @@ package process
 import assertExecutionCountAtAddress
 import kotlin.test.assertEquals
 import mocks.MockInstruction
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import software.shonk.interpreter.internal.InternalShork
@@ -41,6 +42,20 @@ internal class TestProcess {
 
         assertExecutionCountAtAddress(shork.memoryCore, 42, 1)
         assertExecutionCountAtAddress(shork.memoryCore, 43, 1)
+    }
+
+    @Test
+    fun `test multiple ticks with no programcounter incrementation`() {
+        program.createProcessAt(42)
+
+        val process = program.processes.get()
+        process.tick()
+        assertEquals(43, process.programCounter)
+
+        process.dontIncrementProgramCounter = true
+        process.tick()
+        assertEquals(43, process.programCounter)
+        assertFalse(process.dontIncrementProgramCounter)
     }
 
     // Tests if dontIncrementProgramCounter is working
