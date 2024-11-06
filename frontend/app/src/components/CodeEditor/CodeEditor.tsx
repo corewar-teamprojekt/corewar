@@ -7,13 +7,9 @@ import { useEffect, useRef } from "react";
 
 interface CodeEditorProps {
 	setProgram: (s: string) => void;
-	program: string;
 }
 
-export default function CodeEditor({
-	setProgram,
-	program,
-}: Readonly<CodeEditorProps>) {
+export default function CodeEditor({ setProgram }: Readonly<CodeEditorProps>) {
 	const monaco = useMonaco();
 	const linterOwner = "redCodeLinter";
 	const isPageVisible = usePageVisibility();
@@ -23,7 +19,9 @@ export default function CodeEditor({
 		const pollingCallback = async () => {
 			console.debug("Polling linter warnings...");
 
-			const responseLints = await getLinterLintsV1(program);
+			const responseLints = await getLinterLintsV1(
+				monaco?.editor.getModels()[0].getValue() ?? "",
+			);
 			setLinterLinting(responseLints);
 		};
 
@@ -50,7 +48,7 @@ export default function CodeEditor({
 		return () => {
 			stopPolling();
 		};
-	}, [isPageVisible]);
+	}, [isPageVisible, monaco]);
 
 	function setLinterLinting(linterLints: Linterlint[]) {
 		if (!monaco) return;
