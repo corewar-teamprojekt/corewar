@@ -82,6 +82,22 @@ fun Route.configureShorkInterpreterControllerV1() {
         call.respond(HttpStatusCode.Created, lobbyId.toString())
         return@post
     }
+
+    post("/lobby/{lobbyId}/code/{player}") {
+        val lobbyId =
+            call.parameters["lobbyId"]?.toLongOrNull()
+                ?: return@post call.respond(HttpStatusCode.BadRequest)
+
+        val player = call.parameters["player"]
+        val program = call.receive<String>()
+        val result = shorkUseCase.addProgramToLobby(lobbyId, player, program)
+
+        result.onFailure {
+            call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
+        }
+        result.onSuccess { call.respond(HttpStatusCode.OK) }
+        return@post
+    }
 }
 
 @Serializable data class Program(val code: String)
