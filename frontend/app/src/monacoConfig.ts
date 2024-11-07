@@ -19,6 +19,10 @@ const keywordsList = [
 	"SPL",
 	"DAT",
 	"NOP",
+	"LDP",
+	"SEQ",
+	"SNE",
+	"STP",
 ];
 
 [...keywordsList].forEach((keyword) =>
