@@ -13,6 +13,26 @@ Response with an id that identifies the lobby uniquely.
 }
 ```
 
+# POST /lobby/{lobbyid}/join
+
+Endpoint to join an existing lobby.
+
+## body:
+```json
+{
+    "playername": String,
+}
+```
+
+The body must contain the desired playerName
+
+## responses:
+### 200:
+No special response body, join was accepted.
+
+### 409:
+Someone already joined as that player. The slot is locked and the join operation is aborted.
+
 
 # GET /lobby/{lobbyId}/status
 
