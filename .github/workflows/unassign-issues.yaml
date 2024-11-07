@@ -13,10 +13,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up GitHub CLI
-      uses: cli/gh-actions@v2
-      with:
-        gh-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Login to GitHub CLI
+      run: gh auth login --with-token < ${{ secrets.GITHUB_TOKEN }}
 
     - name: Install jq
       run: |
