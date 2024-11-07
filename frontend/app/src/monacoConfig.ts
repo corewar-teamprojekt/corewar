@@ -3,7 +3,7 @@ import { loader } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 
-const keywordsList = [
+const upperkKeywordsList = [
 	"MOV",
 	"ADD",
 	"SUB",
@@ -25,11 +25,13 @@ const keywordsList = [
 	"STP",
 ];
 
-[...keywordsList].forEach((keyword) =>
-	keywordsList.push(keyword.toLowerCase()),
+const fullKeywordsList = [...upperkKeywordsList];
+
+[...upperkKeywordsList].forEach((keyword) =>
+	fullKeywordsList.push(keyword.toLowerCase()),
 );
 
-const keywordListRegex = new RegExp(keywordsList.join("|"), "g");
+const keywordListRegex = new RegExp(fullKeywordsList.join("|"), "g");
 
 self.MonacoEnvironment = {
 	getWorker() {
@@ -78,10 +80,10 @@ monaco.languages.registerCompletionItemProvider("redcode", {
 			position.lineNumber,
 			wordInfo.endColumn,
 		);
-		const suggestions = keywordsList.map((keyword) => ({
-			label: keyword,
+		const suggestions = upperkKeywordsList.map((keyword) => ({
+			label: keyword.toUpperCase(),
 			kind: monaco.languages.CompletionItemKind.Keyword,
-			insertText: keyword,
+			insertText: keyword.toUpperCase(),
 			range: range,
 		}));
 		return { suggestions };
