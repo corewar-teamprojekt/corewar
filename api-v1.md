@@ -5,6 +5,15 @@ Base url: `/api/v1`
 Endpoint to create a new lobby.
 Response with an id that identifies the lobby uniquely.
 
+## body:
+```json
+{
+    "playerName": String,
+}
+```
+
+The body must contain the desired playerName of the player creating the lobby.
+
 ## responses:
 ### 201:
 ```json
