@@ -2,6 +2,7 @@ package software.shonk.interpreter.internal.compiler
 
 import java.util.*
 import kotlin.collections.ArrayList
+import software.shonk.interpreter.internal.error.TokenizerError
 
 // https://en.wikipedia.org/wiki/Lexical_analysis#Tokenization
 internal class Tokenizer(private val source: String) {
@@ -10,8 +11,7 @@ internal class Tokenizer(private val source: String) {
     private var current = 0
     private var line = 1
     private val keywordMap: HashMap<String, TokenType> = HashMap<String, TokenType>()
-    // Errors encountered while tokenizing, Pair of line number and error message
-    val tokenizingErrors: MutableList<Pair<Int, String>> = ArrayList()
+    val tokenizingErrors: MutableList<TokenizerError> = ArrayList()
 
     init {
         // Instructions
@@ -91,7 +91,9 @@ internal class Tokenizer(private val source: String) {
                 } else if (c.isLetter()) {
                     identifier()
                 } else {
-                    tokenizingErrors.add(Pair(line, "Unexpected character: ${c} at pos $current"))
+                    tokenizingErrors.add(
+                        TokenizerError("Unexpected character: $c at $current", line, start, current)
+                    )
                 }
             }
         }
