@@ -79,3 +79,24 @@ Player path variable has to be one of [A, B]
 ```
 ## 404: No code has been submitted for the specified player yet or the lobby does not exist
 
+# GET /lobby
+
+Gets a list of all existing lobbies and their details.
+
+playersJoined contains a list of all playerNames that joined the lobby
+
+## responses:
+### 200:
+
+```json
+{
+  "lobbies": [
+    {
+      "id": number,
+      "playersJoined": [string],
+      "gameState": One of [NOT_STARTED, RUNNING, FINISHED],
+    },
+    ...
+  ]
+}
+```
