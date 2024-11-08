@@ -1,5 +1,6 @@
 package instruction
 
+import getDefaultInternalSettings
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -10,11 +11,10 @@ import software.shonk.interpreter.internal.instruction.Dat
 import software.shonk.interpreter.internal.instruction.Sne
 import software.shonk.interpreter.internal.process.Process
 import software.shonk.interpreter.internal.program.Program
-import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestSne {
     private val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-    private val settings = InternalSettings(8000, 1000, dat, 1000, 100, 64)
+    private val settings = getDefaultInternalSettings(dat)
     private var shork = InternalShork(settings)
     private var program = Program("sne", shork)
     private var process = Process(program, 0)

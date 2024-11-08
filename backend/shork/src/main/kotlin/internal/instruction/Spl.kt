@@ -12,7 +12,8 @@ internal class Spl(
     modifier: Modifier,
 ) : AbstractInstruction(aField, bField, addressModeA, addressModeB, modifier) {
     override fun execute(process: AbstractProcess) {
-        val startAddress = resolve(process, aField, addressModeA)
+        val core = process.program.shork.memoryCore
+        val startAddress = core.resolveForReading(process.programCounter, aField, addressModeA)
         process.program.createProcessAt(startAddress)
     }
 

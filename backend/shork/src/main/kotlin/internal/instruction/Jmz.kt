@@ -14,9 +14,10 @@ internal class Jmz(
 
     override fun execute(process: AbstractProcess) {
         val core = process.program.shork.memoryCore
-        val checkZeroAddress = resolve(process, bField, addressModeB)
+        val checkZeroAddress = core.resolveForReading(process.programCounter, bField, addressModeB)
         val checkZeroInstruction = core.loadAbsolute(checkZeroAddress)
-        val absoluteJumpDestination = resolve(process, aField, addressModeA)
+        val absoluteJumpDestination =
+            core.resolveForReading(process.programCounter, aField, addressModeA)
 
         val shouldJump =
             when (modifier) {

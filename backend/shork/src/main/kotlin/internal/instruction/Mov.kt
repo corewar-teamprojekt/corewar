@@ -14,8 +14,10 @@ internal class Mov(
 
     override fun execute(process: AbstractProcess) {
         val core = process.program.shork.memoryCore
-        val sourceAddress = resolve(process, aField, addressModeA)
-        val destinationAddress = resolve(process, bField, addressModeB)
+
+        val sourceAddress = core.resolveForReading(process.programCounter, aField, addressModeA)
+        val destinationAddress =
+            core.resolveForWriting(process.programCounter, bField, addressModeB)
         val sourceInstruction = core.loadAbsolute(sourceAddress)
         val destinationInstruction = core.loadAbsolute(destinationAddress)
 
@@ -41,7 +43,8 @@ internal class Mov(
                 destinationInstruction.bField = sourceInstruction.aField
             }
             Modifier.I -> {
-                core.storeAbsolute(destinationAddress, sourceInstruction.deepCopy())
+                val address = core.resolveForWriting(process.programCounter, bField, addressModeB)
+                core.storeAbsolute(address, sourceInstruction.deepCopy())
             }
         }
     }

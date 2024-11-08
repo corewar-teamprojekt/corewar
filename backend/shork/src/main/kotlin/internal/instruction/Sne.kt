@@ -13,8 +13,9 @@ internal class Sne(
 ) : AbstractInstruction(aField, bField, addressModeA, addressModeB, modifier) {
     override fun execute(process: AbstractProcess) {
         val core = process.program.shork.memoryCore
-        val sourceAddress = resolve(process, aField, addressModeA)
-        val destinationAddress = resolve(process, bField, addressModeB)
+        val sourceAddress = core.resolveForReading(process.programCounter, aField, addressModeA)
+        val destinationAddress =
+            core.resolveForReading(process.programCounter, bField, addressModeB)
         val sourceInstruction = core.loadAbsolute(sourceAddress)
         val destinationInstruction = core.loadAbsolute(destinationAddress)
 

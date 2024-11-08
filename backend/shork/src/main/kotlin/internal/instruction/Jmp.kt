@@ -12,7 +12,12 @@ internal class Jmp(
     modifier: Modifier,
 ) : AbstractInstruction(aField, bField, addressModeA, addressModeB, modifier) {
     override fun execute(process: AbstractProcess) {
-        val absoluteJumpDestination = resolve(process, aField, addressModeA)
+        val absoluteJumpDestination =
+            process.program.shork.memoryCore.resolveForReading(
+                process.programCounter,
+                aField,
+                addressModeA,
+            )
         process.programCounter = absoluteJumpDestination
         process.dontIncrementProgramCounter = true
     }

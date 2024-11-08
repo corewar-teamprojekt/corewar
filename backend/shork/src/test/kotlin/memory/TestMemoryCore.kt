@@ -12,7 +12,6 @@ import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.memory.MemoryCore
 import software.shonk.interpreter.internal.program.Program
-import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestMemoryCore {
     val defaultInstruction =
@@ -71,7 +70,8 @@ internal class TestMemoryCore {
 
     @Test
     fun `test if the memory core integrates with the Game Data Collector`() {
-        val shork = InternalShork(InternalSettings(8000, 1000, defaultInstruction, 1000, 100, 64))
+        val settings = getDefaultInternalSettings(defaultInstruction)
+        val shork = InternalShork(settings)
         val memoryCore = shork.memoryCore
         val gameDataCollector = shork.gameDataCollector
         val program = Program("Test", shork)
@@ -97,5 +97,101 @@ internal class TestMemoryCore {
 
         val writes = gameDataCollector.getGameStatistics().map { it.memoryWrites }.flatten()
         assertEquals(listOf(42, 1337, 666), writes)
+    }
+
+    @Test
+    fun testResolveForReadBoundsPositive() {
+        val defaultInstruction =
+            MockInstruction(42, 69, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.I)
+        val memoryCore10 =
+            MemoryCore(100, getDefaultInternalSettings(defaultInstruction, readDistance = 10))
+
+        val out = memoryCore10.resolveForReading(42, 23, AddressMode.DIRECT)
+        assertEquals(45, out)
+
+        val out2 = memoryCore10.resolveForReading(42, 34, AddressMode.DIRECT)
+        assertEquals(46, out2)
+
+        val memoryCore32 =
+            MemoryCore(256, getDefaultInternalSettings(defaultInstruction, readDistance = 32))
+
+        for (i in 0 until 100) {
+            for (j in 0 until 32) {
+                val out = memoryCore32.resolveForReading(i, j, AddressMode.DIRECT)
+                assertEquals(i + j % 32, out)
+            }
+        }
+    }
+
+    @Test
+    fun testResolveForReadBoundsNegative() {
+        val defaultInstruction =
+            MockInstruction(42, 69, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.I)
+        val memoryCore10 =
+            MemoryCore(100, getDefaultInternalSettings(defaultInstruction, readDistance = 10))
+
+        val out = memoryCore10.resolveForReading(42, -23, AddressMode.DIRECT)
+        assertEquals(39, out)
+
+        val out2 = memoryCore10.resolveForReading(42, -34, AddressMode.DIRECT)
+        assertEquals(38, out2)
+
+        val memoryCore32 =
+            MemoryCore(256, getDefaultInternalSettings(defaultInstruction, readDistance = 32))
+
+        for (i in 0 until 100) {
+            for (j in 0 until 32) {
+                val out = memoryCore32.resolveForReading(i, -j, AddressMode.DIRECT)
+                assertEquals(i - j % 32, out)
+            }
+        }
+    }
+
+    @Test
+    fun testResolveForWriteBoundsPositive() {
+        val defaultInstruction =
+            MockInstruction(42, 69, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.I)
+        val memoryCore10 =
+            MemoryCore(100, getDefaultInternalSettings(defaultInstruction, writeDistance = 10))
+
+        val out = memoryCore10.resolveForWriting(42, 23, AddressMode.DIRECT)
+        assertEquals(45, out)
+
+        val out2 = memoryCore10.resolveForWriting(42, 34, AddressMode.DIRECT)
+        assertEquals(46, out2)
+
+        val memoryCore32 =
+            MemoryCore(256, getDefaultInternalSettings(defaultInstruction, writeDistance = 32))
+
+        for (i in 0 until 100) {
+            for (j in 0 until 32) {
+                val out = memoryCore32.resolveForWriting(i, j, AddressMode.DIRECT)
+                assertEquals(i + j % 32, out)
+            }
+        }
+    }
+
+    @Test
+    fun testResolveForWriteBoundsNegative() {
+        val defaultInstruction =
+            MockInstruction(42, 69, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.I)
+        val memoryCore10 =
+            MemoryCore(100, getDefaultInternalSettings(defaultInstruction, writeDistance = 10))
+
+        val out = memoryCore10.resolveForWriting(42, -23, AddressMode.DIRECT)
+        assertEquals(39, out)
+
+        val out2 = memoryCore10.resolveForWriting(42, -34, AddressMode.DIRECT)
+        assertEquals(38, out2)
+
+        val memoryCore32 =
+            MemoryCore(256, getDefaultInternalSettings(defaultInstruction, writeDistance = 32))
+
+        for (i in 0 until 100) {
+            for (j in 0 until 32) {
+                val out = memoryCore32.resolveForWriting(i, -j, AddressMode.DIRECT)
+                assertEquals(i - j % 32, out)
+            }
+        }
     }
 }

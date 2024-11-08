@@ -32,10 +32,15 @@ internal abstract class AbstractArithmeticInstruction(
 
     override fun execute(process: AbstractProcess) {
         val core = process.program.shork.memoryCore
-        val sourceAddress = resolve(process, aField, addressModeA)
-        val destinationAddress = resolve(process, bField, addressModeB)
+        val sourceAddress = core.resolveForReading(process.programCounter, aField, addressModeA)
+        val destinationAddress =
+            core.resolveForReading(process.programCounter, bField, addressModeB)
+        val destinationWriteAddress =
+            core.resolveForWriting(process.programCounter, bField, addressModeB)
+
         val sourceInstruction = core.loadAbsolute(sourceAddress)
         val destinationInstruction = core.loadAbsolute(destinationAddress)
+        val destinationWriteInstruction = core.loadAbsolute(destinationWriteAddress)
 
         errorOccured = false
 
@@ -49,7 +54,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result?.let({ destinationInstruction.aField = result })
+                result?.let({ destinationWriteInstruction.aField = result })
             }
             Modifier.B -> {
                 val result =
@@ -60,7 +65,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result?.let({ destinationInstruction.bField = result })
+                result?.let({ destinationWriteInstruction.bField = result })
             }
             Modifier.AB -> {
                 val result =
@@ -71,7 +76,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result?.let({ destinationInstruction.bField = result })
+                result?.let({ destinationWriteInstruction.bField = result })
             }
             Modifier.BA -> {
                 val result =
@@ -82,7 +87,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result?.let({ destinationInstruction.aField = result })
+                result?.let({ destinationWriteInstruction.aField = result })
             }
             Modifier.F,
             Modifier.I -> {
@@ -94,7 +99,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                resultA?.let({ destinationInstruction.aField = resultA })
+                resultA?.let({ destinationWriteInstruction.aField = resultA })
 
                 val resultB =
                     executeWithHandling({
@@ -104,7 +109,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                resultB?.let({ destinationInstruction.bField = resultB })
+                resultB?.let({ destinationWriteInstruction.bField = resultB })
             }
             Modifier.X -> {
                 val result1 =
@@ -115,7 +120,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result1?.let({ destinationInstruction.bField = result1 })
+                result1?.let({ destinationWriteInstruction.bField = result1 })
 
                 val result2 =
                     executeWithHandling({
@@ -125,7 +130,7 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result2?.let({ destinationInstruction.aField = result2 })
+                result2?.let({ destinationWriteInstruction.aField = result2 })
             }
         }
 

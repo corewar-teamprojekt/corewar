@@ -31,6 +31,11 @@ class Settings(
 
     /** The maximum number of processes that can be running at the same time. */
     val maximumProcessesPerPlayer: Int = 64,
+
+    /** The maximum distance a read operation can access. */
+    val readDistance: Int = coreSize,
+    /** The maximum distance a write operation can access. */
+    val writeDistance: Int = coreSize,
 ) {
     internal fun toInternalSettings() =
         software.shonk.interpreter.internal.settings.InternalSettings(
@@ -46,5 +51,7 @@ class Settings(
             maximumTicks,
             mininumSeparation,
             maximumProcessesPerPlayer,
+            readDistance,
+            writeDistance,
         )
 }

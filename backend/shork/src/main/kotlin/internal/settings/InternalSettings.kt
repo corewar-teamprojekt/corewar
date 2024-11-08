@@ -25,6 +25,11 @@ internal class InternalSettings(
     /** The maximum number of processes that can be running at the same time. */
     val maximumProcessesPerPlayer: Int,
 
+    /** The maximum distance a read operation can access. */
+    val readDistance: Int,
+    /** The maximum distance a write operation can access. */
+    val writeDistance: Int,
+
     /** The game data collector to use. */
     val gameDataCollector: IGameDataCollector = GameDataCollector(),
 )
