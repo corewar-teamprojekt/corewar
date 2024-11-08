@@ -23,12 +23,12 @@ internal class TestParser {
     fun `CMP is alias for SEQ`() {
         val program =
             listOf(
-                Token(TokenType.CMP, "CMP", "", 1),
-                Token(TokenType.NUMBER, "42", 42, 1),
-                Token(TokenType.COMMA, ",", "", 1),
-                Token(TokenType.NUMBER, "1337", 1337, 1),
-                Token(TokenType.I, "I", "", 1),
-                Token(TokenType.EOF, "", "", 1),
+                Token(TokenType.CMP, "CMP", "", 1, 0, 0),
+                Token(TokenType.NUMBER, "42", 42, 1, 0, 0),
+                Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                Token(TokenType.NUMBER, "1337", 1337, 1, 0, 0),
+                Token(TokenType.I, "I", "", 1, 0, 0),
+                Token(TokenType.EOF, "", "", 1, 0, 0),
             )
 
         val expected = listOf(Seq(42, 1337, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.I))
@@ -171,23 +171,34 @@ internal class TestParser {
                         arguments.add(
                             Arguments.of(
                                 listOf(
-                                    Token(instruction.first, instruction.first.toString(), "", 1),
-                                    Token(firstMode.third, firstMode.second, "", 1),
+                                    Token(
+                                        instruction.first,
+                                        instruction.first.toString(),
+                                        "",
+                                        1,
+                                        0,
+                                        0,
+                                    ),
+                                    Token(firstMode.third, firstMode.second, "", 1, 0, 0),
                                     Token(
                                         TokenType.NUMBER,
                                         firstAddress.toString(),
                                         firstAddress,
                                         1,
+                                        0,
+                                        0,
                                     ),
-                                    Token(TokenType.COMMA, ",", "", 1),
-                                    Token(secondMode.third, secondMode.second, "", 1),
+                                    Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                                    Token(secondMode.third, secondMode.second, "", 1, 0, 0),
                                     Token(
                                         TokenType.NUMBER,
                                         secondAddress.toString(),
                                         secondAddress,
                                         1,
+                                        0,
+                                        0,
                                     ),
-                                    Token(TokenType.EOF, "", "", 1),
+                                    Token(TokenType.EOF, "", "", 1, 0, 0),
                                 ),
                                 listOf(instance),
                             )
@@ -236,13 +247,34 @@ internal class TestParser {
                     arguments.add(
                         Arguments.of(
                             listOf(
-                                Token(instruction.first, instruction.first.toString(), "", 1),
-                                Token(firstAddressMode.third, firstAddressMode.second, "", 1),
-                                Token(TokenType.NUMBER, firstAddress.toString(), firstAddress, 1),
-                                Token(TokenType.COMMA, ",", "", 1),
-                                Token(secondAddressMode.third, secondAddressMode.second, "", 1),
-                                Token(TokenType.NUMBER, secondAddress.toString(), secondAddress, 1),
-                                Token(TokenType.EOF, "", "", 1),
+                                Token(instruction.first, instruction.first.toString(), "", 1, 0, 0),
+                                Token(firstAddressMode.third, firstAddressMode.second, "", 1, 0, 0),
+                                Token(
+                                    TokenType.NUMBER,
+                                    firstAddress.toString(),
+                                    firstAddress,
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                                Token(
+                                    secondAddressMode.third,
+                                    secondAddressMode.second,
+                                    "",
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(
+                                    TokenType.NUMBER,
+                                    secondAddress.toString(),
+                                    secondAddress,
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(TokenType.EOF, "", "", 1, 0, 0),
                             ),
                             listOf(instance),
                         )
@@ -282,23 +314,34 @@ internal class TestParser {
                         arguments.add(
                             Arguments.of(
                                 listOf(
-                                    Token(instruction.first, instruction.first.toString(), "", 1),
-                                    Token(firstMode.third, firstMode.second, "", 1),
+                                    Token(
+                                        instruction.first,
+                                        instruction.first.toString(),
+                                        "",
+                                        1,
+                                        0,
+                                        0,
+                                    ),
+                                    Token(firstMode.third, firstMode.second, "", 1, 0, 0),
                                     Token(
                                         TokenType.NUMBER,
                                         firstAddress.toString(),
                                         firstAddress,
                                         1,
+                                        0,
+                                        0,
                                     ),
-                                    Token(TokenType.COMMA, ",", "", 1),
-                                    Token(secondMode.third, secondMode.second, "", 1),
+                                    Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                                    Token(secondMode.third, secondMode.second, "", 1, 0, 0),
                                     Token(
                                         TokenType.NUMBER,
                                         secondAddress.toString(),
                                         secondAddress,
                                         1,
+                                        0,
+                                        0,
                                     ),
-                                    Token(TokenType.EOF, "", "", 1),
+                                    Token(TokenType.EOF, "", "", 1, 0, 0),
                                 ),
                                 listOf(instance),
                             )
@@ -347,13 +390,27 @@ internal class TestParser {
                     arguments.add(
                         Arguments.of(
                             listOf(
-                                Token(instruction.first, instruction.first.toString(), "", 1),
-                                Token(firstMode.third, firstMode.second, "", 1),
-                                Token(TokenType.NUMBER, firstAddress.toString(), firstAddress, 1),
-                                Token(TokenType.COMMA, ",", "", 1),
-                                Token(secondMode.third, secondMode.second, "", 1),
-                                Token(TokenType.NUMBER, secondAddress.toString(), secondAddress, 1),
-                                Token(TokenType.EOF, "", "", 1),
+                                Token(instruction.first, instruction.first.toString(), "", 1, 0, 0),
+                                Token(firstMode.third, firstMode.second, "", 1, 0, 0),
+                                Token(
+                                    TokenType.NUMBER,
+                                    firstAddress.toString(),
+                                    firstAddress,
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                                Token(secondMode.third, secondMode.second, "", 1, 0, 0),
+                                Token(
+                                    TokenType.NUMBER,
+                                    secondAddress.toString(),
+                                    secondAddress,
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(TokenType.EOF, "", "", 1, 0, 0),
                             ),
                             listOf(instance),
                         )
@@ -397,23 +454,34 @@ internal class TestParser {
                         arguments.add(
                             Arguments.of(
                                 listOf(
-                                    Token(instruction.first, instruction.first.toString(), "", 1),
-                                    Token(firstMode.third, firstMode.second, "", 1),
+                                    Token(
+                                        instruction.first,
+                                        instruction.first.toString(),
+                                        "",
+                                        1,
+                                        0,
+                                        0,
+                                    ),
+                                    Token(firstMode.third, firstMode.second, "", 1, 0, 0),
                                     Token(
                                         TokenType.NUMBER,
                                         firstAddress.toString(),
                                         firstAddress,
                                         1,
+                                        0,
+                                        0,
                                     ),
-                                    Token(TokenType.COMMA, ",", "", 1),
-                                    Token(secondMode.third, secondMode.second, "", 1),
+                                    Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                                    Token(secondMode.third, secondMode.second, "", 1, 0, 0),
                                     Token(
                                         TokenType.NUMBER,
                                         secondAddress.toString(),
                                         secondAddress,
                                         1,
+                                        0,
+                                        0,
                                     ),
-                                    Token(TokenType.EOF, "", "", 1),
+                                    Token(TokenType.EOF, "", "", 1, 0, 0),
                                 ),
                                 listOf(instance),
                             )
@@ -450,35 +518,43 @@ internal class TestParser {
                             arguments.add(
                                 Arguments.of(
                                     listOf(
-                                        Token(instruction.third, instruction.second, "", 1),
-                                        Token(TokenType.DOT, ".", "", 1),
-                                        Token(modifier.third, modifier.second, "", 1),
+                                        Token(instruction.third, instruction.second, "", 1, 0, 0),
+                                        Token(TokenType.DOT, ".", "", 1, 0, 0),
+                                        Token(modifier.third, modifier.second, "", 1, 0, 0),
                                         Token(
                                             firstAddressMode.third,
                                             firstAddressMode.second,
                                             "",
                                             1,
+                                            0,
+                                            0,
                                         ),
                                         Token(
                                             TokenType.NUMBER,
                                             firstAddress.toString(),
                                             firstAddress,
                                             1,
+                                            0,
+                                            0,
                                         ),
-                                        Token(TokenType.COMMA, ",", "", 1),
+                                        Token(TokenType.COMMA, ",", "", 1, 0, 0),
                                         Token(
                                             secondAddressMode.third,
                                             secondAddressMode.second,
                                             "",
                                             1,
+                                            0,
+                                            0,
                                         ),
                                         Token(
                                             TokenType.NUMBER,
                                             secondAddress.toString(),
                                             secondAddress,
                                             1,
+                                            0,
+                                            0,
                                         ),
-                                        Token(TokenType.EOF, "", "", 1),
+                                        Token(TokenType.EOF, "", "", 1, 0, 0),
                                     ),
                                     listOf(instance),
                                 )

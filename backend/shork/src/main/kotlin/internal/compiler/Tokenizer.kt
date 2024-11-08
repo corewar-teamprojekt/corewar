@@ -9,6 +9,9 @@ internal class Tokenizer(private val source: String) {
     private val tokens: MutableList<Token> = ArrayList()
     private var start = 0
     private var current = 0
+    // Used for nice error reporting, track where we are in a line
+    private var columnStart = 0
+    private var currentColumn = 0
     private var line = 1
     private val keywordMap: HashMap<String, TokenType> = HashMap<String, TokenType>()
     val tokenizingErrors: MutableList<TokenizerError> = ArrayList()
@@ -54,7 +57,7 @@ internal class Tokenizer(private val source: String) {
             scanToken()
         }
 
-        tokens.add(Token(TokenType.EOF, "", "", line))
+        tokens.add(Token(TokenType.EOF, "", "", line, 0, 0))
         return tokens
     }
 
@@ -79,11 +82,16 @@ internal class Tokenizer(private val source: String) {
             '#' -> addToken(TokenType.HASHTAG)
             '$' -> addToken(TokenType.DOLLAR)
             '@' -> addToken(TokenType.AT)
-            ' ',
+            ' ' -> {
+                columnStart++
+            }
             '\r',
             '\t' -> {}
             '\n' -> {
                 line++
+                // Columns reset at the start of a new line
+                columnStart = 0
+                currentColumn = 0
             }
             else -> {
                 if (c.isDigit()) {
@@ -91,15 +99,14 @@ internal class Tokenizer(private val source: String) {
                 } else if (c.isLetter()) {
                     identifier()
                 } else {
-                    tokenizingErrors.add(
-                        TokenizerError("Unexpected character: $c at $current", line, start, current)
-                    )
+                    emitError("Unexpected character: $c at $current")
                 }
             }
         }
     }
 
     private fun advance(): Char {
+        currentColumn++
         return source[current++]
     }
 
@@ -129,7 +136,8 @@ internal class Tokenizer(private val source: String) {
 
     private fun addToken(type: TokenType, literal: Any) {
         val text = source.substring(start, current)
-        tokens.add(Token(type, text, literal, line))
+        tokens.add(Token(type, text, literal, line, columnStart + 1, currentColumn))
+        columnStart = currentColumn
     }
 
     private fun isAtEnd(): Boolean {
@@ -142,5 +150,9 @@ internal class Tokenizer(private val source: String) {
         }
 
         addToken(TokenType.NUMBER, source.substring(start, current).toLong())
+    }
+
+    private fun emitError(message: String) {
+        tokenizingErrors.add(TokenizerError(message, line, columnStart + 1, currentColumn))
     }
 }

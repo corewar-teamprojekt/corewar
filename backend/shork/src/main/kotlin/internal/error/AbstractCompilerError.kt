@@ -4,8 +4,8 @@ abstract class AbstractCompilerError
 internal constructor(
     val message: String,
     val lineNumber: Int,
-    val charIndexStart: Int,
-    val charIndexEnd: Int,
+    val lineCharIndexStart: Int,
+    val lineCharIndexEnd: Int,
 ) {
     override fun toString(): String {
         return message
