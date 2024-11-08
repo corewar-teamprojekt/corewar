@@ -16,7 +16,15 @@ import software.shonk.interpreter.internal.settings.InternalSettings
 internal class TestJmp {
     private val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
     private var settings =
-        InternalSettings(8000, 1000, dat, 1000, 100, gameDataCollector = MockGameDataCollector())
+        InternalSettings(
+            8000,
+            1000,
+            dat,
+            1000,
+            100,
+            64,
+            gameDataCollector = MockGameDataCollector(),
+        )
     private var shork = InternalShork(settings)
 
     @BeforeEach

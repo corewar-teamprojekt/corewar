@@ -14,7 +14,7 @@ import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestSeq {
     private val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-    private val settings = InternalSettings(8000, 1000, dat, 1000, 100)
+    private val settings = InternalSettings(8000, 1000, dat, 1000, 100, 64)
     private var shork = InternalShork(settings)
     private var program = Program("seq", shork)
     private var process = Process(program, 0)

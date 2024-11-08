@@ -23,6 +23,7 @@ internal class TestProcess {
             MockInstruction(),
             1000,
             100,
+            64,
             gameDataCollector = MockGameDataCollector(),
         )
     private var shork = InternalShork(settings)
@@ -85,7 +86,7 @@ internal class TestProcess {
     @Test
     fun `test if process integrates with the Game Data Collector`() {
         val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-        val settings = InternalSettings(8000, 1000, dat, 1000, 100)
+        val settings = InternalSettings(8000, 1000, dat, 1000, 100, 64)
         shork = InternalShork(settings)
         val gameDataCollector = shork.gameDataCollector
 

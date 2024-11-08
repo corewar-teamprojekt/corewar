@@ -28,6 +28,9 @@ class Settings(
     val maximumTicks: Int = 80000,
     /** The minimum separation between two processes. */
     val mininumSeparation: Int = 100,
+
+    /** The maximum number of processes that can be running at the same time. */
+    val maximumProcessesPerPlayer: Int = 64,
 ) {
     internal fun toInternalSettings() =
         software.shonk.interpreter.internal.settings.InternalSettings(
@@ -42,5 +45,6 @@ class Settings(
             ), // TODO: replace with actual instruction once the parser exists
             maximumTicks,
             mininumSeparation,
+            maximumProcessesPerPlayer,
         )
 }

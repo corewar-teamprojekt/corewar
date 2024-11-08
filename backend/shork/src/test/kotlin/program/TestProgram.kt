@@ -22,6 +22,7 @@ internal class TestProgram {
             MockInstruction(),
             1000,
             100,
+            64,
             gameDataCollector = MockGameDataCollector(),
         )
     private var shork = InternalShork(settings)
@@ -165,7 +166,7 @@ internal class TestProgram {
     @Test
     fun `test if program integrates with game data collector`() {
         val dat = Dat(1, 1, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-        val settings = InternalSettings(8000, 100, dat, 1000, 100)
+        val settings = InternalSettings(8000, 100, dat, 1000, 100, 64)
         val jmp = Jmp(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
 
         shork = InternalShork(settings)
@@ -187,5 +188,41 @@ internal class TestProgram {
         assertEquals(42, result.programCounterAfter)
         assertEquals(false, result.processDied)
         assertEquals(listOf(420, 4200), result.programCountersOfOtherProcesses)
+    }
+
+    fun testCreateProcessWithMaximumProcesses() {
+        val settings = InternalSettings(8000, 100, MockInstruction(), 1000, 100, 2)
+        val shork = InternalShork(settings)
+        val program = Program("id", shork)
+
+        program.createProcessAt(42)
+        assertEquals(1, program.processes.size())
+
+        program.createProcessAt(69)
+        assertEquals(2, program.processes.size())
+
+        program.createProcessAt(420)
+        assertEquals(2, program.processes.size())
+    }
+
+    @Test
+    fun testRemoveAndCreateProcessWithMaximumProcesses() {
+        val settings = InternalSettings(8000, 100, MockInstruction(), 1000, 100, 2)
+        val shork = InternalShork(settings)
+        val program = Program("id", shork)
+
+        program.createProcessAt(42)
+        program.createProcessAt(69)
+        program.createProcessAt(420)
+        assertEquals(2, program.processes.size())
+
+        program.removeProcess(program.processes.get())
+        assertEquals(1, program.processes.size())
+
+        program.createProcessAt(420)
+        assertEquals(2, program.processes.size())
+
+        program.createProcessAt(720)
+        assertEquals(2, program.processes.size())
     }
 }

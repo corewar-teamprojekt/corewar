@@ -12,11 +12,11 @@ import software.shonk.interpreter.internal.program.Program
 import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestInternalShork {
-    var settings = InternalSettings(8000, 100, KillProgramInstruction(), 1000, 100)
+    var settings = InternalSettings(8000, 100, KillProgramInstruction(), 1000, 100, 64)
 
     @BeforeEach
     fun setUp() {
-        settings = InternalSettings(8000, 100, KillProgramInstruction(), 1000, 100)
+        settings = InternalSettings(8000, 100, KillProgramInstruction(), 1000, 100, 64)
     }
 
     @Test

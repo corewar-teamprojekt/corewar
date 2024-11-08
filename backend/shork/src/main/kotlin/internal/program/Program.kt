@@ -21,6 +21,9 @@ internal class Program(id: String, shork: AbstractInternalShork) : AbstractProgr
     }
 
     override fun createProcessAt(startingAddress: Int) {
+        if (this.processes.size() >= this.shork.settings.maximumProcessesPerPlayer) {
+            return
+        }
         val newProcess = Process(this, startingAddress)
         this.processes.add(newProcess)
     }

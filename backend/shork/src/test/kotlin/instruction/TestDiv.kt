@@ -17,7 +17,15 @@ internal class TestDiv {
 
     private val dat = Dat(5, 13, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
     private val settings =
-        InternalSettings(8000, 1000, dat, 1000, 100, gameDataCollector = MockGameDataCollector())
+        InternalSettings(
+            8000,
+            1000,
+            dat,
+            1000,
+            100,
+            64,
+            gameDataCollector = MockGameDataCollector(),
+        )
     private var shork = InternalShork(settings)
     private var program = Program("div", shork)
     private var process = Process(program, 0)

@@ -21,6 +21,10 @@ internal class InternalSettings(
     val maximumCycles: Int,
     /** The minimum separation between two processes. */
     val minimumSeparation: Int,
+
+    /** The maximum number of processes that can be running at the same time. */
+    val maximumProcessesPerPlayer: Int,
+
     /** The game data collector to use. */
     val gameDataCollector: IGameDataCollector = GameDataCollector(),
 )

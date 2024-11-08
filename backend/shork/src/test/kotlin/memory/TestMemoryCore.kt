@@ -71,7 +71,7 @@ internal class TestMemoryCore {
 
     @Test
     fun `test if the memory core integrates with the Game Data Collector`() {
-        val shork = InternalShork(InternalSettings(8000, 1000, defaultInstruction, 1000, 100))
+        val shork = InternalShork(InternalSettings(8000, 1000, defaultInstruction, 1000, 100, 64))
         val memoryCore = shork.memoryCore
         val gameDataCollector = shork.gameDataCollector
         val program = Program("Test", shork)

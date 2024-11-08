@@ -16,7 +16,15 @@ internal class TestJmn {
 
     private val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
     private val settings =
-        InternalSettings(8000, 1000, dat, 1000, 100, gameDataCollector = MockGameDataCollector())
+        InternalSettings(
+            8000,
+            1000,
+            dat,
+            1000,
+            100,
+            64,
+            gameDataCollector = MockGameDataCollector(),
+        )
     private var shork = InternalShork(settings)
     private var program = Program("jmn", shork)
 

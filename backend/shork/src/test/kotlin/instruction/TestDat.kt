@@ -14,7 +14,7 @@ internal class TestDat {
     @Test
     fun testExecute() {
         val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-        val settings = InternalSettings(8000, 1000, dat, 1000, 100)
+        val settings = InternalSettings(8000, 1000, dat, 1000, 100, 64)
         val shork = InternalShork(settings)
         val program = Program("A-", shork)
         val process = Process(program, 0)
