@@ -90,8 +90,12 @@ export default function CodeEditor({
 	async function getFileContentAndSetCode(e: ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
 		if (file) {
-			const text = await file.text();
-			setProgram(text);
+			const reader = new FileReader();
+			reader.onload = (event) => {
+				const text = event.target?.result as string;
+				setProgram(text);
+			};
+			reader.readAsText(file);
 		}
 		setIsDropdownOpen(false);
 	}
@@ -110,15 +114,9 @@ export default function CodeEditor({
 	return (
 		<>
 			<DropdownMenu open={isDropdownOpen}>
-				<DropdownMenuTrigger>
-					<div className="border-2 border-slate-900 inline-block">
-						<Button
-							variant="ghost"
-							className="mx-0.5 h-[20px] w-[30px]"
-							onClick={() => setIsDropdownOpen(true)}
-						>
-							File
-						</Button>
+				<DropdownMenuTrigger onClick={() => setIsDropdownOpen(true)}>
+					<div className="border-2 border-slate-900 inline-block px-1">
+						File
 					</div>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent

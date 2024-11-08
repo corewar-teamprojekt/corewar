@@ -7,7 +7,7 @@ import { useUser } from "@/services/userContext/UserContextHelpers";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function PlayerCodingPage() {
+export default function PlayerCodingPageV2() {
 	const navigate = useNavigate();
 	const user = useUser();
 	const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
@@ -25,20 +25,34 @@ export default function PlayerCodingPage() {
 			return;
 		}
 		uploadPlayerCode(user.name, code)
-			.then(() => {
-				toast({
-					title: "Success!",
-					description: "your code has been uploaded",
-				});
-				navigate("/waiting-for-opponent");
+			.then((response) => {
+				if (response.status >= 200 && response.status < 300) {
+					displaySuccessToastAndNavigate();
+				} else {
+					displayErrorToast(
+						"Something went wrong while uploading your code :(",
+					);
+				}
 			})
 			.catch((error) => {
-				toast({
-					title: "Error uploading code: ",
-					description: error.message,
-					variant: "destructive",
-				});
+				displayErrorToast(error.message);
 			});
+	}
+
+	function displaySuccessToastAndNavigate() {
+		toast({
+			title: "Success!",
+			description: "your code has been uploaded",
+		});
+		navigate("/waiting-for-opponent");
+	}
+
+	function displayErrorToast(errorMessage: string) {
+		toast({
+			title: "Error uploading code: ",
+			description: errorMessage,
+			variant: "destructive",
+		});
 	}
 
 	return (
@@ -51,6 +65,8 @@ export default function PlayerCodingPage() {
 				isOpen={isConfirmDialogOpen}
 				setIsOpen={setIsConfirmDialogOpen}
 				onConfirm={triggerCodeUpload}
+				title="Upload code"
+				description="Are you sure you want to upload this code?"
 			/>
 		</RequireUser>
 	);

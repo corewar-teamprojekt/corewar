@@ -4,9 +4,9 @@ import { useUser } from "@/services/userContext/UserContextHelpers";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { act } from "react";
+import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import PlayerCodingPage from "./PlayerCodingPage";
-import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
 
 // Mock dependencies
 vi.mock("@/services/userContext/UserContextHelpers");
@@ -27,6 +27,12 @@ const testRouterConfig = [
 		element: <div>Waiting for result</div>,
 	},
 ];
+
+vi.mock("../../components/CodeEditor/CodeEditor", () => ({
+	default: vi.fn(({ setProgram }) => {
+		return <textarea onChange={(e) => setProgram(e.target.value)} />;
+	}),
+}));
 
 describe("PlayerCodingPage", () => {
 	const mockUser = { name: "testUser" };
@@ -52,7 +58,7 @@ describe("PlayerCodingPage", () => {
 		const programInput = screen.getByRole("textbox");
 		act(() => {
 			fireEvent.change(programInput, { target: { value: "some code" } });
-			fireEvent.click(screen.getByText("upload"));
+			fireEvent.click(screen.getByText("upload code"));
 		});
 		await waitFor(() =>
 			expect(
@@ -62,7 +68,7 @@ describe("PlayerCodingPage", () => {
 	});
 
 	it("uploads code and shows success toast on confirm", async () => {
-		(uploadPlayerCode as Mock).mockResolvedValueOnce({});
+		(uploadPlayerCode as Mock).mockResolvedValueOnce({ status: 200 });
 		const router = createMemoryRouter(testRouterConfig);
 		act(() => {
 			render(<RouterProvider router={router} />);
@@ -71,7 +77,7 @@ describe("PlayerCodingPage", () => {
 		const programInput = screen.getByRole("textbox");
 		act(() => {
 			fireEvent.change(programInput, { target: { value: "some code" } });
-			fireEvent.click(screen.getByText("upload"));
+			fireEvent.click(screen.getByText("upload code"));
 		});
 		act(() => {
 			fireEvent.click(screen.getByText("Confirm"));
@@ -96,7 +102,7 @@ describe("PlayerCodingPage", () => {
 		const programInput = screen.getByRole("textbox");
 		act(() => {
 			fireEvent.change(programInput, { target: { value: "some code" } });
-			fireEvent.click(screen.getByText("upload"));
+			fireEvent.click(screen.getByText("upload code"));
 		});
 		act(() => {
 			fireEvent.click(screen.getByText("Confirm"));
@@ -113,7 +119,7 @@ describe("PlayerCodingPage", () => {
 	});
 
 	it("redirects to waiting-for-opponent page on successful upload", async () => {
-		(uploadPlayerCode as Mock).mockResolvedValueOnce({});
+		(uploadPlayerCode as Mock).mockResolvedValueOnce({ status: 200 });
 		const router = createMemoryRouter(testRouterConfig);
 		act(() => {
 			render(<RouterProvider router={router} />);
@@ -122,7 +128,7 @@ describe("PlayerCodingPage", () => {
 		const programInput = screen.getByRole("textbox");
 		act(() => {
 			fireEvent.change(programInput, { target: { value: "some code" } });
-			const uploadButton = screen.getByText("upload");
+			const uploadButton = screen.getByText("upload code");
 			uploadButton.focus();
 			uploadButton.click();
 		});
