@@ -41,7 +41,10 @@ internal class Seq(
                         sourceInstruction.bField == destinationInstruction.aField
                 }
                 Modifier.I -> {
-                    sourceInstruction == destinationInstruction
+                    sourceInstruction::class == destinationInstruction::class &&
+                        sourceInstruction.aField == destinationInstruction.aField &&
+                        sourceInstruction.bField == destinationInstruction.bField &&
+                        sourceInstruction.modifier == destinationInstruction.modifier
                 }
             }
 

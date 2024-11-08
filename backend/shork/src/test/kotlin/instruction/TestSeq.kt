@@ -37,8 +37,14 @@ internal class TestSeq {
         return seq
     }
 
-    private fun setupMemory(aField: Int, bField: Int, address: Int) {
-        val dat = Dat(aField, bField, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+    private fun setupMemory(
+        aField: Int,
+        bField: Int,
+        address: Int,
+        addressModeA: AddressMode = AddressMode.DIRECT,
+        addressModeB: AddressMode = AddressMode.DIRECT,
+    ) {
+        val dat = Dat(aField, bField, addressModeA, addressModeB, Modifier.A)
         shork.memoryCore.storeAbsolute(address, dat)
     }
 
@@ -99,6 +105,14 @@ internal class TestSeq {
         val seq = setupSeq(Modifier.I)
         setupMemory(42, 69, 1)
         setupMemory(42, 69, 2)
+        executeSeqAndAssertCounter(seq, 1)
+    }
+
+    @Test
+    fun `test modifier I equal different address modes`() {
+        val seq = setupSeq(Modifier.I)
+        setupMemory(42, 69, 1, AddressMode.IMMEDIATE, AddressMode.B_INDIRECT)
+        setupMemory(42, 69, 2, AddressMode.A_INDIRECT, AddressMode.DIRECT)
         executeSeqAndAssertCounter(seq, 1)
     }
 
