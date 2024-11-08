@@ -129,3 +129,29 @@ playersJoined contains a list of all playerNames that joined the lobby
   ]
 }
 ```
+
+# POST /redcode/compile/errors
+Retrieves the errors encountered during the compilation of the redcode.
+If no errors were encountered during compilation, the provided error array is empty.
+
+## Request Body:
+```json
+{
+    "code": string,
+}
+```
+
+## Responses:
+### 200:
+```json
+{
+    "errors": [
+        {
+            "line": number,
+            "message": string,
+            "columnStart": number,
+            "columnEnd": number,
+        },
+    ]
+}
+```
