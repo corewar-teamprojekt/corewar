@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Login to GitHub CLI
-      run: gh auth login --with-token < ${{ secrets.GITHUB_TOKEN }}
+      run: echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
 
     - name: Install jq
       run: |
