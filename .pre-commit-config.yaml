@@ -6,14 +6,25 @@ repos:
         entry: python scripts/commit_msg_linter.py
         language: python
         stages: [commit-msg]
-
-  - repo: local
-    hooks:
       - id: prettier-npx
         name: Prettier using npx
         language: system
         entry: 'npx prettier --config ./frontend/app/.prettierrc --write'
         files: ^frontend/app/src/.*\.(js|jsx|ts|tsx|json|css|scss|md)$
+      - id: test-backend
+        name: Run backend tests
+        stages: [pre-push]
+        entry: python ./scripts/run_gradle.py test
+        language: python
+        files: ^backend/.*\.kt$
+        pass_filenames: false
+      - id: test-frontend
+        name: Frontend Tests
+        stages: [pre-push]
+        entry: npm run test run --prefix frontend/app
+        language: system
+        files: ^frontend/app/.*\.(js|jsx|ts|tsx)$
+        pass_filenames: false
 
   - repo: https://github.com/corewar-teamprojekt/ktfmt-pre-commit-hook
     rev: 0.8.0
@@ -30,4 +41,3 @@ repos:
         name: eslint
         files: ^frontend/app/.*\.(js|jsx|ts|tsx)$
         args: ['--config', './frontend/app/eslint.config.js']
-
