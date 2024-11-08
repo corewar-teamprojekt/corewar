@@ -51,7 +51,8 @@ internal class Parser(private val tokens: List<Token>) {
             }
         } else {
             when (token.type) {
-                TokenType.EOF -> {
+                TokenType.EOF,
+                TokenType.SEMICOLON -> {
                     advance()
                 }
                 else -> {
