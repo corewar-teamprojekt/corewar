@@ -9,13 +9,13 @@ internal class MemoryCore(memorySize: Int, val settings: InternalSettings) : ICo
         Array(memorySize) { settings.initialInstruction.deepCopy() }
 
     override fun loadAbsolute(address: Int): AbstractInstruction {
-        val resolvedAddress = address % memory.size
+        val resolvedAddress = resolvedAddressBounds(address)
         settings.gameDataCollector.collectMemoryRead(resolvedAddress)
         return memory[resolvedAddress]
     }
 
     override fun storeAbsolute(address: Int, instruction: AbstractInstruction) {
-        val resolvedAddress = address % memory.size
+        val resolvedAddress = resolvedAddressBounds(address)
         settings.gameDataCollector.collectMemoryWrite(resolvedAddress, instruction)
         memory[resolvedAddress] = instruction
     }
@@ -28,6 +28,15 @@ internal class MemoryCore(memorySize: Int, val settings: InternalSettings) : ICo
     override fun resolveForWriting(sourceAddress: Int, field: Int, mode: AddressMode): Int {
         val maxDistance = settings.writeDistance
         return resolve(sourceAddress, field, mode, maxDistance)
+    }
+
+    private fun resolvedAddressBounds(address: Int): Int {
+        return if (address < 0) {
+            val negativeIndex = address % memory.size
+            (memory.size + negativeIndex) % memory.size
+        } else {
+            address % memory.size
+        }
     }
 
     /**

@@ -61,8 +61,8 @@ internal class TestMemoryCore {
         val memoryCore = MemoryCore(10, settings)
 
         val instruction = MockInstruction(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.I)
-        memoryCore.storeAbsolute(-20, instruction)
-        val out = memoryCore.loadAbsolute(20)
+        memoryCore.storeAbsolute(-13, instruction)
+        val out = memoryCore.loadAbsolute(7)
 
         assertNotEquals(defaultInstruction, out)
         assertEquals(instruction, out)
