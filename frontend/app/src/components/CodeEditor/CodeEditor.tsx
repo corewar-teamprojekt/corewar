@@ -32,8 +32,6 @@ export default function CodeEditor({
 
 	useEffect(() => {
 		const pollingCallback = async () => {
-			console.debug("Polling linter warnings...");
-
 			const responseLints = await getLinterLintsV1(
 				monaco?.editor.getModels()[0].getValue() ?? "",
 			);

@@ -19,7 +19,8 @@ export function getStatusV0(): Promise<Response> {
 	return fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v0/status`);
 }
 
+//eslint is disabled because this function is not implemented yet
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getLinterLintsV1(code: string): Promise<Linterlint[]> {
-	console.debug("fetching lints for code:, ", code);
 	return Promise.resolve([]);
 }
