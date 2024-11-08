@@ -26,8 +26,6 @@ class Settings(
      * execution of a single instruction of every players' program.
      */
     val maximumTicks: Int = 80000,
-    /** The minimum separation between two processes. */
-    val mininumSeparation: Int = 100,
 
     /** The maximum number of processes that can be running at the same time. */
     val maximumProcessesPerPlayer: Int = 64,
@@ -36,6 +34,16 @@ class Settings(
     val readDistance: Int = coreSize,
     /** The maximum distance a write operation can access. */
     val writeDistance: Int = coreSize,
+
+    /** The minimum separation between two processes. */
+    val minimumSeparation: Int = 100,
+    /** The number of instructions between two processes when created */
+    val separation: Int = 100,
+    /**
+     * Whether the separation between two processes is random. `separation` is ignored if this is
+     * true
+     */
+    val randomSeparation: Boolean = false,
 ) {
     internal fun toInternalSettings() =
         software.shonk.interpreter.internal.settings.InternalSettings(
@@ -49,9 +57,11 @@ class Settings(
                 Modifier.I,
             ), // TODO: replace with actual instruction once the parser exists
             maximumTicks,
-            mininumSeparation,
             maximumProcessesPerPlayer,
             readDistance,
             writeDistance,
+            minimumSeparation,
+            separation,
+            randomSeparation,
         )
 }

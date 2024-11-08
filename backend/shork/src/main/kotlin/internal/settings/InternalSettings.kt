@@ -19,8 +19,6 @@ internal class InternalSettings(
      * execution of a single instruction of every players' program.
      */
     val maximumCycles: Int,
-    /** The minimum separation between two processes. */
-    val minimumSeparation: Int,
 
     /** The maximum number of processes that can be running at the same time. */
     val maximumProcessesPerPlayer: Int,
@@ -29,6 +27,16 @@ internal class InternalSettings(
     val readDistance: Int,
     /** The maximum distance a write operation can access. */
     val writeDistance: Int,
+
+    /** The minimum separation between two processes. */
+    val minimumSeparation: Int,
+    /** The number of instructions between two processes when created */
+    val separation: Int,
+    /**
+     * Whether the separation between two processes is random. `separation` is ignored if this is
+     * true
+     */
+    val randomSeparation: Boolean,
 
     /** The game data collector to use. */
     val gameDataCollector: IGameDataCollector = GameDataCollector(),

@@ -31,6 +31,8 @@ internal fun getDefaultInternalSettings(
     maximumProcessesPerPlayer: Int = 64,
     readDistance: Int = coreSize,
     writeDistance: Int = coreSize,
+    separation: Int = 100,
+    randomSeparation: Boolean = false,
     gameDataCollector: IGameDataCollector = GameDataCollector(),
 ): InternalSettings {
     return InternalSettings(
@@ -38,10 +40,12 @@ internal fun getDefaultInternalSettings(
         instructionLimit,
         initialInstruction,
         maximumCycles,
-        minimumSeparation,
         maximumProcessesPerPlayer,
         readDistance,
         writeDistance,
+        minimumSeparation,
+        separation,
+        randomSeparation,
         gameDataCollector,
     )
 }

@@ -15,7 +15,8 @@ class Shork : IShork {
         val internalSettings = settings.toInternalSettings()
         val shork = InternalShork(internalSettings)
 
-        var lastLocation = 0
+        var address = -1 * settings.separation
+
         for ((player, sourceCode) in programs.entries) {
             logger.info("Player $player:")
             val tokenizer = Tokenizer(sourceCode)
@@ -44,14 +45,20 @@ class Shork : IShork {
             val program = Program(player, shork)
             shork.addProgram(program)
 
-            val start = lastLocation
+            address =
+                if (internalSettings.randomSeparation) {
+                    (0 until internalSettings.coreSize).random()
+                    // @TODO: Test once functionality is inside InternalShork
+                } else {
+                    address + internalSettings.separation
+                }
+
+            val start = address
             logger.info("Storing the program of player $player at location $start")
             for (instruction in instructions) {
-                shork.memoryCore.storeAbsolute(lastLocation++, instruction)
+                shork.memoryCore.storeAbsolute(address++, instruction)
             }
-
             program.createProcessAt(start)
-            lastLocation += internalSettings.minimumSeparation + 100
         }
 
         val outcome =
