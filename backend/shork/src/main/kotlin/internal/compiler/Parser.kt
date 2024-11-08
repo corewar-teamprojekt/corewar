@@ -2,6 +2,7 @@ package software.shonk.interpreter.internal.compiler
 
 import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
+import software.shonk.interpreter.internal.error.ParserError
 import software.shonk.interpreter.internal.instruction.*
 import software.shonk.interpreter.internal.instruction.AbstractInstruction
 import software.shonk.interpreter.internal.instruction.Dat
@@ -12,8 +13,7 @@ import software.shonk.interpreter.internal.instruction.Spl
 internal class Parser(private val tokens: List<Token>) {
     private var current = 0
     private var instructions: MutableList<AbstractInstruction> = ArrayList()
-    // Errors encountered while parsing, Pair of error message and token
-    var parsingErrors: MutableList<Pair<String, Token>> = ArrayList()
+    var parsingErrors: MutableList<ParserError> = ArrayList()
 
     fun parse(): List<AbstractInstruction> {
         while (!isAtEnd()) {
@@ -29,14 +29,14 @@ internal class Parser(private val tokens: List<Token>) {
 
     private fun peek(): Token {
         if (isAtEnd()) {
-            return Token(TokenType.EOF, "", "", 0)
+            return Token(TokenType.EOF, "", "", 0, 0, 0)
         }
         return tokens[current]
     }
 
     private fun advance(): Token {
         if (isAtEnd()) {
-            return Token(TokenType.EOF, "", "", 0)
+            return Token(TokenType.EOF, "", "", 0, 0, 0)
         }
         return tokens[current++]
     }
@@ -70,7 +70,8 @@ internal class Parser(private val tokens: List<Token>) {
         var modifier = modifier()
         val (aField, modeA) = field()
         if (peek().type != TokenType.COMMA) {
-            emitError("Expected comma after A Address but found ${peek().type}", token)
+            val nextToken = peek()
+            emitError("Expected comma after A Address but found ${nextToken.type}", nextToken)
             advanceToNextInstruction()
             return null
         }
@@ -258,7 +259,19 @@ internal class Parser(private val tokens: List<Token>) {
         return token.type in TokenType.instructions()
     }
 
+    private fun emitError(
+        message: String,
+        token: Token,
+        line: Int,
+        columnStart: Int,
+        columnEnd: Int,
+    ) {
+        parsingErrors.add(ParserError(message, line, columnStart, columnEnd, token))
+    }
+
     private fun emitError(message: String, token: Token) {
-        parsingErrors.add(Pair(message, token))
+        parsingErrors.add(
+            ParserError(message, token.line, token.columnStart, token.columnEnd, token)
+        )
     }
 }
