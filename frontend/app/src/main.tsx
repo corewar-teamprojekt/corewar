@@ -12,7 +12,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster.tsx";
 import "./index.css";
 import "./monacoConfig";
-import PlayerCodingPageV2 from "./pages/playerCodeInputV2/PlayerCodingPageV2.tsx";
+import PlayerCodingPage from "./pages/playerCodeInput/PlayerCodingPage.tsx";
 import ResultDisplayPage from "./pages/resultDisplayPage/ResultDisplayPage.tsx";
 const router = createBrowserRouter([
 	{
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "player-coding",
-				element: <PlayerCodingPageV2 />,
+				element: <PlayerCodingPage />,
 			},
 			{
 				path: "/player-selection",
