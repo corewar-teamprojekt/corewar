@@ -9,14 +9,13 @@ import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.instruction.Mov
 import software.shonk.interpreter.internal.program.Program
-import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestInternalShork {
-    var settings = InternalSettings(8000, 100, KillProgramInstruction(), 1000, 100, 64)
+    var settings = getDefaultInternalSettings(KillProgramInstruction())
 
     @BeforeEach
     fun setUp() {
-        settings = InternalSettings(8000, 100, KillProgramInstruction(), 1000, 100, 64)
+        settings = getDefaultInternalSettings(KillProgramInstruction())
     }
 
     @Test

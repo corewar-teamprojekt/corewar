@@ -1,6 +1,7 @@
 package process
 
 import assertExecutionCountAtAddress
+import getDefaultInternalSettings
 import kotlin.test.assertEquals
 import mocks.MockGameDataCollector
 import mocks.MockInstruction
@@ -13,19 +14,10 @@ import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.instruction.Dat
 import software.shonk.interpreter.internal.instruction.Jmp
 import software.shonk.interpreter.internal.program.Program
-import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestProcess {
     private var settings =
-        InternalSettings(
-            8000,
-            100,
-            MockInstruction(),
-            1000,
-            100,
-            64,
-            gameDataCollector = MockGameDataCollector(),
-        )
+        getDefaultInternalSettings(MockInstruction(), gameDataCollector = MockGameDataCollector())
     private var shork = InternalShork(settings)
     private var program = Program("id", shork)
 
@@ -86,7 +78,7 @@ internal class TestProcess {
     @Test
     fun `test if process integrates with the Game Data Collector`() {
         val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-        val settings = InternalSettings(8000, 1000, dat, 1000, 100, 64)
+        val settings = getDefaultInternalSettings(dat)
         shork = InternalShork(settings)
         val gameDataCollector = shork.gameDataCollector
 

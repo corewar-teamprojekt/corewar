@@ -1,6 +1,7 @@
 package program
 
 import assertExecutionCountAtAddress
+import getDefaultInternalSettings
 import kotlin.test.assertEquals
 import mocks.MockGameDataCollector
 import mocks.MockInstruction
@@ -12,19 +13,10 @@ import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.instruction.Dat
 import software.shonk.interpreter.internal.instruction.Jmp
 import software.shonk.interpreter.internal.program.Program
-import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestProgram {
     private var settings =
-        InternalSettings(
-            8000,
-            100,
-            MockInstruction(),
-            1000,
-            100,
-            64,
-            gameDataCollector = MockGameDataCollector(),
-        )
+        getDefaultInternalSettings(MockInstruction(), gameDataCollector = MockGameDataCollector())
     private var shork = InternalShork(settings)
     private var program = Program("id", shork)
 
@@ -166,7 +158,7 @@ internal class TestProgram {
     @Test
     fun `test if program integrates with game data collector`() {
         val dat = Dat(1, 1, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-        val settings = InternalSettings(8000, 100, dat, 1000, 100, 64)
+        val settings = getDefaultInternalSettings(dat)
         val jmp = Jmp(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
 
         shork = InternalShork(settings)
@@ -191,7 +183,7 @@ internal class TestProgram {
     }
 
     fun testCreateProcessWithMaximumProcesses() {
-        val settings = InternalSettings(8000, 100, MockInstruction(), 1000, 100, 2)
+        val settings = getDefaultInternalSettings(MockInstruction(), maximumProcessesPerPlayer = 2)
         val shork = InternalShork(settings)
         val program = Program("id", shork)
 
@@ -207,7 +199,7 @@ internal class TestProgram {
 
     @Test
     fun testRemoveAndCreateProcessWithMaximumProcesses() {
-        val settings = InternalSettings(8000, 100, MockInstruction(), 1000, 100, 2)
+        val settings = getDefaultInternalSettings(MockInstruction(), maximumProcessesPerPlayer = 2)
         val shork = InternalShork(settings)
         val program = Program("id", shork)
 

@@ -1,5 +1,6 @@
 package instruction
 
+import getDefaultInternalSettings
 import kotlin.test.assertEquals
 import mocks.MockGameDataCollector
 import org.junit.jupiter.api.BeforeEach
@@ -11,21 +12,12 @@ import software.shonk.interpreter.internal.instruction.Dat
 import software.shonk.interpreter.internal.instruction.Mod
 import software.shonk.interpreter.internal.process.Process
 import software.shonk.interpreter.internal.program.Program
-import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestMod {
 
     private val dat = Dat(5, 13, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
     private val settings =
-        InternalSettings(
-            8000,
-            1000,
-            dat,
-            1000,
-            100,
-            64,
-            gameDataCollector = MockGameDataCollector(),
-        )
+        getDefaultInternalSettings(dat, gameDataCollector = MockGameDataCollector())
     private var shork = InternalShork(settings)
     private var program = Program("mod", shork)
     private var process = Process(program, 0)

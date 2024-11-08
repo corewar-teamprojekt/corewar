@@ -13,7 +13,7 @@ internal abstract class AbstractInternalShork(
     val settings: InternalSettings,
     val gameDataCollector: IGameDataCollector = settings.gameDataCollector,
 ) {
-    val memoryCore = MemoryCore(settings.coreSize, settings.initialInstruction, gameDataCollector)
+    val memoryCore = MemoryCore(settings.coreSize, settings)
 
     abstract fun addProgram(vararg program: AbstractProgram)
 

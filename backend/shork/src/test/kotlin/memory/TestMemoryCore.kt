@@ -1,5 +1,6 @@
 package memory
 
+import getDefaultInternalSettings
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import mocks.MockGameDataCollector
@@ -16,13 +17,14 @@ import software.shonk.interpreter.internal.settings.InternalSettings
 internal class TestMemoryCore {
     val defaultInstruction =
         MockInstruction(42, 69, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.I)
-    var memoryCore =
-        MemoryCore(8000, defaultInstruction = defaultInstruction, MockGameDataCollector())
+    val settings =
+        getDefaultInternalSettings(defaultInstruction, gameDataCollector = MockGameDataCollector())
+
+    var memoryCore = MemoryCore(8000, settings)
 
     @BeforeEach
     fun setup() {
-        memoryCore =
-            MemoryCore(8000, defaultInstruction = defaultInstruction, MockGameDataCollector())
+        memoryCore = MemoryCore(8000, settings)
     }
 
     @Test
@@ -45,8 +47,7 @@ internal class TestMemoryCore {
 
     @Test
     fun testReadWriteOutOfBoundsPositive() {
-        val memoryCore =
-            MemoryCore(10, defaultInstruction = defaultInstruction, MockGameDataCollector())
+        val memoryCore = MemoryCore(10, settings)
 
         val instruction = MockInstruction(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.I)
         memoryCore.storeAbsolute(20, instruction)
@@ -58,8 +59,7 @@ internal class TestMemoryCore {
 
     @Test
     fun testReadWriteOutOfBoundsNegative() {
-        val memoryCore =
-            MemoryCore(10, defaultInstruction = defaultInstruction, MockGameDataCollector())
+        val memoryCore = MemoryCore(10, settings)
 
         val instruction = MockInstruction(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.I)
         memoryCore.storeAbsolute(-20, instruction)
