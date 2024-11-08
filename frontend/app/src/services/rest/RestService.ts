@@ -19,8 +19,25 @@ export function getStatusV0(): Promise<Response> {
 	return fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v0/status`);
 }
 
-//eslint is disabled because this function is not implemented yet
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function getLinterLintsV1(code: string): Promise<Linterlint[]> {
-	return Promise.resolve([]);
+export async function getLinterLintsV1(code: string): Promise<Linterlint[]> {
+	const response = await fetch(
+		`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/redcode/compile/errors`,
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				code: code,
+			}),
+		},
+	);
+	if (response.ok) {
+		const lints = await response
+			.json()
+			.then((data) => data.errors as Linterlint[]);
+		return lints;
+	} else {
+		return [];
+	}
 }
