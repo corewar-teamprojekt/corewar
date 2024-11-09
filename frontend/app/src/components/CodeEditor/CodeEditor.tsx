@@ -14,6 +14,7 @@ import {
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Input } from "../ui/input";
+import { Separator } from "../ui/separator";
 
 interface CodeEditorProps {
 	setProgram: (s: string) => void;
@@ -111,41 +112,42 @@ export default function CodeEditor({
 
 	return (
 		<>
-			<DropdownMenu open={isDropdownOpen}>
-				<DropdownMenuTrigger onClick={() => setIsDropdownOpen(true)}>
-					<div className="border-2 border-slate-900 inline-block px-1">
-						File
-					</div>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent
-					className=""
-					onEscapeKeyDown={() => setIsDropdownOpen(false)}
-					onPointerDownOutside={() => setIsDropdownOpen(false)}
-				>
-					<DropdownMenuLabel>File</DropdownMenuLabel>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem>
-						<label>
-							upload
-							<Input
-								type="file"
-								className="hidden w-[100%] h-[100%]"
-								onChange={getFileContentAndSetCode}
-							/>
-						</label>
-					</DropdownMenuItem>
-					<DropdownMenuItem>
-						<label>
-							download
-							<Button
-								onClick={downloadCode}
-								value="download"
-								className="hidden"
-							/>
-						</label>
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
+			<div className="bg-neutral-900 flex flex-row items-center">
+				<DropdownMenu open={isDropdownOpen}>
+					<DropdownMenuTrigger onClick={() => setIsDropdownOpen(true)}>
+						<div className="my-0.5 mx-2">File</div>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent
+						className=""
+						onEscapeKeyDown={() => setIsDropdownOpen(false)}
+						onPointerDownOutside={() => setIsDropdownOpen(false)}
+					>
+						<DropdownMenuLabel>File</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem>
+							<label>
+								upload
+								<Input
+									type="file"
+									className="hidden w-[100%] h-[100%]"
+									onChange={getFileContentAndSetCode}
+								/>
+							</label>
+						</DropdownMenuItem>
+						<DropdownMenuItem>
+							<label>
+								download
+								<Button
+									onClick={downloadCode}
+									value="download"
+									className="hidden"
+								/>
+							</label>
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+				<Separator orientation="vertical" className="bg-neutral-600 h-[20px]" />
+			</div>
 			<Editor
 				height="60vh"
 				theme="corewarTheme"
