@@ -87,7 +87,7 @@ class ShorkServiceTest {
     @Test
     fun `create lobby creates a new lobby`() {
         val shorkService = ShorkService(MockShork())
-        val lobbyId = shorkService.createLobby()
+        val lobbyId = shorkService.createLobby("player1")
         assertEquals(shorkService.lobbies.size, 2)
         assertEquals(lobbyId, 1)
         assertEquals(
@@ -104,7 +104,7 @@ class ShorkServiceTest {
     @Test
     fun `upload code in lobby 0 does not affect lobby 1`() {
         val shorkService = ShorkService(MockShork())
-        val secondLobby = shorkService.createLobby()
+        val secondLobby = shorkService.createLobby("player1")
         shorkService.addProgramToLobby(0L, "playerA", "someProgram")
         assertEquals(
             shorkService.getLobbyStatus(0L).getOrThrow(),
@@ -199,7 +199,7 @@ class ShorkServiceTest {
         val shorkService = ShorkService(MockShork())
         shorkService.addProgramToLobby(0L, "playerA", "someProgram")
         shorkService.addProgramToLobby(0L, "playerB", "someOtherProgram")
-        val secondLobby = shorkService.createLobby()
+        val secondLobby = shorkService.createLobby("player1")
         shorkService.addProgramToLobby(secondLobby, "playerA", "differentProgram")
         shorkService.addProgramToLobby(secondLobby, "playerB", "evenMoreDifferentProgram")
         assertEquals("someProgram", shorkService.getProgramFromLobby(0L, "playerA").getOrNull())

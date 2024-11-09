@@ -15,7 +15,7 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
     private var lobbyCounter = 0L
 
     init {
-        createLobby()
+        createLobby("default")
     }
 
     override fun setLobbySettings(lobbyId: Long, settings: Settings): Result<Unit> {
@@ -79,9 +79,13 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
         return Result.failure(IllegalArgumentException(NO_LOBBY_MESSAGE))
     }
 
-    override fun createLobby(): Long {
-        lobbies[lobbyCounter] = Lobby(lobbyCounter, HashMap(), shork)
-        return lobbyCounter++
+    override fun createLobby(playerName: String): Long {
+        if (isAlphaNumerical(playerName)) {
+            lobbies[lobbyCounter] = Lobby(lobbyCounter, HashMap(), shork)
+            lobbies[lobbyCounter]?.joinedPlayers?.add(playerName)
+            return lobbyCounter++
+        }
+        return -1
     }
 
     override fun deleteLobby(lobbyId: Long): Result<Unit> {
@@ -99,5 +103,9 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
     private fun getLobby(lobbyId: Long): Result<Lobby> {
         return lobbies[lobbyId]?.let { Result.success(it) }
             ?: Result.failure(IllegalArgumentException(NO_LOBBY_MESSAGE))
+    }
+
+    private fun isAlphaNumerical(playerName: String): Boolean {
+        return playerName.matches("^[a-zA-Z0-9]+$".toRegex()) && playerName.isNotBlank()
     }
 }

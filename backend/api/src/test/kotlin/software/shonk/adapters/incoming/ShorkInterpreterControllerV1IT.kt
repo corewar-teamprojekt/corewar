@@ -188,23 +188,29 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
         assertEquals("UNDECIDED", responseData["result.winner"])
     }
 
-    @Test
-    fun `test create a new lobby`() = runTest {
-        val result = client.post("/api/v1/lobby")
+    fun `test create a new lobby with playerName`() = runTest {
+        val result = client.post("/api/v1/lobby") { setBody("somePlayer") }
         assertEquals(HttpStatusCode.Created, result.status)
         assertEquals("1", result.bodyAsText())
     }
 
     @Test
     fun `test create a multiple new lobbies`() = runTest {
-        val result = client.post("/api/v1/lobby")
-        val result2 = client.post("/api/v1/lobby")
-        val result3 = client.post("/api/v1/lobby")
+        val result = client.post("/api/v1/lobby") { setBody("player1") }
+        val result2 = client.post("/api/v1/lobby") { setBody("player2") }
+        val result3 = client.post("/api/v1/lobby") { setBody("player3") }
         assertEquals(HttpStatusCode.Created, result.status)
         assertEquals("1", result.bodyAsText())
         assertEquals(HttpStatusCode.Created, result2.status)
         assertEquals("2", result2.bodyAsText())
         assertEquals(HttpStatusCode.Created, result3.status)
         assertEquals("3", result3.bodyAsText())
+    }
+
+    @Test
+    fun `test create a new lobby with invalid playerName`() = runTest {
+        val result = client.post("/api/v1/lobby") { setBody("") }
+        assertEquals(HttpStatusCode.BadRequest, result.status)
+        assertEquals("-1", result.bodyAsText())
     }
 }

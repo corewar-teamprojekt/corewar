@@ -78,9 +78,12 @@ fun Route.configureShorkInterpreterControllerV1() {
     }
 
     post("/lobby") {
-        val lobbyId = shorkUseCase.createLobby()
-        call.respond(HttpStatusCode.Created, lobbyId.toString())
-        return@post
+        val creatingPlayerName = call.receive<String>()
+        val lobbyId = shorkUseCase.createLobby(creatingPlayerName)
+        if (lobbyId < 0) {
+            return@post call.respond(HttpStatusCode.BadRequest, lobbyId.toString())
+        }
+        return@post call.respond(HttpStatusCode.Created, lobbyId.toString())
     }
 
     post("/lobby/{lobbyId}/code/{player}") {
