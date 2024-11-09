@@ -1,5 +1,10 @@
 Base url: `/api/v1`
 
+# apiV1 - Parallel games / Lobby system
+NOTE: We kicked of  the lobby system by always initializing a "default" lobby
+A goal of these endpoints is to **GET RID OF** the default lobby.
+Keep that in mind when working on this system.
+
 # POST /lobby
 
 Endpoint to create a new lobby.
