@@ -14,10 +14,6 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
     val lobbies: HashMap<Long, Lobby> = HashMap<Long, Lobby>()
     private var lobbyCounter = 0L
 
-    init {
-        createLobby("default")
-    }
-
     override fun setLobbySettings(lobbyId: Long, settings: Settings): Result<Unit> {
         val lobby =
             getLobby(lobbyId).getOrElse {
@@ -79,13 +75,13 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
         return Result.failure(IllegalArgumentException(NO_LOBBY_MESSAGE))
     }
 
-    override fun createLobby(playerName: String): Long {
+    override fun createLobby(playerName: String): Result<Long> {
         if (isAlphaNumerical(playerName)) {
             lobbies[lobbyCounter] = Lobby(lobbyCounter, HashMap(), shork)
             lobbies[lobbyCounter]?.joinedPlayers?.add(playerName)
-            return lobbyCounter++
+            return Result.success(lobbyCounter++)
         }
-        return -1
+        return Result.failure(IllegalArgumentException("Your player name is invalid"))
     }
 
     override fun deleteLobby(lobbyId: Long): Result<Unit> {

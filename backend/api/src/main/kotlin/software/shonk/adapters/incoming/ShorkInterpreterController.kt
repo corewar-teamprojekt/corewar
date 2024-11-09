@@ -79,11 +79,13 @@ fun Route.configureShorkInterpreterControllerV1() {
 
     post("/lobby") {
         val creatingPlayerName = call.receive<String>()
-        val lobbyId = shorkUseCase.createLobby(creatingPlayerName)
-        if (lobbyId < 0) {
-            return@post call.respond(HttpStatusCode.BadRequest, lobbyId.toString())
+        val result = shorkUseCase.createLobby(creatingPlayerName)
+        result.onFailure {
+            logger.error("Failed to create Lobby, player name is invalid", it)
+            call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
         }
-        return@post call.respond(HttpStatusCode.Created, lobbyId.toString())
+        result.onSuccess { call.respond(HttpStatusCode.Created, it) }
+        return@post
     }
 
     post("/lobby/{lobbyId}/code/{player}") {
