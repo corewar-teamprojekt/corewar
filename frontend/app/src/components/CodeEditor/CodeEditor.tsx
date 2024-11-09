@@ -149,7 +149,7 @@ export default function CodeEditor({
 				<Separator orientation="vertical" className="bg-neutral-600 h-[20px]" />
 			</div>
 			<Editor
-				height="60vh"
+				height="50vh"
 				theme="corewarTheme"
 				defaultLanguage="redcode"
 				value={program}
