@@ -21,6 +21,8 @@ fun Route.configureShorkInterpreterControllerV0() {
     val shorkUseCase by inject<ShorkUseCase>()
 
     get("/status") {
+        val tempUseCaseResponse = shorkUseCase.getLobbyStatus(defaultLobby)
+        tempUseCaseResponse.onFailure { shorkUseCase.createLobby("player1") }
         val useCaseResponse = shorkUseCase.getLobbyStatus(defaultLobby)
         useCaseResponse.onFailure {
             logger.error("Failed to get lobby status", it)
@@ -32,6 +34,13 @@ fun Route.configureShorkInterpreterControllerV0() {
     post("/code/{player}") {
         val player = call.parameters["player"]
         val program = call.receive<String>()
+
+        val tempUseCaseResponse = shorkUseCase.getLobbyStatus(defaultLobby)
+        tempUseCaseResponse.onFailure {
+            if (player != null) {
+                shorkUseCase.createLobby(player)
+            }
+        }
 
         val result = shorkUseCase.addProgramToLobby(defaultLobby, player, program)
         result.onFailure {
