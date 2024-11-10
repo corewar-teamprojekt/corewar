@@ -36,7 +36,7 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
 
     @Test
     fun `test post and get player code`() = runTest {
-        client.post("/api/v1/lobby") { setBody("somePlayer") }
+        client.post("/api/v1/lobby") { setBody("{\"playerName\":\"playerA\"}") }
         client.post("/api/v1/lobby/0/code/playerA") {
             contentType(ContentType.Application.Json)
             setBody("someString")
@@ -62,7 +62,7 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
 
     @Test
     fun testGetPlayerCodeNotSubmitted() = runTest {
-        client.post("/api/v1/lobby") { setBody("somePlayer") }
+        client.post("/api/v1/lobby") { setBody("{\"playerName\":\"playerA\"}") }
         val result = client.get("/api/v1/lobby/0/code/playerA")
         assertEquals(HttpStatusCode.BadRequest, result.status)
         assert(result.bodyAsText().contains("No player with that name in the lobby"))
@@ -77,7 +77,7 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
 
     @Test
     fun `test get lobby status with valid default ID`() = runTest {
-        client.post("/api/v1/lobby") { setBody("somePlayer") }
+        client.post("/api/v1/lobby") { setBody("{\"playerName\":\"playerA\"}") }
         val result = client.get("/api/v1/lobby/status/0")
         val responseData = parseStatus(result)
         assertEquals("false", responseData["playerASubmitted"])
@@ -88,7 +88,7 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
 
     @Test
     fun `test get lobby status with valid custom ID`() = runTest {
-        client.post("/api/v1/lobby") { setBody("somePlayer") }
+        client.post("/api/v1/lobby") { setBody("{\"playerName\":\"playerA\"}") }
         client.post("/api/v1/lobby/0/code/playerA") {
             contentType(ContentType.Application.Json)
             setBody("someString")
@@ -109,7 +109,7 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
 
     @Test
     fun `test player empty code submission`() = runTest {
-        client.post("/api/v1/lobby") { setBody("somePlayer") }
+        client.post("/api/v1/lobby") { setBody("{\"playerName\":\"playerA\"}") }
         val player = "playerA"
         val result = client.post("/api/v1/lobby/0/code/$player")
         assertEquals(HttpStatusCode.OK, result.status)
@@ -118,7 +118,7 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
     @Test
     fun `test player code submission with invalid username does not change lobby status`() =
         runTest {
-            client.post("/api/v1/lobby") { setBody("somePlayer") }
+            client.post("/api/v1/lobby") { setBody("{\"playerName\":\"playerA\"}") }
             val player = "playerC"
             client.post("/api/v1/lobby/0/code/$player") {
                 contentType(ContentType.Application.Json)
@@ -139,7 +139,7 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
 
     @Test
     fun `test player code submission reflecting in lobby status`() = runTest {
-        client.post("/api/v1/lobby") { setBody("somePlayer") }
+        client.post("/api/v1/lobby") { setBody("{\"playerName\":\"playerA\"}") }
         val player = "playerA"
         client.post("/api/v1/lobby/0/code/$player") {
             contentType(ContentType.Application.Json)
@@ -156,7 +156,7 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
 
     @Test
     fun `test game starts when both players submit`() = runTest {
-        client.post("/api/v1/lobby") { setBody("somePlayer") }
+        client.post("/api/v1/lobby") { setBody("{\"playerName\":\"playerA\"}") }
         client.post("/api/v1/lobby/0/code/playerA") {
             contentType(ContentType.Application.Json)
             setBody("someVeryLongString")
@@ -174,7 +174,7 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
 
     @Test
     fun `test lobby status resets after new code submission by player A`() = runTest {
-        client.post("/api/v1/lobby") { setBody("somePlayer") }
+        client.post("/api/v1/lobby") { setBody("{\"playerName\":\"playerA\"}") }
         client.post("/api/v1/lobby/0/code/playerA") {
             contentType(ContentType.Application.Json)
             setBody("someString")
@@ -199,16 +199,24 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
 
     @Test
     fun `test create a new lobby with playerName`() = runTest {
-        val result = client.post("/api/v1/lobby") { setBody("somePlayer") }
+        val result =
+            client.post("/api/v1/lobby") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerA\"}")
+            }
         assertEquals(HttpStatusCode.Created, result.status)
         assertEquals("0", result.bodyAsText())
     }
 
     @Test
     fun `test create a multiple new lobbies`() = runTest {
-        val result = client.post("/api/v1/lobby") { setBody("player1") }
-        val result2 = client.post("/api/v1/lobby") { setBody("player2") }
-        val result3 = client.post("/api/v1/lobby") { setBody("player3") }
+        val result =
+            client.post("/api/v1/lobby") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerA\"}")
+            }
+        val result2 = client.post("/api/v1/lobby") { setBody("{\"playerName\":\"playerB\"}") }
+        val result3 = client.post("/api/v1/lobby") { setBody("{\"playerName\":\"playerC\"}") }
         assertEquals(HttpStatusCode.Created, result.status)
         assertEquals("0", result.bodyAsText())
         assertEquals(HttpStatusCode.Created, result2.status)
@@ -219,7 +227,7 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
 
     @Test
     fun `test create a new lobby with invalid playerName`() = runTest {
-        val result = client.post("/api/v1/lobby") { setBody("") }
+        val result = client.post("/api/v1/lobby") { setBody("{\"playerName\":\"\"}") }
         assertEquals(HttpStatusCode.BadRequest, result.status)
         assertEquals("Your player name is invalid", result.bodyAsText())
     }

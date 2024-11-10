@@ -1,5 +1,8 @@
 package software.shonk.application.service
 
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import software.shonk.application.port.incoming.ShorkUseCase
 import software.shonk.domain.GameState
 import software.shonk.domain.Lobby
@@ -75,8 +78,12 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
         return Result.failure(IllegalArgumentException(NO_LOBBY_MESSAGE))
     }
 
+    // playerName is a Json-String
     override fun createLobby(playerName: String): Result<Long> {
-        if (isAlphaNumerical(playerName)) {
+        val json = Json { ignoreUnknownKeys = true }
+        val jsonObj = json.parseToJsonElement(playerName).jsonObject
+        val name = jsonObj["playerName"]?.jsonPrimitive?.content.toString()
+        if (isAlphaNumerical(name)) {
             lobbies[lobbyCounter] = Lobby(lobbyCounter, HashMap(), shork)
             lobbies[lobbyCounter]?.joinedPlayers?.add(playerName)
             return Result.success(lobbyCounter++)
