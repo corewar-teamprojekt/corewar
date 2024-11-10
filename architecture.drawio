@@ -1,12 +1,12 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64; rv:132.0) Gecko/20100101 Firefox/132.0" version="24.8.4">
   <diagram name="Page-1" id="0eHJ7MtMPAZvea-WposX">
-    <mxGraphModel dx="3247" dy="1933" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="3026" dy="1814" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="0vqjD29_u-Z0sOauuZsa-54" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2315" y="-90" as="targetPoint" />
+            <mxPoint x="2315" y="90" as="targetPoint" />
             <mxPoint x="2315.5" y="-560" as="sourcePoint" />
             <Array as="points">
               <mxPoint x="2315" y="-329" />
@@ -825,33 +825,35 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-1" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
-          <mxGeometry x="1670" y="-740" width="30" height="60" as="geometry" />
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-1" value="PlayerA" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1530" y="-730" width="30" height="60" as="geometry" />
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-2" value="" style="line;strokeWidth=2;direction=south;html=1;" vertex="1" parent="1">
-          <mxGeometry x="1410" y="-715" width="10" height="665" as="geometry" />
+          <mxGeometry x="1410" y="-715" width="10" height="895" as="geometry" />
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-3" value="API V0" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=48;" vertex="1" parent="1">
           <mxGeometry x="1740" y="-900" width="490" height="110" as="geometry" />
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-5" value="" style="line;strokeWidth=2;direction=south;html=1;" vertex="1" parent="1">
-          <mxGeometry x="1680" y="-640" width="10" height="610" as="geometry" />
+          <mxGeometry x="1680" y="-640" width="10" height="520" as="geometry" />
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-4" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="1675" y="-620" width="20" height="530" as="geometry" />
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1675" y="-370" width="20" height="230" as="geometry" />
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-6" value="Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="2210" y="-710" width="230" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1.011;entryY=0.281;entryDx=0;entryDy=0;dashed=1;entryPerimeter=0;" edge="1" parent="1" source="0vqjD29_u-Z0sOauuZsa-39" target="0vqjD29_u-Z0sOauuZsa-4">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;dashed=1;" edge="1" parent="1" source="0vqjD29_u-Z0sOauuZsa-39">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1560" y="-472" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-39" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="2308" y="-502.5" width="15" height="40" as="geometry" />
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-40" value="" style="endArrow=classic;html=1;rounded=0;jumpSize=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="1695.5" y="-492.5" as="sourcePoint" />
+            <mxPoint x="1560" y="-492" as="sourcePoint" />
             <mxPoint x="2305.5" y="-492.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
@@ -865,7 +867,7 @@
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.066;entryY=0.139;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="0vqjD29_u-Z0sOauuZsa-58">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1695.5" y="-436.5" as="sourcePoint" />
+            <mxPoint x="1557" y="-440" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-44" value="GET /api/v0/status" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-43">
@@ -875,7 +877,7 @@
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;dashed=1;" edge="1" parent="1" source="0vqjD29_u-Z0sOauuZsa-58">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1695.5" y="-412.5" as="targetPoint" />
+            <mxPoint x="1560" y="-412" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-46" value="NOT STARTED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-45">
@@ -889,7 +891,7 @@
             <mxPoint x="2305.5" y="-342.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-48" value="POST /api/v0/code/playerB" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-47">
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-48" value="GET /api/v0/status" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-47">
           <mxGeometry x="-0.0521" y="2" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -899,7 +901,7 @@
             <mxPoint x="1700" y="-322" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-82" value="OK" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-81">
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-82" value="NOT STARTED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-81">
           <mxGeometry x="0.0762" y="1" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -919,7 +921,7 @@
             <mxPoint x="2307" y="-278.86" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-65" value="GET /api/v0/status" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-64">
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-65" value="POST /api/v0/code/playerB" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-64">
           <mxGeometry x="-0.1284" y="2" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
@@ -930,13 +932,13 @@
             <mxPoint x="2308" y="-254.86" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-67" value="FINISHED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-66">
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-67" value="OK" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-66">
           <mxGeometry x="0.163" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-69" value="&lt;div&gt;stores stuff in current v0Lobby, creates that lobby if there is no current v0Lobby&lt;/div&gt;&lt;div&gt;in this specific case, it creates a new v0 lobby and uses that&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="2323" y="-507.5" width="610" height="40" as="geometry" />
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-69" value="&lt;div&gt;creates a new v0 lobby and stores stuff in that&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="2323" y="-502.5" width="360" height="30" as="geometry" />
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-71" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
@@ -946,7 +948,7 @@
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-72" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.066;entryY=0.139;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="0vqjD29_u-Z0sOauuZsa-76">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1695.5" y="-594" as="sourcePoint" />
+            <mxPoint x="1560" y="-594" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-73" value="GET /api/v0/status" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-72">
@@ -956,7 +958,7 @@
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-74" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;dashed=1;" edge="1" parent="1" source="0vqjD29_u-Z0sOauuZsa-76">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1695.5" y="-570" as="targetPoint" />
+            <mxPoint x="1560" y="-570" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-75" value="NOT STARTED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-74">
@@ -967,14 +969,14 @@
         <mxCell id="0vqjD29_u-Z0sOauuZsa-76" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="2308" y="-600" width="15" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-77" value="&lt;div&gt;either get status of current v0 lobby if there is one, or get last status of the previous v0 lobby if there is none atm.&lt;/div&gt;&lt;div&gt;if there is no current v0Lobby, returns default status but does NOT create new lobby.&lt;/div&gt;&lt;div&gt;in this specific case, returns default status&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="2323" y="-615" width="890" height="60" as="geometry" />
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-77" value="returns default status" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="2323" y="-600" width="180" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-78" value="&lt;div&gt;either get status of current v0 lobby if there is one, or get last status of the previous v0 lobby if there is none atm.&lt;/div&gt;&lt;div&gt;if there is no current v0Lobby, returns default status but does NOT create new lobby.&lt;/div&gt;&lt;div&gt;in this specific case, it returns the status of the v0 lobby created from the previous POST&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="2323" y="-452" width="890" height="60" as="geometry" />
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-78" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;returns the status of the v0 lobby created from the previous POST&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="2310" y="-452.06" width="490" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-80" value="stores stuff in current v0Lobby, creates that lobby if there is no current v0Lobby&lt;br&gt;&lt;div&gt;this specific call also runs the complete game, since its the second of 2 required&lt;/div&gt;&lt;div&gt;post calls.&lt;/div&gt;&amp;nbsp;the lobby is then deleted, but its status is stored for future get calls." style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="2323" y="-367.5" width="610" height="70" as="geometry" />
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-80" value="stores stuff in the current v0 Lobby&lt;br&gt;&lt;div&gt;runs the complete game, since its the second of 2 required post calls.&lt;/div&gt;&amp;nbsp;the lobby is then deleted, but its status is stored for future get calls." style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="2308" y="-296.5" width="560" height="60" as="geometry" />
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-83" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="2308" y="-194" width="15" height="40" as="geometry" />
@@ -985,25 +987,328 @@
             <mxPoint x="1695" y="-163.49" as="targetPoint" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-157" value="FINISHED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-84">
+          <mxGeometry x="0.1241" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-85" value="" style="endArrow=classic;html=1;rounded=0;jumpSize=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="1695.5" y="-184.99" as="sourcePoint" />
             <mxPoint x="2305.5" y="-184.99" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-86" value="POST /api/v0/code/playerA" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-85">
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-86" value="GET /api/v0/status" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-85">
           <mxGeometry x="-0.0521" y="2" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-87" value="&lt;div&gt;either get status of current v0 lobby if there is one, or get last status of the previous v0 lobby if there is none atm.&lt;/div&gt;&lt;div&gt;if there is no current v0Lobby, returns default status but does NOT create new lobby.&lt;/div&gt;&lt;div&gt;in this specific case, it returns the stored status from the previous v0 lobby&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="2323" y="-295" width="890" height="60" as="geometry" />
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-87" value="&lt;div&gt;returns the &lt;b&gt;stored&lt;/b&gt; status from the previous v0 lobby&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="2310" y="-192" width="400" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="0vqjD29_u-Z0sOauuZsa-88" value="&lt;div&gt;stores stuff in current v0Lobby, creates that lobby if there is no current v0Lobby&lt;/div&gt;&lt;div&gt;in this specific case, it creates a new v0 lobby and uses that.&lt;/div&gt;&lt;div&gt;stored state from a previous v0 lobby is dropped&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="2333" y="-204" width="610" height="60" as="geometry" />
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-88" value="&lt;div&gt;creates a new v0 lobby and uses that to store stuff.&lt;/div&gt;&lt;div&gt;stored state from a previous v0 lobby is dropped&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="2324" y="-50" width="400" height="40" as="geometry" />
         </mxCell>
         <mxCell id="0vqjD29_u-Z0sOauuZsa-89" value="..." style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="1919" y="-132" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-90" value="" style="line;strokeWidth=2;direction=south;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3310" y="-710" width="10" height="665" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-91" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="4025" y="-50" as="targetPoint" />
+            <mxPoint x="4025.5" y="-520" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="4025" y="-289" />
+              <mxPoint x="4025" y="-60" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-92" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="3380" y="-700" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-93" value="API V1 - basic userflow" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=48;" vertex="1" parent="1">
+          <mxGeometry x="3450" y="-860" width="490" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-94" value="" style="line;strokeWidth=2;direction=south;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3390" y="-600" width="10" height="610" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-95" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3385" y="-580" width="20" height="530" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-96" value="Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3920" y="-670" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-97" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1.011;entryY=0.281;entryDx=0;entryDy=0;dashed=1;entryPerimeter=0;" edge="1" parent="1" source="0vqjD29_u-Z0sOauuZsa-98" target="0vqjD29_u-Z0sOauuZsa-95">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-98" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4018" y="-462.5" width="15" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-99" value="" style="endArrow=classic;html=1;rounded=0;jumpSize=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="3405.5" y="-452.5" as="sourcePoint" />
+            <mxPoint x="4015.5" y="-452.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-100" value="POST /api/v0/code/playerA" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-99">
+          <mxGeometry x="-0.0521" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-101" value="OK" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="3684.5271514835017" y="-432.05981688322686" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-102" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.066;entryY=0.139;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="0vqjD29_u-Z0sOauuZsa-111">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3405.5" y="-396.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-103" value="GET /api/v0/status" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-102">
+          <mxGeometry x="-0.1284" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-104" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;dashed=1;" edge="1" parent="1" source="0vqjD29_u-Z0sOauuZsa-111">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3405.5" y="-372.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-105" value="NOT STARTED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-104">
+          <mxGeometry x="0.163" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-106" value="" style="endArrow=classic;html=1;rounded=0;jumpSize=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="3405.5" y="-302.5" as="sourcePoint" />
+            <mxPoint x="4015.5" y="-302.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-107" value="POST /api/v0/code/playerB" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-106">
+          <mxGeometry x="-0.0521" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-108" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;dashed=1;" edge="1" parent="1" source="0vqjD29_u-Z0sOauuZsa-110">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3410" y="-282" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-109" value="OK" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-108">
+          <mxGeometry x="0.0762" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-110" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4018" y="-312.5" width="15" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-111" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4018" y="-402.5" width="15" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-112" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4018" y="-246.5" width="15" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-113" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.066;entryY=0.139;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3405" y="-238.86" as="sourcePoint" />
+            <mxPoint x="4017" y="-238.86" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-114" value="GET /api/v0/status" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-113">
+          <mxGeometry x="-0.1284" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-115" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3405" y="-214.86" as="targetPoint" />
+            <mxPoint x="4018" y="-214.86" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-116" value="FINISHED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-115">
+          <mxGeometry x="0.163" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-117" value="&lt;div&gt;stores stuff in current v0Lobby, creates that lobby if there is no current v0Lobby&lt;/div&gt;&lt;div&gt;in this specific case, it creates a new v0 lobby and uses that&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="4033" y="-467.5" width="610" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-118" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="4025.538461538461" y="-560" as="targetPoint" />
+            <mxPoint x="4026" y="-590" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-119" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.066;entryY=0.139;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="0vqjD29_u-Z0sOauuZsa-123">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3405.5" y="-554" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-120" value="GET /api/v1/lobby" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-119">
+          <mxGeometry x="-0.1284" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-121" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;dashed=1;" edge="1" parent="1" source="0vqjD29_u-Z0sOauuZsa-123">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3405.5" y="-530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-122" value="OK, with list of lobbies" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-121">
+          <mxGeometry x="0.163" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-123" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4018" y="-560" width="15" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-124" value="&lt;div&gt;get all existing lobbies&lt;/div&gt;&lt;div&gt;excludes potential v0 lobby&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="4040" y="-560" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-125" value="&lt;div&gt;either get status of current v0 lobby if there is one, or get last status of the previous v0 lobby if there is none atm.&lt;/div&gt;&lt;div&gt;if there is no current v0Lobby, returns default status but does NOT create new lobby.&lt;/div&gt;&lt;div&gt;in this specific case, it returns the status of the v0 lobby created from the previous POST&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="4033" y="-412" width="890" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-126" value="stores stuff in current v0Lobby, creates that lobby if there is no current v0Lobby&lt;br&gt;&lt;div&gt;this specific call also runs the complete game, since its the second of 2 required&lt;/div&gt;&lt;div&gt;post calls.&lt;/div&gt;&amp;nbsp;the lobby is then deleted, but its status is stored for future get calls." style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="4033" y="-327.5" width="610" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-127" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="4018" y="-154" width="15" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-128" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1.011;entryY=0.281;entryDx=0;entryDy=0;dashed=1;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="4018" y="-124.49000000000001" as="sourcePoint" />
+            <mxPoint x="3405" y="-123.49000000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-129" value="" style="endArrow=classic;html=1;rounded=0;jumpSize=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="3405.5" y="-144.99" as="sourcePoint" />
+            <mxPoint x="4015.5" y="-144.99" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-130" value="POST /api/v0/code/playerA" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-129">
+          <mxGeometry x="-0.0521" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-131" value="&lt;div&gt;either get status of current v0 lobby if there is one, or get last status of the previous v0 lobby if there is none atm.&lt;/div&gt;&lt;div&gt;if there is no current v0Lobby, returns default status but does NOT create new lobby.&lt;/div&gt;&lt;div&gt;in this specific case, it returns the stored status from the previous v0 lobby&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="4033" y="-255" width="890" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-132" value="&lt;div&gt;stores stuff in current v0Lobby, creates that lobby if there is no current v0Lobby&lt;/div&gt;&lt;div&gt;in this specific case, it creates a new v0 lobby and uses that.&lt;/div&gt;&lt;div&gt;stored state from a previous v0 lobby is dropped&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="4043" y="-164" width="610" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-133" value="..." style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="3629" y="-92" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-135" value="PlayerB" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1669" y="-730" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-136" value="" style="line;strokeWidth=2;direction=south;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1540" y="-640" width="10" height="840" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-137" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1535" y="-620" width="20" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-141" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2308" y="-120" width="15" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-142" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=0.931;entryY=0.163;entryDx=0;entryDy=0;dashed=1;entryPerimeter=0;" edge="1" parent="1" target="0vqjD29_u-Z0sOauuZsa-145">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2308" y="-90.49000000000001" as="sourcePoint" />
+            <mxPoint x="1695" y="-89.49000000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-149" value="FINISHED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-142">
+          <mxGeometry x="0.1378" y="5" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-143" value="" style="endArrow=classic;html=1;rounded=0;jumpSize=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1560" y="-111" as="sourcePoint" />
+            <mxPoint x="2305.5" y="-110.99000000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-144" value="GET /api/v0/status" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-143">
+          <mxGeometry x="-0.0521" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-145" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1535" y="-132" width="20" height="262" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-146" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2308" y="-50" width="15" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-147" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=0.931;entryY=0.424;entryDx=0;entryDy=0;dashed=1;entryPerimeter=0;" edge="1" parent="1" target="0vqjD29_u-Z0sOauuZsa-145">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2308" y="-20.49000000000001" as="sourcePoint" />
+            <mxPoint x="1695" y="-19.49000000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-152" value="OK" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-147">
+          <mxGeometry x="0.0888" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-150" value="" style="endArrow=classic;html=1;rounded=0;jumpSize=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1562.5" y="-40" as="sourcePoint" />
+            <mxPoint x="2308" y="-39.99000000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-151" value="POST /api/v0/playerA" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-150">
+          <mxGeometry x="-0.0521" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-153" value="&lt;font color=&quot;#ff0000&quot;&gt;NOT READY&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=48;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="3439.53" y="-725" width="490" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-154" value="&lt;font color=&quot;#00ff00&quot;&gt;READY&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=48;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1740.0000000000002" y="-790" width="490" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-155" value="" style="line;strokeWidth=2;direction=south;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="650" width="10" height="3560" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-156" value="HTTP BOUNDARY" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=76;" vertex="1" parent="1">
+          <mxGeometry x="-140" y="470" width="460" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-158" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2309" y="20" width="15" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-159" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;dashed=1;entryX=0.931;entryY=0.694;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="0vqjD29_u-Z0sOauuZsa-145">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2309" y="49.50999999999999" as="sourcePoint" />
+            <mxPoint x="1560" y="30" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-160" value="NOT STARTED" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-159">
+          <mxGeometry x="0.1378" y="5" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-161" value="" style="endArrow=classic;html=1;rounded=0;jumpSize=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1561" y="29" as="sourcePoint" />
+            <mxPoint x="2306.5" y="29.00999999999999" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-162" value="GET /api/v0/status" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="0vqjD29_u-Z0sOauuZsa-161">
+          <mxGeometry x="-0.0521" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-166" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;returns the status of the v0 lobby created from the previous POST&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="2323" y="-360" width="490" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-167" value="&lt;div&gt;returns the &lt;b&gt;stored&lt;/b&gt; status from the previous v0 lobby&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="2310" y="-115" width="400" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="0vqjD29_u-Z0sOauuZsa-168" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;returns the status of the v0 lobby created from the previous POST&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="2320" y="20" width="490" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
