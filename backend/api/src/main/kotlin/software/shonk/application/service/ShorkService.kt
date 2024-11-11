@@ -11,6 +11,9 @@ const val NO_LOBBY_MESSAGE = "No lobby with that id"
 
 class ShorkService(private val shork: IShork) : ShorkUseCase {
 
+    private var v0Lobby: Lobby? = null
+    private var lastV0GameStatus: Status? = null
+
     val lobbies: HashMap<Long, Lobby> = HashMap<Long, Lobby>()
     private var lobbyCounter = 0L
 
@@ -25,19 +28,13 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
     }
 
     override fun addProgramToLobby(lobbyId: Long, name: String?, program: String): Result<Unit> {
-        var lobby =
+        val lobby =
             getLobby(lobbyId).getOrElse {
                 return Result.failure(it)
             }
 
         if (name == null || !verifyPlayerName(name)) {
             return Result.failure(IllegalArgumentException("Invalid player name"))
-        }
-
-        if (lobby.getStatus().gameState == GameState.FINISHED) {
-            // It's fine to throw the exception here,
-            // as we already made sure the lobby with the id exists
-            lobby = resetLobby(lobbyId).getOrThrow()
         }
 
         lobby.addProgram(name, program)
@@ -66,13 +63,38 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
         return Result.success(lobby.getStatus())
     }
 
-    fun resetLobby(lobbyId: Long): Result<Lobby> {
-        if (lobbies.containsKey(lobbyId)) {
-            val newLobby = Lobby(lobbyId, HashMap(), shork)
-            lobbies[lobbyId] = newLobby
-            return Result.success(newLobby)
+    override fun getV0LobbyStatus(): Status {
+        if (lastV0GameStatus != null) {
+            return lastV0GameStatus!!
         }
-        return Result.failure(IllegalArgumentException(NO_LOBBY_MESSAGE))
+        return v0Lobby?.getStatus() ?: Status.defaultState()
+    }
+
+    override fun addProgramToV0Lobby(program: String?, name: String): Result<Unit> {
+        if (!verifyPlayerName(name)) {
+            return Result.failure(IllegalArgumentException("Invalid player name"))
+        }
+
+        if (program == null) {
+            return Result.failure(IllegalArgumentException("Program cant be null"))
+        }
+
+        if (v0Lobby == null) {
+            v0Lobby = Lobby(lobbyCounter++, HashMap(), shork)
+            lastV0GameStatus = null
+        }
+        if (!v0Lobby!!.joinedPlayers.contains(name)) {
+            v0Lobby!!.joinedPlayers.add(name)
+        }
+
+        v0Lobby!!.addProgram(name, program)
+
+        if (v0Lobby!!.getStatus().gameState == GameState.FINISHED) {
+            lastV0GameStatus = v0Lobby!!.getStatus()
+            v0Lobby = null
+        }
+
+        return Result.success(Unit)
     }
 
     override fun createLobby(playerName: String): Result<Long> {

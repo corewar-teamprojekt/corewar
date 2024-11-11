@@ -15,4 +15,8 @@ interface ShorkUseCase {
     fun deleteLobby(lobbyId: Long): Result<Unit>
 
     fun getLobbyStatus(lobbyId: Long): Result<Status>
+
+    fun getV0LobbyStatus(): Status
+
+    fun addProgramToV0Lobby(program: String?, name: String): Result<Unit>
 }

@@ -4,10 +4,7 @@ import io.mockk.spyk
 import io.mockk.verify
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
-import software.shonk.domain.GameState
-import software.shonk.domain.Result
-import software.shonk.domain.Status
-import software.shonk.domain.Winner
+import software.shonk.domain.*
 import software.shonk.interpreter.MockShork
 import software.shonk.interpreter.Settings
 
@@ -45,24 +42,6 @@ class ShorkServiceTest {
             Status(
                 playerASubmitted = false,
                 playerBSubmitted = true,
-                gameState = GameState.NOT_STARTED,
-                result = Result(winner = Winner.UNDECIDED),
-            ),
-        )
-    }
-
-    @Test
-    fun `close lobby removes player code and resets the game state`() {
-        val shorkService = ShorkService(MockShork())
-        shorkService.createLobby("playerA")
-        shorkService.addProgramToLobby(0L, "playerA", "someProgram")
-        shorkService.addProgramToLobby(0L, "playerB", "someProgram")
-        shorkService.resetLobby(0L)
-        assertEquals(
-            shorkService.getLobbyStatus(0L).getOrThrow(),
-            Status(
-                playerASubmitted = false,
-                playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
                 result = Result(winner = Winner.UNDECIDED),
             ),
@@ -212,18 +191,6 @@ class ShorkServiceTest {
     }
 
     @Test
-    fun `get code after game reset`() {
-        val shorkService = ShorkService(MockShork())
-        shorkService.createLobby("playerA")
-        shorkService.addProgramToLobby(0L, "playerA", "someProgram")
-        shorkService.addProgramToLobby(0L, "playerB", "someOtherProgram")
-        // Reset because of new upload
-        shorkService.addProgramToLobby(0L, "playerA", "someProgram")
-        assertEquals("someProgram", shorkService.getProgramFromLobby(0L, "playerA").getOrNull())
-        assert(shorkService.getProgramFromLobby(0L, "playerB").isFailure)
-    }
-
-    @Test
     fun `get code from lobby with invalid player`() {
         val shorkService = ShorkService(MockShork())
         shorkService.createLobby("playerA")
@@ -244,13 +211,12 @@ class ShorkServiceTest {
     }
 
     @Test
-    fun `check if a dead lobby gets closed after new code gets submitted by any player`() {
-        val shorkService = spyk(ShorkService(MockShork()))
-        shorkService.createLobby("playerA")
-        val lobbyId = 0L
-        shorkService.addProgramToLobby(lobbyId, "playerA", "someProgram")
-        shorkService.addProgramToLobby(lobbyId, "playerB", "someOtherProgram")
-        shorkService.addProgramToLobby(lobbyId, "playerB", "someNewOtherProgram")
-        verify(exactly = 1) { shorkService.resetLobby(lobbyId) }
+    fun `check if a v0lobby gets re-created after new code gets submitted by any player`() {
+        val spy = spyk(Lobby::class)
+        val shorkService = ShorkService(MockShork())
+        shorkService.addProgramToV0Lobby("playerA", "someProgram")
+        shorkService.addProgramToV0Lobby("playerB", "someOtherProgram")
+        shorkService.addProgramToV0Lobby("playerB", "someNewOtherProgram")
+        verify(exactly = 2) { Lobby(any(), any(), any()) }
     }
 }

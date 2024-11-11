@@ -8,4 +8,14 @@ data class Status(
     val playerBSubmitted: Boolean,
     val gameState: GameState,
     val result: Result,
-)
+) {
+    companion object Factory {
+        fun defaultState() =
+            Status(
+                playerASubmitted = false,
+                playerBSubmitted = false,
+                GameState.NOT_STARTED,
+                result = Result(Winner.UNDECIDED),
+            )
+    }
+}

@@ -29,7 +29,7 @@ data class Lobby(
         )
 
     fun addProgram(name: String, program: String) {
-        programs.put(name, program)
+        programs[name] = program
         if (containsPlayerAandB()) {
             run()
         }
