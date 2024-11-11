@@ -3,11 +3,10 @@ package software.shonk.adapters.incoming
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
-import org.junit.jupiter.api.Assertions.assertEquals
+import kotlinx.serialization.json.*
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import software.shonk.domain.LobbyStatus
 import software.shonk.module
 import software.shonk.moduleApiV1
 
@@ -30,6 +29,12 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             "gameState" to responseJson["gameState"]!!.jsonPrimitive.content,
             "result.winner" to resultWinner,
         )
+    }
+
+    private suspend fun parseAllLobbies(response: HttpResponse): List<LobbyStatus> {
+        val responseJson = Json.parseToJsonElement(response.bodyAsText()).jsonObject
+        val lobbiesArray = responseJson["lobbies"]!!.jsonArray
+        return lobbiesArray.map { Json.decodeFromJsonElement<LobbyStatus>(it) }
     }
 
     @Test
@@ -289,4 +294,91 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
 
         assertEquals(HttpStatusCode.BadRequest, result.status)
     }
+
+    @Test
+    fun `test get all lobbies when there is only one and it's not initialized`() = runTest {
+        client.post("/api/v1/lobby") {
+            contentType(ContentType.Application.Json)
+            setBody("{\"playerName\":\"playerA\"}")
+        }
+
+        val result = client.get("/api/v1/lobby")
+        val parsedLobbies = parseAllLobbies(result)
+
+        assertEquals(HttpStatusCode.OK, result.status)
+        assertEquals(1, parsedLobbies.size)
+
+        assertTrue(
+            parsedLobbies.contains(
+                LobbyStatus(lobbyId = 0L, playersJoined = emptyList(), gameState = "NOT_STARTED")
+            )
+        )
+    }
+
+    @Test
+    fun `test get all lobbies as a list with players and games status for more than one lobby`() =
+        runTest {
+            client.post("/api/v1/lobby") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerA\"}")
+            }
+            client.post("/api/v1/lobby") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerA\"}")
+            }
+            client.post("/api/v1/lobby") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerA\"}")
+            }
+
+            client.post("/api/v1/lobby/0/code/playerA") {
+                contentType(ContentType.Application.Json)
+                setBody("")
+            }
+
+            client.post("/api/v1/lobby/2/code/playerA") {
+                contentType(ContentType.Application.Json)
+                setBody("someString")
+            }
+            client.post("/api/v1/lobby/2/code/playerB") {
+                contentType(ContentType.Application.Json)
+                setBody("someOtherString")
+            }
+
+            val result = client.get("/api/v1/lobby")
+            val parsedLobbies = parseAllLobbies(result)
+
+            assertEquals(HttpStatusCode.OK, result.status)
+            assertEquals(3, parsedLobbies.size)
+
+            assertTrue(
+                parsedLobbies.contains(
+                    LobbyStatus(
+                        lobbyId = 1L,
+                        playersJoined = emptyList(),
+                        gameState = "NOT_STARTED",
+                    )
+                )
+            )
+
+            assertTrue(
+                parsedLobbies.contains(
+                    LobbyStatus(
+                        lobbyId = 2L,
+                        playersJoined = listOf("playerA", "playerB"),
+                        gameState = "FINISHED",
+                    )
+                )
+            )
+
+            assertTrue(
+                parsedLobbies.contains(
+                    LobbyStatus(
+                        lobbyId = 0L,
+                        playersJoined = listOf("playerA"),
+                        gameState = "NOT_STARTED",
+                    )
+                )
+            )
+        }
 }
