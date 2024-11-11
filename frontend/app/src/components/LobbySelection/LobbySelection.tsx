@@ -10,7 +10,7 @@ interface LobbySelectionProps {
 	joinLobby: (lobby: Lobby) => void;
 }
 
-export default function LobbbySelection({
+export default function LobbySelection({
 	lobbies,
 	joinLobby,
 }: Readonly<LobbySelectionProps>) {
