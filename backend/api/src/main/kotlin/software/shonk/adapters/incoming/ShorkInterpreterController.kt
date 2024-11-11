@@ -76,6 +76,12 @@ fun Route.configureShorkInterpreterControllerV1() {
         result.onSuccess { call.respond(HttpStatusCode.OK) }
         return@post
     }
+
+    get("/lobby") {
+        val lobbiesStatus = shorkUseCase.getAllLobbies()
+        call.respond(HttpStatusCode.OK, mapOf("lobbies" to lobbiesStatus))
+        return@get
+    }
 }
 
 @Serializable data class Program(val code: String)

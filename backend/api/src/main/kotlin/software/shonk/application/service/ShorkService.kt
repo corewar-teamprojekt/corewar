@@ -1,9 +1,8 @@
 package software.shonk.application.service
 
+import kotlin.Result
 import software.shonk.application.port.incoming.ShorkUseCase
-import software.shonk.domain.GameState
-import software.shonk.domain.Lobby
-import software.shonk.domain.Status
+import software.shonk.domain.*
 import software.shonk.interpreter.IShork
 import software.shonk.interpreter.Settings
 
@@ -72,6 +71,18 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
             return Result.success(lobbyCounter++)
         }
         return Result.failure(IllegalArgumentException("Your player name is invalid"))
+    }
+
+    override fun getAllLobbies(): List<LobbyStatus> {
+        return lobbies.keys.mapNotNull { lobbyId ->
+            getLobbyStatus(lobbyId).getOrNull()?.let { status ->
+                LobbyStatus(
+                    lobbyId = lobbyId,
+                    playersJoined = lobbies[lobbyId]?.programs?.keys?.toList().orEmpty(),
+                    gameState = status.gameState.toString(),
+                )
+            }
+        }
     }
 
     override fun deleteLobby(lobbyId: Long): Result<Unit> {
