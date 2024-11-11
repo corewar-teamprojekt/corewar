@@ -12,8 +12,10 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster.tsx";
 import "./index.css";
 import "./monacoConfig";
+import LobbySelectionPage from "./pages/lobbySelectionPage/LobbySelectionPage.tsx";
 import PlayerCodingPage from "./pages/playerCodeInput/PlayerCodingPage.tsx";
 import ResultDisplayPage from "./pages/resultDisplayPage/ResultDisplayPage.tsx";
+import { LobbyProvider } from "./services/lobbyContext/LobbyContext.tsx";
 const router = createBrowserRouter([
 	{
 		path: "/",
@@ -44,6 +46,10 @@ const router = createBrowserRouter([
 				path: "/result-display",
 				element: <ResultDisplayPage />,
 			},
+			{
+				path: "/lobby-selection",
+				element: <LobbySelectionPage />,
+			},
 		],
 	},
 ]);
@@ -51,10 +57,12 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<UserProvider>
-			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-				<RouterProvider router={router} />
-				<Toaster />
-			</ThemeProvider>
+			<LobbyProvider>
+				<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+					<RouterProvider router={router} />
+					<Toaster />
+				</ThemeProvider>
+			</LobbyProvider>
 		</UserProvider>
 	</StrictMode>,
 );
