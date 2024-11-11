@@ -44,7 +44,7 @@ export async function getLinterLintsV1(code: string): Promise<Linterlint[]> {
 	}
 }
 
-export async function getLobbbiesV1(): Promise<Lobby[]> {
+export async function getLobbiesV1(): Promise<Lobby[]> {
 	return Promise.resolve(mockLobbies());
 	// const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/lobby`);
 	// if (response.ok) {

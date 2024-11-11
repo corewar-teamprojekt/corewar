@@ -1,11 +1,11 @@
-import LobbbySelection from "@/components/LobbySelection/LobbySelection";
+import LobbySelection from "@/components/LobbySelection/LobbySelection";
 import { RequireLogout } from "@/components/requireLogout/RequireLogout";
 import { Button } from "@/components/ui/button";
 import { BASE_POLLING_INTERVAL_MS } from "@/consts";
 import { Lobby } from "@/domain/Lobby";
 import { usePageVisibility } from "@/lib/usePageVisibility";
 import { useDispatchLobby } from "@/services/lobbyContext/LobbyContextHelpers";
-import { getLobbbiesV1 } from "@/services/rest/RestService";
+import { getLobbiesV1 } from "@/services/rest/RestService";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -18,7 +18,7 @@ export default function LobbySelectionPage() {
 
 	useEffect(() => {
 		const pollingCallback = async () => {
-			const lobbies = await getLobbbiesV1();
+			const lobbies = await getLobbiesV1();
 			setLobbies(lobbies);
 		};
 
@@ -57,7 +57,7 @@ export default function LobbySelectionPage() {
 		<RequireLogout blocked={false}>
 			<div className="h-[100%] w-[100%] flex flex-col justify-center items-center">
 				<h1 className="text-2xl font-extrabold mb-[45px]">AVAILABLE LOBBIES</h1>
-				<LobbbySelection lobbies={lobbies} joinLobby={joinLobby} />
+				<LobbySelection lobbies={lobbies} joinLobby={joinLobby} />
 				<Button
 					className="mt-[20px]"
 					onClick={() => navigate("/player-selection")}
