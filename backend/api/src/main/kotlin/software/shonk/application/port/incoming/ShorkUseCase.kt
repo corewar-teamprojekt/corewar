@@ -1,5 +1,6 @@
 package software.shonk.application.port.incoming
 
+import software.shonk.domain.LobbyStatus
 import software.shonk.domain.Status
 import software.shonk.interpreter.Settings
 
@@ -15,4 +16,6 @@ interface ShorkUseCase {
     fun deleteLobby(lobbyId: Long): Result<Unit>
 
     fun getLobbyStatus(lobbyId: Long): Result<Status>
+
+    fun getAllLobbies(): List<LobbyStatus>
 }
