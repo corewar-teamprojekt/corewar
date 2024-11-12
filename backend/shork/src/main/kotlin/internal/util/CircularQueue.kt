@@ -45,6 +45,16 @@ internal class CircularQueue<T> {
         return -1
     }
 
+    /** Returns the next item without moving it to the back of the queue */
+    fun peek(): T {
+        return queue.first()
+    }
+
+    /** Returns all items in the queue as an immutable list */
+    fun all(): List<T> {
+        return queue
+    }
+
     /** Kinda self-explanatory, isn't it? */
     fun size() = queue.size
 

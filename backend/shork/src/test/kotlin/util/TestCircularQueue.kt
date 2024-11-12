@@ -73,4 +73,20 @@ internal class TestCircularQueue {
         queue.removeByReference(instruction)
         assertEquals(true, queue.isEmpty())
     }
+
+    @Test
+    fun `test if peek does not modify the queue`() {
+        val queue = CircularQueue<Int>()
+
+        queue.add(1)
+        queue.add(2)
+        queue.add(3)
+
+        assertEquals(1, queue.peek())
+        assertEquals(1, queue.get())
+        assertEquals(2, queue.peek())
+        assertEquals(2, queue.get())
+        assertEquals(3, queue.peek())
+        assertEquals(3, queue.get())
+    }
 }
