@@ -12,10 +12,43 @@ internal class Djn(
     modifier: Modifier,
 ) : AbstractInstruction(aField, bField, addressModeA, addressModeB, modifier) {
     override fun execute(process: AbstractProcess) {
-        TODO("Not yet implemented")
+        val core = process.program.shork.memoryCore
+        val checkZeroAddress = resolve(process, bField, addressModeB)
+        val checkZeroInstruction = core.loadAbsolute(checkZeroAddress)
+        val absoluteJumpDestination = resolve(process, aField, addressModeA)
+
+        val shouldJump =
+            when (modifier) {
+                Modifier.A,
+                Modifier.BA -> {
+                    checkZeroInstruction.aField -= 1
+                    checkZeroInstruction.aField != 0
+                }
+                Modifier.B,
+                Modifier.AB -> {
+                    checkZeroInstruction.bField -= 1
+                    checkZeroInstruction.bField != 0
+                }
+                Modifier.F,
+                Modifier.X,
+                Modifier.I -> {
+                    checkZeroInstruction.aField -= 1
+                    checkZeroInstruction.bField -= 1
+                    checkZeroInstruction.aField != 0 && checkZeroInstruction.bField != 0
+                }
+            }
+
+        if (shouldJump) {
+            process.programCounter = absoluteJumpDestination
+            process.dontIncrementProgramCounter = true
+        }
     }
 
     override fun deepCopy(): AbstractInstruction {
-        TODO("Not yet implemented")
+        return Djn(aField, bField, addressModeA, addressModeB, modifier)
+    }
+
+    override fun toString(): String {
+        return "[DJN] $addressModeA $aField, $addressModeB $bField, $modifier"
     }
 }
