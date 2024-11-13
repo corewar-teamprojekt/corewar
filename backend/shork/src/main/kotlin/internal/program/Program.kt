@@ -10,7 +10,14 @@ internal class Program(id: String, shork: AbstractInternalShork) : AbstractProgr
         if (this.processes.isEmpty()) {
             return
         }
-        this.processes.get().tick()
+        val gameDataCollector = this.shork.gameDataCollector
+        val process = this.processes.get()
+
+        gameDataCollector.collectProcessDataBeforeTick(process)
+
+        process.tick()
+
+        gameDataCollector.collectProcessDataAfterTick(process)
     }
 
     override fun createProcessAt(startingAddress: Int) {

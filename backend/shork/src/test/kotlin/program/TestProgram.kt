@@ -2,15 +2,28 @@ package program
 
 import assertExecutionCountAtAddress
 import kotlin.test.assertEquals
+import mocks.MockGameDataCollector
 import mocks.MockInstruction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import software.shonk.interpreter.internal.InternalShork
+import software.shonk.interpreter.internal.addressing.AddressMode
+import software.shonk.interpreter.internal.addressing.Modifier
+import software.shonk.interpreter.internal.instruction.Dat
+import software.shonk.interpreter.internal.instruction.Jmp
 import software.shonk.interpreter.internal.program.Program
 import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestProgram {
-    private var settings = InternalSettings(8000, 100, MockInstruction(), 1000, 100)
+    private var settings =
+        InternalSettings(
+            8000,
+            100,
+            MockInstruction(),
+            1000,
+            100,
+            gameDataCollector = MockGameDataCollector(),
+        )
     private var shork = InternalShork(settings)
     private var program = Program("id", shork)
 
@@ -147,5 +160,32 @@ internal class TestProgram {
         // Dead again :(
         program.removeProcess(program.processes.get())
         assertEquals(false, program.isAlive())
+    }
+
+    @Test
+    fun `test if program integrates with game data collector`() {
+        val dat = Dat(1, 1, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val settings = InternalSettings(8000, 100, dat, 1000, 100)
+        val jmp = Jmp(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+
+        shork = InternalShork(settings)
+        shork.memoryCore.storeAbsolute(0, jmp)
+        program = Program("Test", shork)
+        val gameDataCollector = shork.gameDataCollector
+
+        program.createProcessAt(0)
+        program.createProcessAt(420)
+        program.createProcessAt(4200)
+
+        gameDataCollector.startRoundForProgram(program)
+        program.tick()
+        gameDataCollector.endRoundForProgram(program)
+
+        val result = gameDataCollector.getGameStatistics().first()
+
+        assertEquals(0, result.programCounterBefore)
+        assertEquals(42, result.programCounterAfter)
+        assertEquals(false, result.processDied)
+        assertEquals(listOf(420, 4200), result.programCountersOfOtherProcesses)
     }
 }

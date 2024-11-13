@@ -2,16 +2,29 @@ package process
 
 import assertExecutionCountAtAddress
 import kotlin.test.assertEquals
+import mocks.MockGameDataCollector
 import mocks.MockInstruction
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import software.shonk.interpreter.internal.InternalShork
+import software.shonk.interpreter.internal.addressing.AddressMode
+import software.shonk.interpreter.internal.addressing.Modifier
+import software.shonk.interpreter.internal.instruction.Dat
+import software.shonk.interpreter.internal.instruction.Jmp
 import software.shonk.interpreter.internal.program.Program
 import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestProcess {
-    private var settings = InternalSettings(8000, 100, MockInstruction(), 1000, 100)
+    private var settings =
+        InternalSettings(
+            8000,
+            100,
+            MockInstruction(),
+            1000,
+            100,
+            gameDataCollector = MockGameDataCollector(),
+        )
     private var shork = InternalShork(settings)
     private var program = Program("id", shork)
 
@@ -58,7 +71,6 @@ internal class TestProcess {
         assertFalse(process.dontIncrementProgramCounter)
     }
 
-    // Tests if dontIncrementProgramCounter is working
     @Test
     fun testDontIncrementProgramCounter() {
         program.createProcessAt(42)
@@ -68,5 +80,33 @@ internal class TestProcess {
         process.tick()
 
         assertEquals(42, process.programCounter)
+    }
+
+    @Test
+    fun `test if process integrates with the Game Data Collector`() {
+        val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val settings = InternalSettings(8000, 1000, dat, 1000, 100)
+        shork = InternalShork(settings)
+        val gameDataCollector = shork.gameDataCollector
+
+        val jmp = Jmp(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        shork.memoryCore.storeAbsolute(0, jmp)
+
+        val program = Program("Test", shork)
+        program.createProcessAt(0)
+        val process = program.processes.first()
+
+        gameDataCollector.startRoundForProgram(program)
+        gameDataCollector.collectProcessDataBeforeTick(process)
+
+        process.tick()
+
+        gameDataCollector.collectProcessDataAfterTick(process)
+        gameDataCollector.endRoundForProgram(program)
+
+        val stats = gameDataCollector.getGameStatistics().first()
+        assertEquals(0, stats.programCounterBefore)
+        assertEquals(42, stats.programCounterAfter)
+        assertEquals(false, stats.processDied)
     }
 }
