@@ -35,7 +35,7 @@ data class Lobby(
     }
 
     fun run() {
-        val result: String? = shork.run(currentSettings, programs)
+        val result = shork.run(currentSettings, programs).outcome.player
         gameState = GameState.FINISHED
 
         if (result == "playerA") {

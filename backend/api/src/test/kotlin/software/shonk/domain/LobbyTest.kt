@@ -6,8 +6,7 @@ import io.mockk.spyk
 import io.mockk.verify
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
-import software.shonk.interpreter.MockShork
-import software.shonk.interpreter.Settings
+import software.shonk.interpreter.*
 
 class LobbyTest {
 
@@ -79,7 +78,8 @@ class LobbyTest {
     @Test
     fun `check if game is finished and winner is decided`() {
         val shork = mockk<MockShork>()
-        every { shork.run(any(), any()) } returns "playerA"
+        every { shork.run(any(), any()) } returns
+            GameResult(GameOutcome("playerA", OutcomeKind.WIN), emptyList())
 
         val lobby = Lobby(id = 0, programs = HashMap<String, String>(), shork = shork)
         lobby.addProgram("playerA", "someProgram")
