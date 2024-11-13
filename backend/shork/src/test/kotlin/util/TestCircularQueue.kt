@@ -75,18 +75,37 @@ internal class TestCircularQueue {
     }
 
     @Test
-    fun `test if peek does not modify the queue`() {
+    fun `test if first does not modify the queue`() {
         val queue = CircularQueue<Int>()
 
         queue.add(1)
         queue.add(2)
         queue.add(3)
 
-        assertEquals(1, queue.peek())
+        assertEquals(1, queue.first())
         assertEquals(1, queue.get())
-        assertEquals(2, queue.peek())
+        assertEquals(2, queue.first())
         assertEquals(2, queue.get())
-        assertEquals(3, queue.peek())
+        assertEquals(3, queue.first())
         assertEquals(3, queue.get())
+    }
+
+    @Test
+    fun `test if last does not modify the queue`() {
+        val queue = CircularQueue<Int>()
+
+        queue.add(1)
+        queue.add(2)
+        queue.add(3)
+
+        assertEquals(3, queue.last())
+        assertEquals(3, queue.last())
+
+        assertEquals(1, queue.get())
+        assertEquals(1, queue.last())
+        assertEquals(2, queue.get())
+        assertEquals(2, queue.last())
+        assertEquals(3, queue.get())
+        assertEquals(3, queue.last())
     }
 }
