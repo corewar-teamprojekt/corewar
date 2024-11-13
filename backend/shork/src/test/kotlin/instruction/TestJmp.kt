@@ -1,6 +1,8 @@
 package instruction
 
 import kotlin.test.assertEquals
+import mocks.MockGameDataCollector
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import software.shonk.interpreter.internal.InternalShork
 import software.shonk.interpreter.internal.addressing.AddressMode
@@ -12,11 +14,18 @@ import software.shonk.interpreter.internal.program.Program
 import software.shonk.interpreter.internal.settings.InternalSettings
 
 internal class TestJmp {
+    private val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+    private var settings =
+        InternalSettings(8000, 1000, dat, 1000, 100, gameDataCollector = MockGameDataCollector())
+    private var shork = InternalShork(settings)
+
+    @BeforeEach
+    fun setUp() {
+        shork = InternalShork(settings)
+    }
+
     @Test
     fun testExecute() {
-        val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-        val settings = InternalSettings(8000, 1000, dat, 1000, 100)
-        val shork = InternalShork(settings)
         val program = Program("Jumpy :3", shork)
         val process = Process(program, 0)
 
@@ -28,9 +37,6 @@ internal class TestJmp {
 
     @Test
     fun `test in conjunction with process`() {
-        val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-        val settings = InternalSettings(8000, 1000, dat, 1000, 100)
-        val shork = InternalShork(settings)
         val core = shork.memoryCore
         val program = Program("Jumpy :3", shork)
         program.createProcessAt(0)

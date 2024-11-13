@@ -1,6 +1,8 @@
 package software.shonk.interpreter.internal.settings
 
 import software.shonk.interpreter.internal.instruction.AbstractInstruction
+import software.shonk.interpreter.internal.statistics.GameDataCollector
+import software.shonk.interpreter.internal.statistics.IGameDataCollector
 
 internal class InternalSettings(
     /** The size of the core, in number of instructions it will fit. */
@@ -19,4 +21,6 @@ internal class InternalSettings(
     val maximumCycles: Int,
     /** The minimum separation between two processes. */
     val minimumSeparation: Int,
+    /** The game data collector to use. */
+    val gameDataCollector: IGameDataCollector = GameDataCollector(),
 )

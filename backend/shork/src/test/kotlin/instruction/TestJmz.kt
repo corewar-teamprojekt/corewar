@@ -1,6 +1,7 @@
 package instruction
 
 import kotlin.test.assertEquals
+import mocks.MockGameDataCollector
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import software.shonk.interpreter.internal.InternalShork
@@ -14,7 +15,8 @@ import software.shonk.interpreter.internal.settings.InternalSettings
 internal class TestJmz {
 
     private val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-    private val settings = InternalSettings(8000, 1000, dat, 1000, 100)
+    private val settings =
+        InternalSettings(8000, 1000, dat, 1000, 100, gameDataCollector = MockGameDataCollector())
     private var shork = InternalShork(settings)
     private var program = Program("jmz", shork)
 

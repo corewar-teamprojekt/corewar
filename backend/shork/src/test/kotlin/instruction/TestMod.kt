@@ -1,6 +1,7 @@
 package instruction
 
 import kotlin.test.assertEquals
+import mocks.MockGameDataCollector
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import software.shonk.interpreter.internal.InternalShork
@@ -15,7 +16,8 @@ import software.shonk.interpreter.internal.settings.InternalSettings
 internal class TestMod {
 
     private val dat = Dat(5, 13, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
-    private val settings = InternalSettings(8000, 1000, dat, 1000, 100)
+    private val settings =
+        InternalSettings(8000, 1000, dat, 1000, 100, gameDataCollector = MockGameDataCollector())
     private var shork = InternalShork(settings)
     private var program = Program("mod", shork)
     private var process = Process(program, 0)
@@ -34,7 +36,7 @@ internal class TestMod {
 
         mod.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 0)
@@ -50,7 +52,7 @@ internal class TestMod {
 
         mod.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 5)
@@ -66,7 +68,7 @@ internal class TestMod {
 
         mod.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 5)
@@ -82,7 +84,7 @@ internal class TestMod {
 
         mod.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 3)
@@ -98,7 +100,7 @@ internal class TestMod {
 
         mod.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 0)
@@ -114,7 +116,7 @@ internal class TestMod {
 
         mod.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 0)
@@ -130,7 +132,7 @@ internal class TestMod {
 
         mod.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 3)
