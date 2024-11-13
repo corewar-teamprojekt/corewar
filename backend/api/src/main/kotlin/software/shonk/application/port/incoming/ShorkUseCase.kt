@@ -10,7 +10,7 @@ interface ShorkUseCase {
 
     fun setLobbySettings(lobbyId: Long, settings: Settings): Result<Unit>
 
-    fun createLobby(): Long
+    fun createLobby(playerName: String): Result<Long>
 
     fun deleteLobby(lobbyId: Long): Result<Unit>
 
