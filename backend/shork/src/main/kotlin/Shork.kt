@@ -11,7 +11,7 @@ import software.shonk.interpreter.internal.program.Program
 class Shork : IShork {
     private val logger = LoggerFactory.getLogger(Shork::class.java)
 
-    override fun run(settings: Settings, programs: Map<String, String>): String {
+    override fun run(settings: Settings, programs: Map<String, String>): GameResult {
         val internalSettings = settings.toInternalSettings()
         val shork = InternalShork(internalSettings)
 
@@ -54,16 +54,20 @@ class Shork : IShork {
             lastLocation += internalSettings.minimumSeparation + 100
         }
 
-        when (val result = shork.run()) {
-            is GameStatus.FINISHED -> {
-                return when (result.state) {
-                    FinishedState.DRAW -> "DRAW"
-                    is FinishedState.WINNER -> result.state.winner.playerId
+        val outcome =
+            when (val result = shork.run()) {
+                is GameStatus.FINISHED -> {
+                    when (result.state) {
+                        FinishedState.DRAW -> GameOutcome(null, OutcomeKind.DRAW)
+                        is FinishedState.WINNER ->
+                            GameOutcome(result.state.winner.playerId, OutcomeKind.WIN)
+                    }
+                }
+                GameStatus.NOT_STARTED -> {
+                    throw IllegalStateException("Not started impossible after calling run")
                 }
             }
-            GameStatus.NOT_STARTED -> {
-                throw IllegalStateException("Not started impossible after calling run")
-            }
-        }
+
+        return GameResult(outcome = outcome, roundInformation = emptyList())
     }
 }

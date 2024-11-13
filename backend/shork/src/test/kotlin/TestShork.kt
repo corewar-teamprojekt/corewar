@@ -1,8 +1,7 @@
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import software.shonk.interpreter.Settings
-import software.shonk.interpreter.Shork
+import software.shonk.interpreter.*
 
 internal class TestShork {
     var settings = Settings()
@@ -19,7 +18,7 @@ internal class TestShork {
         val programs = mapOf("impy" to "mov 0, 1", "blahaj" to "jmp $1, 0")
         val result = shork.run(settings, programs)
 
-        assertEquals("impy", result)
+        assertEquals(GameOutcome("impy", OutcomeKind.WIN), result.outcome)
     }
 
     @Test
@@ -28,7 +27,7 @@ internal class TestShork {
         val programs = mapOf<String, String>()
         val result = shork.run(settings, programs)
 
-        assertEquals("DRAW", result)
+        assertEquals(GameOutcome(null, OutcomeKind.DRAW), result.outcome)
     }
 
     @Test
@@ -38,6 +37,6 @@ internal class TestShork {
         val programs = mapOf("impy" to "jmp 0, 0", "blahaj" to "jmp 0, 0")
         val result = shork.run(settings, programs)
 
-        assertEquals("DRAW", result)
+        assertEquals(GameOutcome(null, OutcomeKind.DRAW), result.outcome)
     }
 }

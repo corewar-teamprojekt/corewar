@@ -9,8 +9,10 @@ interface IShork {
      * @param programs The programs to run. The key is the name of the program (Player) , and the
      *   value is the source code for the program itself. It will be compiled and run by the
      *   interpreter.
-     * @return The name / id of the winning program / player
+     * @return The result of the game. This will contain the winner of the game, and information
+     *   about the rounds
+     * @see GameResult
      * @see Settings.instructionLimit
      */
-    fun run(settings: Settings, programs: Map<String, String>): String?
+    fun run(settings: Settings, programs: Map<String, String>): GameResult
 }
