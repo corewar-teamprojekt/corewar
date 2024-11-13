@@ -58,7 +58,7 @@ class Shork : IShork {
             is GameStatus.FINISHED -> {
                 return when (result.state) {
                     FinishedState.DRAW -> "DRAW"
-                    is FinishedState.WINNER -> result.state.winner.id
+                    is FinishedState.WINNER -> result.state.winner.playerId
                 }
             }
             GameStatus.NOT_STARTED -> {

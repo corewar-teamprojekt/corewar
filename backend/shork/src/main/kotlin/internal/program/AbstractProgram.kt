@@ -5,10 +5,10 @@ import software.shonk.interpreter.internal.process.AbstractProcess
 import software.shonk.interpreter.internal.util.CircularQueue
 
 /**
- * Abstract class representing a program that can be run on the Shonk interpreter It holds processes
- * which themselves execute instructions
+ * Abstract class representing a program that can be run on the Shork interpreter. It holds
+ * processes which themselves execute instructions
  */
-internal abstract class AbstractProgram(val id: String, val shork: AbstractInternalShork) {
+internal abstract class AbstractProgram(val playerId: String, val shork: AbstractInternalShork) {
     val processes: CircularQueue<AbstractProcess> = CircularQueue()
 
     /**
