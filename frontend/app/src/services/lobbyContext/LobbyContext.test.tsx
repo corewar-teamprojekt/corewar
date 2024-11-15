@@ -1,13 +1,13 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { LobbyProvider } from "@/services/lobbyContext/LobbyContext.tsx";
 import {
 	lobbyReducer,
 	useDispatchLobby,
 	useLobby,
 } from "@/services/lobbyContext/LobbyContextHelpers.ts";
 import { aLobby, anotherLobby } from "@/TestFactories.ts";
+import { cleanup, render, screen } from "@testing-library/react";
 import { act } from "react";
-import { LobbyProvider } from "@/services/lobbyContext/LobbyContext.tsx";
+import { beforeEach, describe, expect, it } from "vitest";
 
 const NO_LOBBY_TEXT = "No lobby";
 
@@ -19,15 +19,20 @@ describe("lobby state", () => {
 	describe("reducer", () => {
 		describe("joining", () => {
 			it("returns joined lobby when not in lobby", () => {
-				expect(lobbyReducer(null, { type: "join", lobby: aLobby() })).toEqual(
-					aLobby(),
-				);
+				expect(
+					lobbyReducer(null, { type: "join", lobby: aLobby() })?.equals(
+						aLobby(),
+					),
+				).toBeTruthy();
 			});
 
 			it("overwrites active lobby with new lobby", () => {
 				expect(
-					lobbyReducer(aLobby(), { type: "join", lobby: anotherLobby() }),
-				).toEqual(anotherLobby());
+					lobbyReducer(aLobby(), {
+						type: "join",
+						lobby: anotherLobby(),
+					})?.equals(anotherLobby()),
+				).toBeTruthy();
 			});
 		});
 

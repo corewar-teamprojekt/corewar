@@ -1,7 +1,7 @@
 import LobbySelection from "@/components/LobbySelection/LobbySelection";
 import { RequireLogout } from "@/components/requireLogout/RequireLogout";
 import { Button } from "@/components/ui/button";
-import { BASE_POLLING_INTERVAL_MS, MAX_PLAYERS_PER_LOBBY } from "@/consts";
+import { BASE_POLLING_INTERVAL_MS } from "@/consts";
 import { Lobby } from "@/domain/Lobby";
 import { usePageVisibility } from "@/lib/usePageVisibility";
 import { useDispatchLobby } from "@/services/lobbyContext/LobbyContextHelpers";
@@ -69,7 +69,9 @@ export default function LobbySelectionPage() {
 		const newFreeLobbies = filterFullLobbies(newLobbies);
 		newFreeLobbies.forEach((lobby) => (lobby.isDisabled = false));
 
-		const mergedLobbies: Lobby[] = lobbies.map((lobby) => ({ ...lobby }));
+		const mergedLobbies: Lobby[] = lobbies.map(
+			(lobby) => new Lobby(lobby.id, lobby.playersJoined, lobby.gameState),
+		);
 		const newlyAddedLobbies: Lobby[] = [];
 		mergedLobbies.forEach((lobby) => (lobby.isDisabled = true));
 
@@ -88,9 +90,7 @@ export default function LobbySelectionPage() {
 		//replace deleted or full lobbies with new lobbies or add new lobbies at the end
 		for (const newlyAddedLobby of newlyAddedLobbies) {
 			const fullOrDisabledLobby = mergedLobbies.find(
-				(lobby) =>
-					lobby.isDisabled ||
-					lobby.playersJoined.length >= MAX_PLAYERS_PER_LOBBY,
+				(lobby) => lobby.isDisabled || lobby.isLobbyFull(),
 			);
 			if (fullOrDisabledLobby) {
 				Object.assign(fullOrDisabledLobby, newlyAddedLobby);
@@ -103,9 +103,7 @@ export default function LobbySelectionPage() {
 	}
 
 	function filterFullLobbies(lobbies: Lobby[]): Lobby[] {
-		return lobbies.filter(
-			(lobby) => lobby.playersJoined.length < MAX_PLAYERS_PER_LOBBY,
-		);
+		return lobbies.filter((lobby) => lobby.isLobbyFull() === false);
 	}
 	return (
 		<RequireLogout blocked={false}>
