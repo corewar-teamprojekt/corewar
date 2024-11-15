@@ -95,7 +95,7 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
         return playerName.matches("^[a-zA-Z0-9]+$".toRegex()) && playerName.isNotBlank()
     }
 
-    fun resetLobby(lobbyId: Long): Result<Lobby> {
+    private fun resetLobby(lobbyId: Long): Result<Lobby> {
         if (lobbies.containsKey(lobbyId)) {
             val newLobby = Lobby(lobbyId, HashMap(), shork)
             lobbies[lobbyId] = newLobby
