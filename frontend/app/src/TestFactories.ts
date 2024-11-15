@@ -11,55 +11,15 @@ export function anotherLobby(): Lobby {
 
 export function mockLobbies(): Lobby[] {
 	return [
-		{
-			id: 1,
-			playersJoined: ["Alice"],
-			gameState: GameState.NOT_STARTED,
-		},
-		{
-			id: 2,
-			playersJoined: ["Charlie", "Dave"],
-			gameState: GameState.NOT_STARTED,
-		},
-		{
-			id: 3,
-			playersJoined: ["Frank"],
-			gameState: GameState.NOT_STARTED,
-		},
-		{
-			id: 4,
-			playersJoined: ["Grace"],
-			gameState: GameState.NOT_STARTED,
-		},
-		{
-			id: 5,
-			playersJoined: ["Ivan", "Judy"],
-			gameState: GameState.NOT_STARTED,
-		},
-		{
-			id: 6,
-			playersJoined: ["Kevin"],
-			gameState: GameState.NOT_STARTED,
-		},
-		{
-			id: 7,
-			playersJoined: ["Laura"],
-			gameState: GameState.NOT_STARTED,
-		},
-		{
-			id: 8,
-			playersJoined: ["Mike"],
-			gameState: GameState.NOT_STARTED,
-		},
-		{
-			id: 9,
-			playersJoined: ["Nina"],
-			gameState: GameState.NOT_STARTED,
-		},
-		{
-			id: 10,
-			playersJoined: ["Oscar"],
-			gameState: GameState.NOT_STARTED,
-		},
+		new Lobby(1, ["Alice"], GameState.NOT_STARTED),
+		new Lobby(2, ["Charlie", "Dave"], GameState.NOT_STARTED),
+		new Lobby(3, ["Frank"], GameState.NOT_STARTED),
+		new Lobby(4, ["Grace"], GameState.NOT_STARTED),
+		new Lobby(5, ["Ivan", "Judy"], GameState.NOT_STARTED),
+		new Lobby(6, ["Kevin"], GameState.NOT_STARTED),
+		new Lobby(7, ["Laura"], GameState.NOT_STARTED),
+		new Lobby(8, ["Mike"], GameState.NOT_STARTED),
+		new Lobby(9, ["Nina"], GameState.NOT_STARTED),
+		new Lobby(10, ["Oscar"], GameState.NOT_STARTED),
 	];
 }
