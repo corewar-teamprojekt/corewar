@@ -1,6 +1,7 @@
 package software.shonk.application.service
 
 import software.shonk.application.port.incoming.ShorkUseCase
+import software.shonk.domain.GameState
 import software.shonk.domain.Lobby
 import software.shonk.domain.Status
 import software.shonk.interpreter.IShork
@@ -24,6 +25,11 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
     }
 
     override fun addProgramToLobby(lobbyId: Long, name: String?, program: String): Result<Unit> {
+
+        if (lobbies[lobbyId]?.gameState == GameState.FINISHED) {
+            lobbies[lobbyId] = resetLobby(lobbyId).getOrThrow()
+        }
+
         val lobby =
             getLobby(lobbyId).getOrElse {
                 return Result.failure(it)
@@ -87,5 +93,14 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
 
     private fun isAlphaNumerical(playerName: String): Boolean {
         return playerName.matches("^[a-zA-Z0-9]+$".toRegex()) && playerName.isNotBlank()
+    }
+
+    fun resetLobby(lobbyId: Long): Result<Lobby> {
+        if (lobbies.containsKey(lobbyId)) {
+            val newLobby = Lobby(lobbyId, HashMap(), shork)
+            lobbies[lobbyId] = newLobby
+            return Result.success(newLobby)
+        }
+        return Result.failure(IllegalArgumentException(NO_LOBBY_MESSAGE))
     }
 }
