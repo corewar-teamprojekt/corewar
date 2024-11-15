@@ -18,9 +18,8 @@ export default function LobbySelection({
 	const [searchedLobbyID, setSearchedLobbyID] = useState("");
 
 	function getStyledButtonForLobby(lobby: Lobby) {
-		const isLobbyFull = lobby.playersJoined.length >= MAX_PLAYERS_PER_LOBBY;
 		const styling =
-			isLobbyFull || lobby.isDisabled
+			lobby.isLobbyFull() || lobby.isDisabled
 				? "border-2 border-grey-900"
 				: "border-2 border-lime-700";
 		return (
@@ -28,7 +27,7 @@ export default function LobbySelection({
 				onClick={() => joinLobby(lobby)}
 				variant="outline"
 				className={styling}
-				disabled={isLobbyFull || lobby.isDisabled}
+				disabled={lobby.isLobbyFull() || lobby.isDisabled}
 			>
 				Join
 			</Button>
