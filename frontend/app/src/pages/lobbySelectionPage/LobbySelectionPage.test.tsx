@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { BASE_POLLING_INTERVAL_MS, MAX_PLAYERS_PER_LOBBY } from "@/consts";
+import { BASE_POLLING_INTERVAL_MS } from "@/consts";
 import { Lobby } from "@/domain/Lobby";
 import { getLobbiesV1 } from "@/services/rest/RestService";
 import { aLobby, mockLobbies } from "@/TestFactories";
@@ -29,10 +29,7 @@ vi.mock("../../components/LobbySelection/LobbySelection", () => ({
 						onClick={() => joinLobby(lobby.id)}
 					>
 						{lobby.id}:
-						{lobby.playersJoined.length >= MAX_PLAYERS_PER_LOBBY ||
-						lobby.isDisabled
-							? "disabled"
-							: "enabled"}
+						{lobby.isLobbyFull() || lobby.isDisabled ? "disabled" : "enabled"}
 					</Button>
 				))}
 			</div>
@@ -117,7 +114,7 @@ describe("LobbySelectionPage", () => {
 		);
 		for (const lobby of allPossibleLobbies) {
 			//if the lobby is not full, it should be on screen
-			if (lobby.playersJoined.length < MAX_PLAYERS_PER_LOBBY) {
+			if (lobby.isLobbyFull() === false) {
 				expect(
 					allDisplayedLobbies.find((ld) => ld.id === lobby.id),
 				).toBeTruthy();
@@ -143,7 +140,7 @@ describe("LobbySelectionPage", () => {
 		);
 		for (const lobby of allPossibleLobbies) {
 			//if the lobby is not full, it should be on screen
-			if (lobby.playersJoined.length < MAX_PLAYERS_PER_LOBBY) {
+			if (lobby.isLobbyFull() === false) {
 				expect(
 					allOriginallyDisplayedLobbies.find((ld) => ld.id === lobby.id),
 				).toBeTruthy();
@@ -190,7 +187,7 @@ describe("LobbySelectionPage", () => {
 		);
 		for (const lobby of allPossibleLobbies) {
 			//if the lobby is not full, it should be on screen
-			if (lobby.playersJoined.length < MAX_PLAYERS_PER_LOBBY) {
+			if (lobby.isLobbyFull() === false) {
 				expect(
 					allInitialDisplayedLobbies.find((ld) => ld.id === lobby.id),
 				).toBeTruthy();
@@ -244,7 +241,7 @@ describe("LobbySelectionPage", () => {
 		);
 		for (const lobby of allPossibleLobbies) {
 			//if the lobby is not full, it should be on screen
-			if (lobby.playersJoined.length < MAX_PLAYERS_PER_LOBBY) {
+			if (lobby.isLobbyFull() === false) {
 				expect(
 					allInitialDisplayedLobbies.find((ld) => ld.id === lobby.id),
 				).toBeTruthy();
@@ -296,7 +293,7 @@ describe("LobbySelectionPage", () => {
 		);
 		for (const lobby of allPossibleLobbies) {
 			//if the lobby is not full, it should be on screen
-			if (lobby.playersJoined.length < MAX_PLAYERS_PER_LOBBY) {
+			if (lobby.isLobbyFull() === false) {
 				expect(
 					allInitialDisplayedLobbies.find((ld) => ld.id === lobby.id),
 				).toBeTruthy();
@@ -372,7 +369,7 @@ describe("LobbySelectionPage", () => {
 		);
 		for (const lobby of allPossibleLobbies) {
 			//if the lobby is not full, it should be on screen
-			if (lobby.playersJoined.length < MAX_PLAYERS_PER_LOBBY) {
+			if (lobby.isLobbyFull() === false) {
 				expect(
 					allInitialDisplayedLobbies.find((ld) => ld.id === lobby.id),
 				).toBeTruthy();
@@ -451,7 +448,7 @@ describe("LobbySelectionPage", () => {
 	}
 
 	function fillUpLobbies(lobbies: Lobby[]): Lobby[] {
-		return [...lobbies.map((lobby) => ({ ...lobby }))].map((lobby) => {
+		return lobbies.map((lobby) => {
 			if (lobby.playersJoined.length === 1) {
 				lobby.playersJoined.push("Rainer Winkler");
 			}

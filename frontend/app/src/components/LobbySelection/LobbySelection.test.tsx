@@ -9,7 +9,6 @@ import {
 } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import LobbySelection from "./LobbySelection";
-import { MAX_PLAYERS_PER_LOBBY } from "@/consts";
 
 const mockJoinLobby = vi.fn();
 
@@ -83,7 +82,7 @@ function getFullLobbies(): Lobby[] {
 	const lobbies = mockLobbies();
 	const fullLobbies = [];
 	for (const lobby of lobbies) {
-		if (lobby.playersJoined.length >= MAX_PLAYERS_PER_LOBBY) {
+		if (lobby.isLobbyFull()) {
 			fullLobbies.push(lobby);
 		}
 	}
@@ -94,7 +93,7 @@ function getFreeLobbies(): Lobby[] {
 	const lobbies = mockLobbies();
 	const fullLobbies = [];
 	for (const lobby of lobbies) {
-		if (lobby.playersJoined.length < MAX_PLAYERS_PER_LOBBY) {
+		if (lobby.isLobbyFull() === false) {
 			fullLobbies.push(lobby);
 		}
 	}
