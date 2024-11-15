@@ -1,8 +1,9 @@
 package software.shonk.application.service
 
-import kotlin.Result
 import software.shonk.application.port.incoming.ShorkUseCase
-import software.shonk.domain.*
+import software.shonk.domain.GameState
+import software.shonk.domain.Lobby
+import software.shonk.domain.Status
 import software.shonk.interpreter.IShork
 import software.shonk.interpreter.Settings
 
@@ -67,17 +68,6 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
                 return Result.failure(it)
             }
         return Result.success(lobby.getStatus())
-    }
-
-    override fun getAllLobbies(): List<LobbyStatus> {
-        return lobbies.map { (lobbyId, lobby) ->
-            val joinedPlayers = lobby.programs.keys.toList()
-            LobbyStatus(
-                lobbyId = lobbyId,
-                playersJoined = joinedPlayers,
-                gameState = lobby.getStatus().gameState,
-            )
-        }
     }
 
     fun resetLobby(lobbyId: Long): Result<Lobby> {

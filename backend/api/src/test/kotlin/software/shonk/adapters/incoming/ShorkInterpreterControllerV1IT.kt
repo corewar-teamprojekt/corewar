@@ -1,12 +1,12 @@
 package software.shonk.adapters.incoming
 
-import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import kotlin.test.assertNotNull
-import kotlinx.serialization.json.*
-import org.junit.jupiter.api.Assertions.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import software.shonk.module
 import software.shonk.moduleApiV0
@@ -206,69 +206,5 @@ class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
         assertEquals("2", result2.bodyAsText())
         assertEquals(HttpStatusCode.Created, result3.status)
         assertEquals("3", result3.bodyAsText())
-    }
-
-    @kotlinx.serialization.Serializable
-    data class LobbyInformation(
-        val lobbyId: Long,
-        val playersJoined: List<String>,
-        val gameState: String,
-    )
-
-    private suspend fun parseAllLobbiesResponse(
-        httpResponse: HttpResponse
-    ): MutableList<LobbyInformation> {
-        val body = httpResponse.bodyAsText()
-        val jsonObject = Json.parseToJsonElement(body).jsonObject
-
-        assert(jsonObject.containsKey("lobbies"))
-        return Json.decodeFromJsonElement<MutableList<LobbyInformation>>(jsonObject["lobbies"]!!)
-    }
-
-    suspend fun createLobby(client: HttpClient): Long {
-        val result = client.post("/api/v1/lobby")
-        assertEquals(HttpStatusCode.Created, result.status)
-
-        return result.bodyAsText().toLong()
-    }
-
-    @Test
-    fun `get all lobbies returns only default lobby if none have been created`() = runTest {
-        val result = client.get("/api/v1/lobby")
-
-        assertEquals(HttpStatusCode.OK, result.status)
-
-        val lobbies = parseAllLobbiesResponse(result)
-
-        assertEquals(1, lobbies.size)
-        assertEquals(LobbyInformation(0, emptyList(), "NOT_STARTED"), lobbies.first())
-    }
-
-    @Test
-    fun `get all lobbies returns multiple lobbies`() = runTest {
-        val lobbyIds = List(3) { createLobby(client) }
-
-        val allLobbiesResponse = client.get("/api/v1/lobby")
-
-        assertEquals(HttpStatusCode.OK, allLobbiesResponse.status)
-
-        val lobbies = parseAllLobbiesResponse(allLobbiesResponse).toMutableList()
-
-        assertEquals(4, lobbies.size) // 3 we created + 1 default
-        assertEquals(LobbyInformation(0, emptyList(), "NOT_STARTED"), lobbies.first())
-        assertNotEquals(lobbies[1].lobbyId, lobbies[2].lobbyId)
-        assertNotEquals(lobbies[2].lobbyId, lobbies[3].lobbyId)
-
-        for (lobbyId in lobbyIds) {
-            val lobby = lobbies.find { it.lobbyId == lobbyId }
-            assertNotNull(lobby)
-
-            assertEquals(LobbyInformation(lobbyId, emptyList(), "NOT_STARTED"), lobby)
-            lobbies.removeIf { it.lobbyId == lobbyId }
-        }
-
-        // Only the default lobby is left now
-        assertEquals(1, lobbies.size)
-        assertEquals(0, lobbies[0].lobbyId)
     }
 }

@@ -4,7 +4,10 @@ import io.mockk.spyk
 import io.mockk.verify
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
-import software.shonk.domain.*
+import software.shonk.domain.GameState
+import software.shonk.domain.Result
+import software.shonk.domain.Status
+import software.shonk.domain.Winner
 import software.shonk.interpreter.MockShork
 import software.shonk.interpreter.Settings
 
@@ -252,78 +255,5 @@ class ShorkServiceTest {
         shorkService.addProgramToLobby(lobbyId, "playerB", "someOtherProgram")
         shorkService.addProgramToLobby(lobbyId, "playerB", "someNewOtherProgram")
         verify(exactly = 1) { shorkService.resetLobby(lobbyId) }
-    }
-
-    @Test
-    fun `test get all lobbies`() {
-        val shorkService = ShorkService(MockShork())
-        var lobbyId = 0L
-        shorkService.addProgramToLobby(lobbyId, "playerA", "someOtherProgram")
-        shorkService.createLobby()
-        shorkService.createLobby()
-        lobbyId += 2
-        shorkService.addProgramToLobby(lobbyId, "playerA", "someProgram")
-        shorkService.addProgramToLobby(lobbyId, "playerB", "someOtherProgram")
-        val result = shorkService.getAllLobbies()
-
-        assertEquals(3, result.size)
-        result.forEachIndexed { index, lobby ->
-            when (index) {
-                0 -> {
-                    assertEquals(index.toLong(), lobby.lobbyId)
-                    assertEquals(listOf("playerA"), lobby.playersJoined)
-                    assertEquals(GameState.NOT_STARTED, lobby.gameState)
-                }
-                1 -> {
-                    assertEquals(index.toLong(), lobby.lobbyId)
-                    assert(lobby.playersJoined.isEmpty())
-                    assertEquals(GameState.NOT_STARTED, lobby.gameState)
-                }
-                2 -> {
-                    assertEquals(index.toLong(), lobby.lobbyId)
-                    assertEquals(listOf("playerA", "playerB"), lobby.playersJoined)
-                    assertEquals(GameState.FINISHED, lobby.gameState)
-                }
-            }
-        }
-    }
-
-    @Test
-    fun `get allLobbies but one is deleted`() {
-        val shorkService = ShorkService(MockShork())
-        var lobbyId = 0L
-        shorkService.addProgramToLobby(lobbyId, "playerA", "someOtherProgram")
-        shorkService.createLobby()
-        shorkService.createLobby()
-        lobbyId += 2
-        shorkService.addProgramToLobby(lobbyId, "playerA", "someProgram")
-        shorkService.addProgramToLobby(lobbyId, "playerB", "someOtherProgram")
-        shorkService.createLobby()
-        lobbyId++
-        shorkService.addProgramToLobby(lobbyId, "playerB", "someOtherProgram")
-        shorkService.deleteLobby(lobbyId - 2)
-
-        val result = shorkService.getAllLobbies()
-
-        assertEquals(3, result.size)
-        result.forEachIndexed { index, lobby ->
-            when (index) {
-                0 -> {
-                    assertEquals(index.toLong(), lobby.lobbyId)
-                    assertEquals(listOf("playerA"), lobby.playersJoined)
-                    assertEquals(GameState.NOT_STARTED, lobby.gameState)
-                }
-                1 -> {
-                    assertEquals(index.toLong() + 1, lobby.lobbyId)
-                    assertEquals(listOf("playerA", "playerB"), lobby.playersJoined)
-                    assertEquals(GameState.FINISHED, lobby.gameState)
-                }
-                2 -> {
-                    assertEquals(index.toLong() + 1, lobby.lobbyId)
-                    assertEquals(listOf("playerB"), lobby.playersJoined)
-                    assertEquals(GameState.NOT_STARTED, lobby.gameState)
-                }
-            }
-        }
     }
 }

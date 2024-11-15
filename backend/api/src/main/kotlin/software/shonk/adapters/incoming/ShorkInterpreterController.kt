@@ -77,12 +77,6 @@ fun Route.configureShorkInterpreterControllerV1() {
         return@get
     }
 
-    get("/lobby") {
-        val allLobbies = shorkUseCase.getAllLobbies()
-        call.respond(HttpStatusCode.OK, mapOf("lobbies" to allLobbies))
-        return@get
-    }
-
     post("/lobby") {
         val lobbyId = shorkUseCase.createLobby()
         call.respond(HttpStatusCode.Created, lobbyId.toString())
