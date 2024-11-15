@@ -13,9 +13,14 @@ import {
 import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import LobbySelectionPage from "./LobbySelectionPage";
+import { useDispatchLobby } from "@/services/lobbyContext/LobbyContextHelpers";
 
 vi.mock("@/services/rest/RestService", () => ({
 	getLobbiesV1: vi.fn(),
+}));
+
+vi.mock("@/services/lobbyContext/LobbyContextHelpers", () => ({
+	useDispatchLobby: vi.fn(),
 }));
 
 //mock the LobbySelection component to better see what lobbies are passed down to the LobbySelection component
@@ -26,7 +31,7 @@ vi.mock("../../components/LobbySelection/LobbySelection", () => ({
 				{lobbies.map((lobby: Lobby) => (
 					<Button
 						key={"test-button-" + lobby.id}
-						onClick={() => joinLobby(lobby.id)}
+						onClick={() => joinLobby(lobby)}
 					>
 						{lobby.id}:
 						{lobby.isLobbyFull() || lobby.isDisabled ? "disabled" : "enabled"}
@@ -65,6 +70,34 @@ describe("LobbySelectionPage", () => {
 
 		act(() => {
 			fireEvent.click(screen.getByText("CREATE LOBBY"));
+		});
+		await waitFor(() => {
+			expect(router.state.location.pathname).toEqual("/player-selection");
+		});
+	});
+
+	it("joins correct lobby and navigates to player selection on join lobby button click", async () => {
+		(getLobbiesV1 as Mock).mockResolvedValue([aLobby()]);
+		const mockDispatcher = vi.fn();
+		(useDispatchLobby as Mock).mockReturnValue(mockDispatcher);
+		const router = createMemoryRouter(testRouterConfig);
+		render(<RouterProvider router={router} />);
+
+		await waitFor(
+			() => {
+				expect(getLobbiesV1).toHaveBeenCalledTimes(1);
+			},
+			{ timeout: BASE_POLLING_INTERVAL_MS + 100 },
+		);
+		act(() => {
+			fireEvent.click(screen.getByText(aLobby().id + ":enabled"));
+		});
+
+		await waitFor(() => {
+			expect(mockDispatcher.mock.calls[0][0].type).toBe("join");
+			expect(
+				aLobby().equals(mockDispatcher.mock.calls[0][0].lobby),
+			).toBeTruthy();
 		});
 		await waitFor(() => {
 			expect(router.state.location.pathname).toEqual("/player-selection");
