@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import { useState } from "react";
+import { MAX_PLAYERS_PER_LOBBY } from "@/consts";
 
 interface LobbySelectionProps {
 	lobbies: Lobby[];
@@ -16,20 +17,18 @@ export default function LobbySelection({
 }: Readonly<LobbySelectionProps>) {
 	const [searchedLobbyID, setSearchedLobbyID] = useState("");
 
-	//later this will probbalby be unique for every lobby, but for now its always 2
-	const MAX_PLAYERS = 2;
-
 	function getStyledButtonForLobby(lobby: Lobby) {
-		const isLobbyFull = lobby.playersJoined.length >= MAX_PLAYERS;
-		const styling = isLobbyFull
-			? "border-2 border-red-900"
-			: "border-2 border-lime-700";
+		const isLobbyFull = lobby.playersJoined.length >= MAX_PLAYERS_PER_LOBBY;
+		const styling =
+			isLobbyFull || lobby.isDisabled
+				? "border-2 border-grey-900"
+				: "border-2 border-lime-700";
 		return (
 			<Button
 				onClick={() => joinLobby(lobby)}
 				variant="outline"
 				className={styling}
-				disabled={isLobbyFull}
+				disabled={isLobbyFull || lobby.isDisabled}
 			>
 				Join
 			</Button>
@@ -58,7 +57,7 @@ export default function LobbySelection({
 										LobbyID: {lobby.id}
 									</TableCell>
 									<TableCell className="text-right">
-										{lobby.playersJoined.length}/{MAX_PLAYERS} Players
+										{lobby.playersJoined.length}/{MAX_PLAYERS_PER_LOBBY} Players
 									</TableCell>
 									<TableCell className="text-right w-[50px]">
 										{getStyledButtonForLobby(lobby)}
