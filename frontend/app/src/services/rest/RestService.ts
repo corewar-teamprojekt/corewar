@@ -2,7 +2,6 @@
 
 import { Linterlint } from "@/domain/LinterLint";
 import { Lobby } from "@/domain/Lobby";
-import { mockLobbies } from "@/TestFactories";
 
 export function uploadPlayerCode(
 	playerName: string,
@@ -45,12 +44,15 @@ export async function getLinterLintsV1(code: string): Promise<Linterlint[]> {
 }
 
 export async function getLobbiesV1(): Promise<Lobby[]> {
-	return Promise.resolve(mockLobbies());
-	// const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/lobby`);
-	// if (response.ok) {
-	// 	const lobbies = await response.json().then((data) => data.lobbies as Lobby[]);
-	// 	return lobbies;
-	// } else {
-	// 	return [];
-	// }
+	const response = await fetch(
+		`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/lobby`,
+	);
+	if (response.ok) {
+		const lobbies = await response
+			.json()
+			.then((data) => data.lobbies as Lobby[]);
+		return lobbies;
+	} else {
+		return [];
+	}
 }
