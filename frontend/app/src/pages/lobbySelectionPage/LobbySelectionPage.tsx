@@ -1,7 +1,7 @@
 import LobbySelection from "@/components/LobbySelection/LobbySelection";
 import { RequireLogout } from "@/components/requireLogout/RequireLogout";
 import { Button } from "@/components/ui/button";
-import { BASE_POLLING_INTERVAL_MS } from "@/consts";
+import { BASE_POLLING_INTERVAL_MS, MAX_PLAYERS_PER_LOBBY } from "@/consts";
 import { Lobby } from "@/domain/Lobby";
 import { usePageVisibility } from "@/lib/usePageVisibility";
 import { useDispatchLobby } from "@/services/lobbyContext/LobbyContextHelpers";
@@ -18,8 +18,9 @@ export default function LobbySelectionPage() {
 
 	useEffect(() => {
 		const pollingCallback = async () => {
-			const lobbies = await getLobbiesV1();
-			setLobbies(lobbies);
+			const fetchedLobbies = await getLobbiesV1();
+			const mergedLobbies = mergeLobbies(fetchedLobbies);
+			setLobbies(mergedLobbies);
 		};
 
 		const startPolling = () => {
@@ -45,13 +46,66 @@ export default function LobbySelectionPage() {
 		return () => {
 			stopPolling();
 		};
-	}, [isPageVisible]);
+		//eslint wants to create an endless loop again by adding a function to the dependency array :(
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isPageVisible, lobbies]);
 
 	function joinLobby(lobby: Lobby) {
 		if (lobbyDispatch) {
 			lobbyDispatch({ lobby: lobby, type: "join" });
 			navigate("/player-selection");
 		}
+	}
+
+	/**
+	 * 1. new free lobby with new id
+	 * 	1.1: when there is a full / disabled lobby, the new lobby should replace that one
+	 * 	1.2: there is no full / disabled lobby, the new lobby should be added at the end
+	 * 2. existing lobbyID: replaces the existing lobby
+	 * 3. lobby is missing: the existing lobby is disabled
+	 * 4. new full lobby with new id: should not be added
+	 */
+	function mergeLobbies(newLobbies: Lobby[]): Lobby[] {
+		const newFreeLobbies = filterFullLobbies(newLobbies);
+		newFreeLobbies.forEach((lobby) => (lobby.isDisabled = false));
+
+		const mergedLobbies: Lobby[] = lobbies.map((lobby) => ({ ...lobby }));
+		const newlyAddedLobbies: Lobby[] = [];
+		mergedLobbies.forEach((lobby) => (lobby.isDisabled = true));
+
+		//refresh existing lobbies and add new lobbies to newlyAddedLobbies
+		for (const newLobby of newFreeLobbies) {
+			const existingLobby = mergedLobbies.find(
+				(lobby) => lobby.id === newLobby.id,
+			);
+			if (existingLobby) {
+				Object.assign(existingLobby, newLobby);
+			} else {
+				newlyAddedLobbies.push(newLobby);
+			}
+		}
+
+		//replace deleted or full lobbies with new lobbies or add new lobbies at the end
+		for (const newlyAddedLobby of newlyAddedLobbies) {
+			const fullOrDisabledLobby = mergedLobbies.find(
+				(lobby) =>
+					lobby.isDisabled ||
+					lobby.playersJoined.length >= MAX_PLAYERS_PER_LOBBY,
+			);
+			if (fullOrDisabledLobby) {
+				Object.assign(fullOrDisabledLobby, newlyAddedLobby);
+			} else {
+				mergedLobbies.push(newlyAddedLobby);
+			}
+		}
+
+		return mergedLobbies;
+	}
+
+	function filterFullLobbies(lobbies: Lobby[]): Lobby[] {
+		return lobbies.filter(
+			(lobby) => lobby.playersJoined.length < MAX_PLAYERS_PER_LOBBY,
+		);
 	}
 	return (
 		<RequireLogout blocked={false}>
