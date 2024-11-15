@@ -4,8 +4,7 @@ import org.slf4j.LoggerFactory
 import software.shonk.interpreter.internal.FinishedState
 import software.shonk.interpreter.internal.GameStatus
 import software.shonk.interpreter.internal.InternalShork
-import software.shonk.interpreter.internal.compiler.Parser
-import software.shonk.interpreter.internal.compiler.Tokenizer
+import software.shonk.interpreter.internal.compiler.Compiler
 import software.shonk.interpreter.internal.program.Program
 
 class Shork : IShork {
@@ -19,20 +18,20 @@ class Shork : IShork {
 
         for ((player, sourceCode) in programs.entries) {
             logger.info("Player $player:")
-            val tokenizer = Tokenizer(sourceCode)
-            val tokens = tokenizer.scanTokens()
-            val parser = Parser(tokens)
-            val instructions = parser.parse()
+            val compiler = Compiler(sourceCode)
+            val instructions = compiler.instructions
+            val tokenizingErrors = compiler.tokenizerErrors
+            val parsingErrors = compiler.parserErrors
 
             logger.info("Successfully parsed ${instructions.size} instructions")
-            if (tokenizer.tokenizingErrors.isNotEmpty()) {
+            if (tokenizingErrors.isNotEmpty()) {
                 logger.error("Errors while tokenizing: ")
-                tokenizer.tokenizingErrors.forEach { logger.error(it.toString()) }
+                tokenizingErrors.forEach { logger.error(it.toString()) }
             }
 
-            if (parser.parsingErrors.isNotEmpty()) {
+            if (parsingErrors.isNotEmpty()) {
                 logger.error("Errors while parsing: ")
-                parser.parsingErrors.forEach { logger.error(it.toString()) }
+                parsingErrors.forEach { logger.error(it.toString()) }
             }
 
             if (instructions.size > internalSettings.instructionLimit) {
