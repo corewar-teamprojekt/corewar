@@ -8,9 +8,6 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import org.koin.ktor.ext.inject
 import org.slf4j.LoggerFactory
 import software.shonk.application.port.incoming.ShorkUseCase
@@ -81,11 +78,11 @@ fun Route.configureShorkInterpreterControllerV1() {
     }
 
     post("/lobby") {
-        val creatingPlayerName = call.receive<String>()
-        val json = Json { ignoreUnknownKeys = true }
-        val jsonObj = json.parseToJsonElement(creatingPlayerName).jsonObject
-        val name = jsonObj["playerName"]?.jsonPrimitive?.content.toString()
-        val result = shorkUseCase.createLobby(name)
+        @Serializable data class CreateLobbyBody(val playerName: String)
+
+        val createLobbyBody = call.receive<CreateLobbyBody>()
+
+        val result = shorkUseCase.createLobby(createLobbyBody.playerName)
         result.onFailure {
             logger.error("Failed to create lobby, player name is invalid", it)
             call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
