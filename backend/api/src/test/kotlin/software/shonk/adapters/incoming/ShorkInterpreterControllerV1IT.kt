@@ -9,15 +9,13 @@ import kotlinx.serialization.json.jsonPrimitive
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import software.shonk.module
-import software.shonk.moduleApiV0
 import software.shonk.moduleApiV1
 
-class ShorkInterpreterControllerV1IT() : AbstractControllerTest() {
+class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
 
     override fun applyTestEngineApplication() {
         testEngine.application.apply {
             module()
-            moduleApiV0() // @TODO: delete once v0 functionality is implemented in v1
             moduleApiV1()
         }
     }

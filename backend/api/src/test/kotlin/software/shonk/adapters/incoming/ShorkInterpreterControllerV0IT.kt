@@ -3,8 +3,6 @@ package software.shonk.adapters.incoming
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.server.config.*
-import io.ktor.server.testing.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -14,7 +12,7 @@ import org.junit.jupiter.api.Test
 import software.shonk.module
 import software.shonk.moduleApiV0
 
-class ShorkInterpreterControllerV0IT() : AbstractControllerTest() {
+class ShorkInterpreterControllerV0IT : AbstractControllerTest() {
 
     override fun applyTestEngineApplication() {
         testEngine.application.apply {
