@@ -34,14 +34,15 @@ class V0ShorkService(private val shork: IShork) : V0ShorkUseCase {
         gameState = GameState.RUNNING
         winner = Winner.UNDECIDED
 
-        val result: String? = shork.run(currentSettings, programs)
+        val winningPlayer: String? = shork.run(currentSettings, programs).outcome.player
         gameState = GameState.FINISHED
 
-        if (result == "playerA") {
+        if (winningPlayer == "playerA") {
             winner = Winner.A
-        } else if (result == "playerB") {
+        } else if (winningPlayer == "playerB") {
             winner = Winner.B
         }
+
         programs.clear()
     }
 
