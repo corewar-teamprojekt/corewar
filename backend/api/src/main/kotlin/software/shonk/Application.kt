@@ -14,7 +14,9 @@ import org.koin.ktor.plugin.koin
 import software.shonk.adapters.incoming.configureShorkInterpreterControllerV0
 import software.shonk.adapters.incoming.configureShorkInterpreterControllerV1
 import software.shonk.application.port.incoming.ShorkUseCase
+import software.shonk.application.port.incoming.V0ShorkUseCase
 import software.shonk.application.service.ShorkService
+import software.shonk.application.service.V0ShorkService
 import software.shonk.interpreter.IShork
 import software.shonk.interpreter.Shork
 
@@ -63,6 +65,7 @@ fun Application.koinModule() {
             module {
                 single<IShork> { Shork() }
                 single<ShorkUseCase> { ShorkService(get()) }
+                single<V0ShorkUseCase> { V0ShorkService(get()) }
             }
         )
     }

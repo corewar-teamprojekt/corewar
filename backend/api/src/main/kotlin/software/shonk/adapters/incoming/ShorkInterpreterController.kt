@@ -13,35 +13,6 @@ import org.slf4j.LoggerFactory
 import software.shonk.application.port.incoming.ShorkUseCase
 
 const val UNKNOWN_ERROR_MESSAGE = "Unknown Error"
-const val defaultLobby = 0L
-
-fun Route.configureShorkInterpreterControllerV0() {
-    val logger = LoggerFactory.getLogger("ShorkInterpreterControllerV0")
-
-    val shorkUseCase by inject<ShorkUseCase>()
-
-    get("/status") {
-        val useCaseResponse = shorkUseCase.getLobbyStatus(defaultLobby)
-        useCaseResponse.onFailure {
-            logger.error("Failed to get lobby status", it)
-            call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
-        }
-        useCaseResponse.onSuccess { call.respond(it) }
-    }
-
-    post("/code/{player}") {
-        val player = call.parameters["player"]
-        val program = call.receive<String>()
-
-        val result = shorkUseCase.addProgramToLobby(defaultLobby, player, program)
-        result.onFailure {
-            logger.error("Failed to add program to lobby", it)
-            call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
-        }
-        result.onSuccess { call.respond(HttpStatusCode.OK) }
-        return@post
-    }
-}
 
 fun Route.configureShorkInterpreterControllerV1() {
     val logger = LoggerFactory.getLogger("ShorkInterpreterControllerV1")
