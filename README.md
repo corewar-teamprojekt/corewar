@@ -23,6 +23,12 @@ The current production deployment can be found [here](https://corewar.shonk.soft
 
 We deploy every active branch to https://$BRANCHNAME.corewar.shonk.software/ aswell.
 
+## Technologies
+This app uses a [react](https://react.dev/) frontend with [shadcn](https://ui.shadcn.com/) as its core component library.
+On the serverside, we run a [ktor](https://ktor.io/) backend.
+
+For more details regarding our architecture, check out [this drawio file](https://github.com/corewar-teamprojekt/corewar/blob/main/architecture.drawio).
+
 
 ## Contributing / Local setup
 
