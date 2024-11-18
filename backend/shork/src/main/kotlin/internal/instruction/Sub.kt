@@ -15,7 +15,7 @@ internal class Sub(
         sourceInstructionOperand: Int,
         destinationInstructionOperand: Int,
     ): Int {
-        return sourceInstructionOperand - destinationInstructionOperand
+        return destinationInstructionOperand - sourceInstructionOperand
     }
 
     override fun deepCopy(): AbstractInstruction {
