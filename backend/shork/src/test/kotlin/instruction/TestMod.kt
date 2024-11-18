@@ -72,7 +72,7 @@ internal class TestMod {
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 5)
-        assert(resultInstruction.bField == 5)
+        assert(resultInstruction.bField == 3)
         assert(resultInstruction.addressModeA == AddressMode.IMMEDIATE)
         assert(resultInstruction.addressModeB == AddressMode.IMMEDIATE)
     }
@@ -87,7 +87,7 @@ internal class TestMod {
         val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
-        assert(resultInstruction.aField == 3)
+        assert(resultInstruction.aField == 5)
         assert(resultInstruction.bField == 13)
         assert(resultInstruction.addressModeA == AddressMode.IMMEDIATE)
         assert(resultInstruction.addressModeB == AddressMode.IMMEDIATE)
@@ -135,15 +135,15 @@ internal class TestMod {
         val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
-        assert(resultInstruction.aField == 3)
-        assert(resultInstruction.bField == 5)
+        assert(resultInstruction.aField == 5)
+        assert(resultInstruction.bField == 3)
         assert(resultInstruction.addressModeA == AddressMode.IMMEDIATE)
         assert(resultInstruction.addressModeB == AddressMode.IMMEDIATE)
     }
 
     @Test
     fun testModByZero() {
-        val mod = Mod(1, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.F)
+        val mod = Mod(0, 1, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.F)
         shork.memoryCore.storeAbsolute(0, mod)
 
         program.createProcessAt(0)
