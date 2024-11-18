@@ -142,10 +142,13 @@ internal abstract class AbstractArithmeticInstruction(
     /**
      * Executes an arithmetic operation given two operands.
      *
-     * @param operand1 The first operand
-     * @param operand2 The second operand
+     * @param sourceInstructionOperand The first operand
+     * @param destinationInstructionOperand The second operand
      * @return The result of the operation
      * @throws ArithmeticException When an illegal operation (e.g. divide by zero) is performed
      */
-    abstract fun runArithmeticOperation(operand1: Int, operand2: Int): Int
+    abstract fun runArithmeticOperation(
+        sourceInstructionOperand: Int,
+        destinationInstructionOperand: Int,
+    ): Int
 }

@@ -11,8 +11,11 @@ internal class Mul(
     modifier: Modifier,
 ) : AbstractArithmeticInstruction(aField, bField, addressModeA, addressModeB, modifier) {
 
-    override fun runArithmeticOperation(operand1: Int, operand2: Int): Int {
-        return operand1 * operand2
+    override fun runArithmeticOperation(
+        sourceInstructionOperand: Int,
+        destinationInstructionOperand: Int,
+    ): Int {
+        return sourceInstructionOperand * destinationInstructionOperand
     }
 
     override fun deepCopy(): AbstractInstruction {
