@@ -72,7 +72,7 @@ internal class TestDiv {
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 5)
-        assert(resultInstruction.bField == 0)
+        assert(resultInstruction.bField == 2)
         assert(resultInstruction.addressModeA == AddressMode.IMMEDIATE)
         assert(resultInstruction.addressModeB == AddressMode.IMMEDIATE)
     }
@@ -87,7 +87,7 @@ internal class TestDiv {
         var resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
-        assert(resultInstruction.aField == 2)
+        assert(resultInstruction.aField == 0)
         assert(resultInstruction.bField == 13)
         assert(resultInstruction.addressModeA == AddressMode.IMMEDIATE)
         assert(resultInstruction.addressModeB == AddressMode.IMMEDIATE)
@@ -135,15 +135,15 @@ internal class TestDiv {
         var resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
-        assert(resultInstruction.aField == 2)
-        assert(resultInstruction.bField == 0)
+        assert(resultInstruction.aField == 0)
+        assert(resultInstruction.bField == 2)
         assert(resultInstruction.addressModeA == AddressMode.IMMEDIATE)
         assert(resultInstruction.addressModeB == AddressMode.IMMEDIATE)
     }
 
     @Test
     fun testDivideByZero() {
-        val div = Div(1, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.F)
+        val div = Div(0, 1, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.F)
         shork.memoryCore.storeAbsolute(0, div)
 
         program.createProcessAt(0)

@@ -15,10 +15,10 @@ internal class Div(
         sourceInstructionOperand: Int,
         destinationInstructionOperand: Int,
     ): Int {
-        if (destinationInstructionOperand == 0) {
+        if (sourceInstructionOperand == 0) {
             throw ArithmeticException("Divide by zero")
         }
-        return sourceInstructionOperand / destinationInstructionOperand
+        return destinationInstructionOperand / sourceInstructionOperand
     }
 
     override fun deepCopy(): AbstractInstruction {
