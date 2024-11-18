@@ -11,11 +11,14 @@ internal class Div(
     modifier: Modifier,
 ) : AbstractArithmeticInstruction(aField, bField, addressModeA, addressModeB, modifier) {
 
-    override fun runArithmeticOperation(operand1: Int, operand2: Int): Int {
-        if (operand2 == 0) {
+    override fun runArithmeticOperation(
+        sourceInstructionOperand: Int,
+        destinationInstructionOperand: Int,
+    ): Int {
+        if (destinationInstructionOperand == 0) {
             throw ArithmeticException("Divide by zero")
         }
-        return operand1 / operand2
+        return sourceInstructionOperand / destinationInstructionOperand
     }
 
     override fun deepCopy(): AbstractInstruction {
