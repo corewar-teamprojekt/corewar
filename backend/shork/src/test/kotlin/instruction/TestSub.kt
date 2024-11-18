@@ -70,7 +70,7 @@ internal class TestSub {
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 5)
-        assert(resultInstruction.bField == -2)
+        assert(resultInstruction.bField == 2)
         assert(resultInstruction.addressModeA == AddressMode.IMMEDIATE)
         assert(resultInstruction.addressModeB == AddressMode.IMMEDIATE)
     }
@@ -85,7 +85,7 @@ internal class TestSub {
         var resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
-        assert(resultInstruction.aField == 2)
+        assert(resultInstruction.aField == -2)
         assert(resultInstruction.bField == 7)
         assert(resultInstruction.addressModeA == AddressMode.IMMEDIATE)
         assert(resultInstruction.addressModeB == AddressMode.IMMEDIATE)
@@ -133,8 +133,8 @@ internal class TestSub {
         var resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
-        assert(resultInstruction.aField == 2)
-        assert(resultInstruction.bField == -2)
+        assert(resultInstruction.aField == -2)
+        assert(resultInstruction.bField == 2)
         assert(resultInstruction.addressModeA == AddressMode.IMMEDIATE)
         assert(resultInstruction.addressModeB == AddressMode.IMMEDIATE)
     }
