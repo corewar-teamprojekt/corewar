@@ -75,22 +75,30 @@ internal class MemoryCore(memorySize: Int, val settings: InternalSettings) : ICo
                     field + instruction.bField
                 }
                 AddressMode.A_PRE_DECREMENT -> {
-                    instruction.aField -= 1
-                    field + instruction.aField
+                    instruction.writeToMemory(this, sourceAddress) {
+                        it.aField -= 1
+                        field + it.aField
+                    }
                 }
                 AddressMode.B_PRE_DECREMENT -> {
-                    instruction.bField -= 1
-                    field + instruction.bField
+                    instruction.writeToMemory(this, sourceAddress) {
+                        it.bField -= 1
+                        field + it.bField
+                    }
                 }
                 AddressMode.A_POST_INCREMENT -> {
-                    val offset = field + instruction.aField
-                    instruction.aField += 1
-                    offset
+                    instruction.writeToMemory(this, sourceAddress) {
+                        val offset = field + it.aField
+                        it.aField += 1
+                        offset
+                    }
                 }
                 AddressMode.B_POST_INCREMENT -> {
-                    val offset = field + instruction.bField
-                    instruction.bField += 1
-                    offset
+                    instruction.writeToMemory(this, sourceAddress) {
+                        val offset = field + it.bField
+                        it.bField += 1
+                        offset
+                    }
                 }
             }
 
