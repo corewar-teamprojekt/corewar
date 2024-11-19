@@ -39,3 +39,22 @@ h2 {
 #playerIcon {
 	margin-right: 14px;
 }
+
+#lobbyInfoButton {
+	height: 40px;
+	border: 1px solid white;
+	border-radius: 6px;
+	padding-left: 32px;
+	padding-right: 32px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, 0);
+}
+
+#lobbyInfoButton:hover {
+	background-color: rgb(50, 50, 50);
+}

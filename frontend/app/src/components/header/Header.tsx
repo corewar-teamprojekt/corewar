@@ -22,7 +22,18 @@ function Header() {
 				</h2>
 			</div>
 			{lobby !== null && (
-				<button onClick={copyLobbyIdToClipboard}>Lobby ID: {lobby?.id}</button>
+				<button
+					id="lobbyInfoButton"
+					className={"font-semibold"}
+					onClick={copyLobbyIdToClipboard}
+				>
+					<img
+						src={"copy.svg"}
+						alt={"An icon indicating that this button triggers a copy action"}
+						style={{ marginRight: "8px" }}
+					/>
+					Lobby ID: {lobby?.id}
+				</button>
 			)}
 			<div id="player">
 				{user != null && (
