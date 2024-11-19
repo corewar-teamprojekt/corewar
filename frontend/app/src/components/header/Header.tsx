@@ -14,6 +14,7 @@ function Header() {
 					{location.pathname.length !== 1 && "Corewar"}
 				</h2>
 			</div>
+			<button>Lobby ID: 0</button>
 			<div id="player">
 				{user != null && (
 					<>

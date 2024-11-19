@@ -5,6 +5,10 @@ import Header from "@/components/header/Header.tsx";
 import { cleanup, render, screen } from "@testing-library/react";
 import { useDispatchUser } from "@/services/userContext/UserContextHelpers.ts";
 import { useLocation } from "react-router-dom";
+import { LobbyProvider } from "@/services/lobbyContext/LobbyContext.tsx";
+import { useDispatchLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
+import { Lobby } from "@/domain/Lobby.ts";
+import { aLobby } from "@/TestFactories.ts";
 
 vi.mock("react-router-dom");
 
@@ -107,6 +111,26 @@ describe("playerIndicator", () => {
 	});
 });
 
+describe("lobby info", () => {
+	it("display current lobby id", () => {
+		const lobbyId: number = 0;
+
+		act(() => {
+			render(
+				<LobbyProvider>
+					<LobbyDispatcherInteractor
+						dispatcherCommand={"join"}
+						lobby={aLobby({ lobbyId: lobbyId })}
+					/>
+				</LobbyProvider>,
+			);
+		});
+		const lobbyInfoButton = screen.getByRole("button");
+		expect(lobbyInfoButton).toBeTruthy();
+		expect(lobbyInfoButton.textContent).toContain(`Lobby ID: ${lobbyId}`);
+	});
+});
+
 // Used to pass commands to the UserContext for testing
 const UserDispatcherInteractor = ({
 	dispatcherCommand,
@@ -125,6 +149,30 @@ const UserDispatcherInteractor = ({
 			}
 		});
 	}, [dispatch, dispatcherCommand]);
+
+	return <Header />;
+};
+
+// Used to pass commands to the LobbyContext for testing
+const LobbyDispatcherInteractor = ({
+	dispatcherCommand,
+	lobby,
+}: {
+	dispatcherCommand: string | null;
+	lobby: Lobby | null;
+}) => {
+	const dispatch = useDispatchLobby();
+
+	useEffect(() => {
+		act(() => {
+			if (dispatch && dispatcherCommand) {
+				dispatch({
+					type: dispatcherCommand,
+					lobby: lobby,
+				});
+			}
+		});
+	}, [dispatch, dispatcherCommand, lobby]);
 
 	return <Header />;
 };
