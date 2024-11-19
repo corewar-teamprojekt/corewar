@@ -40,7 +40,7 @@ internal abstract class AbstractArithmeticInstruction(
 
         val sourceInstruction = core.loadAbsolute(sourceAddress)
         val destinationInstruction = core.loadAbsolute(destinationAddress)
-        val destinationWriteInstruction = core.loadAbsolute(destinationWriteAddress)
+        var destinationWriteInstruction = core.loadAbsolute(destinationWriteAddress)
 
         errorOccured = false
 
@@ -54,7 +54,11 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result?.let({ destinationWriteInstruction.aField = result })
+                result?.let {
+                    destinationWriteInstruction.writeToMemory(core, destinationAddress) {
+                        it.aField = result
+                    }
+                }
             }
             Modifier.B -> {
                 val result =
@@ -65,7 +69,11 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result?.let({ destinationWriteInstruction.bField = result })
+                result?.let {
+                    destinationWriteInstruction.writeToMemory(core, destinationAddress) {
+                        it.bField = result
+                    }
+                }
             }
             Modifier.AB -> {
                 val result =
@@ -76,7 +84,11 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result?.let({ destinationWriteInstruction.bField = result })
+                result?.let {
+                    destinationWriteInstruction.writeToMemory(core, destinationAddress) {
+                        it.bField = result
+                    }
+                }
             }
             Modifier.BA -> {
                 val result =
@@ -87,7 +99,11 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result?.let({ destinationWriteInstruction.aField = result })
+                result?.let {
+                    destinationWriteInstruction.writeToMemory(core, destinationAddress) {
+                        it.aField = result
+                    }
+                }
             }
             Modifier.F,
             Modifier.I -> {
@@ -99,7 +115,10 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                resultA?.let({ destinationWriteInstruction.aField = resultA })
+                resultA?.let {
+                    destinationWriteInstruction =
+                        destinationWriteInstruction.write { it.aField = resultA }.first
+                }
 
                 val resultB =
                     executeWithHandling({
@@ -109,7 +128,11 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                resultB?.let({ destinationWriteInstruction.bField = resultB })
+                resultB?.let {
+                    destinationWriteInstruction.writeToMemory(core, destinationAddress) {
+                        it.bField = resultB
+                    }
+                }
             }
             Modifier.X -> {
                 val result1 =
@@ -120,7 +143,10 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result1?.let({ destinationWriteInstruction.bField = result1 })
+                result1?.let {
+                    destinationWriteInstruction =
+                        destinationWriteInstruction.write { it.bField = result1 }.first
+                }
 
                 val result2 =
                     executeWithHandling({
@@ -130,7 +156,11 @@ internal abstract class AbstractArithmeticInstruction(
                         )
                     })
 
-                result2?.let({ destinationWriteInstruction.aField = result2 })
+                result2?.let {
+                    destinationWriteInstruction.writeToMemory(core, destinationAddress) {
+                        it.aField = result2
+                    }
+                }
             }
         }
 
