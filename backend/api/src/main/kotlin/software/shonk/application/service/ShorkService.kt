@@ -73,6 +73,21 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
         return Result.failure(IllegalArgumentException("Your player name is invalid"))
     }
 
+    override fun joinLobby(lobbyId: Long, playerName: String): Result<Unit> {
+        val lobby =
+            getLobby(lobbyId).getOrElse {
+                return Result.failure(it)
+            }
+
+        if (isAlphaNumerical(playerName) && hasNotJoinedTheLobby(lobbyId, playerName)) {
+            lobby.joinedPlayers.add(playerName)
+            return Result.success(Unit)
+        }
+        return Result.failure(
+            IllegalArgumentException("Your player name is invalid OR Lobby doesn't exist")
+        )
+    }
+
     override fun getAllLobbies(): List<LobbyStatus> {
         return lobbies.keys.mapNotNull { lobbyId ->
             getLobbyStatus(lobbyId).getOrNull()?.let { status ->
@@ -113,5 +128,13 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
             return Result.success(newLobby)
         }
         return Result.failure(IllegalArgumentException(NO_LOBBY_MESSAGE))
+    }
+
+    private fun hasNotJoinedTheLobby(lobbyId: Long, playerName: String): Boolean {
+        var boolean = true
+        if (lobbies[lobbyId]?.joinedPlayers?.contains(playerName) == true) {
+            boolean = false
+        }
+        return boolean
     }
 }
