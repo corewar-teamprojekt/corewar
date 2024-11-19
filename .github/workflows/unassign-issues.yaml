@@ -3,41 +3,40 @@ name: Unassign Idle Issues
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"  # This schedules the job to run once a day (midnight UTC)
+    - cron: "0 0 * * *" # This schedules the job to run once a day (midnight UTC)
 
 jobs:
   unassign_idle_issues:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Login to GitHub CLI
-      run: echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+      - name: Login to GitHub CLI
+        run: echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
 
-    - name: Install jq
-      run: |
-        sudo apt-get update
-        sudo apt-get install jq bash -y
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install jq bash -y
 
-    - name: Unassign Idle Issues
-      env:
-        ASSIGNMENT_TIMEOUT_HOURS: ${{ env.ASSIGNMENT_TIMEOUT_HOURS || 72 }} # Default of 72 hours
-      run: |
-        TIMEOUT=$((60*60*ASSIGNMENT_TIMEOUT_HOURS)) # Secs/Min * Mins/Hour * Assigner Timeout Hours
-        echo "Unassigning issues that have been idle for more than $ASSIGNMENT_TIMEOUT_HOURS hours"
+      - name: Unassign Idle Issues
+        env:
+          ASSIGNMENT_TIMEOUT_HOURS: ${{ env.ASSIGNMENT_TIMEOUT_HOURS || 72 }} # Default of 72 hours
+        run: |
+          TIMEOUT=$((60*60*ASSIGNMENT_TIMEOUT_HOURS)) # Secs/Min * Mins/Hour * Assigner Timeout Hours
+          echo "Unassigning issues that have been idle for more than $ASSIGNMENT_TIMEOUT_HOURS hours"
 
-        # Get the list of issues that match the criteria
-        issues=$(gh issue list --json "projectItems,updatedAt,assignees,url,labels" \
-        -q ".[] | select (.assignees | length > 0) | select((now - (.updatedAt | fromdateiso8601)) > $TIMEOUT) | if(.projectItems | all(.status.name == \"Todo\")) then . else empty end")
+          # Get the list of issues that match the criteria
+          issues=$(gh issue list --json "projectItems,updatedAt,assignees,url,labels" \
+          -q ".[] | select (.assignees | length > 0) | select((now - (.updatedAt | fromdateiso8601)) > $TIMEOUT) | if(.projectItems | all(.status.name == \"Todo\")) then . else empty end")
 
-        echo "Unassigning the following issues:"
-        echo $issues | jq -r ".url"
-        echo "Executing the following commands:"
+          echo "Unassigning the following issues:"
+          echo $issues | jq -r ".url"
+          echo "Executing the following commands:"
 
-        commands=$(echo $issues | jq -r ".url as \$url | .assignees[] | \"gh issue edit \(\$url) --remove-assignee \(.login)\"")
+          commands=$(echo $issues | jq -r ".url as \$url | .assignees[] | \"gh issue edit \(\$url) --remove-assignee \(.login)\"")
 
-        echo $commands
+          echo $commands
 
-        echo "$commands" | xargs -I {} bash -c "{}"
+          echo "$commands" | xargs -I {} bash -c "{}"

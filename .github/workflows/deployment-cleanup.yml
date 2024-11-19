@@ -10,6 +10,7 @@ jobs:
         run: |
           echo "Clean up for branch ${{ github.event.ref }}"
           curl -X DELETE https://corewar-deployment.schnelle.dev/deployments/${{ github.event.ref }} -H "Authorization: Bearer ${{ secrets.DEPLOYMENT_TOKEN }}"
+
       - name: Clean up ghcr image
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token

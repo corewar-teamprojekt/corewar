@@ -3,87 +3,16 @@ on:
   push:
 
 env:
-    IMAGE_NAME: aio
-    IMAGE_TAGS: ${{ github.ref_name }}
-    IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
-    REGISTRY_USER: ${{ github.actor }}
-    REGISTRY_PASSWORD: ${{ github.token }}
+  IMAGE_NAME: aio
+  IMAGE_TAGS: ${{ github.ref_name }}
+  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+  REGISTRY_USER: ${{ github.actor }}
+  REGISTRY_PASSWORD: ${{ github.token }}
+  JAVA_VERSION: 21
 
 jobs:
-  e2e-tests:
-    name: "Run E2E playwright tests"
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-
-    - name: Install dependencies
-      working-directory: e2e
-      run: npm ci
-
-    - name: Install Playwright Browsers
-      working-directory: e2e
-      run: npx playwright install --with-deps
-
-    - name: Run Playwright tests
-      working-directory: e2e
-      run: npx playwright test
-
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
-
-  build-frontend:
-    name: "Build and Test Frontend"
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-
-    - name: Install Task
-      uses: arduino/setup-task@v2
-      with:
-        version: 3.x
-
-    - name: Install dependencies
-      working-directory: frontend/app
-      run: | 
-          task setup
-          npm install @microsoft/eslint-formatter-sarif@3.1.0
-
-    - name: Run Prettier
-      working-directory: frontend/app
-      run: task format-check
-
-    - name: Run ESLint
-      working-directory: frontend/app
-      run: task lint
-
-    - name: Build project
-      working-directory: frontend/app
-      run: task build
-
-    - name: Run unit tests
-      working-directory: frontend/app
-      run: task test
-
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: dist
-        path: |
-          frontend/app/dist
-
-  build-backend:
-    name: "Build and Test Backend"
+  test-backend:
+    name: "Test Backend"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -91,21 +20,67 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: 21
+          java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Run Format Check and Tests
+        working-directory: backend/
+        run: ./gradlew clean ktfmtCheck test
 
+  build-frontend:
+    name: "Build and Test Frontend"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
       - name: Install Task
         uses: arduino/setup-task@v2
         with:
           version: 3.x
+      - name: Install dependencies
+        working-directory: frontend/app
+        run: |
+          task setup
+          npm install @microsoft/eslint-formatter-sarif@3.1.0
+      - name: Run Prettier
+        working-directory: frontend/app
+        run: task format-check
+      - name: Run ESLint
+        working-directory: frontend/app
+        run: task lint
+      - name: Build project
+        working-directory: frontend/app
+        run: task build
+      - name: Run unit tests
+        working-directory: frontend/app
+        run: task test
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: |
+            frontend/app/dist
 
+  build-backend:
+    name: "Build and Test Backend"
+    runs-on: ubuntu-latest
+    needs: [test-backend]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-
-      - name: Run Format Check, Tests and Build
+      - name: Build
         working-directory: backend/
-        run: task clean format-check test build
-
+        run: ./gradlew clean buildFatJar
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -115,7 +90,7 @@ jobs:
   build-container-image:
     name: "Build Container Image"
     runs-on: ubuntu-latest
-    needs: [ build-backend, build-frontend, e2e-tests ]
+    needs: [build-backend, build-frontend]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -129,56 +104,99 @@ jobs:
         with:
           name: dist
           path: ./frontend/app/dist
-
-      - name: Login to ghcr.io
-        uses: docker/login-action@v3.3.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Buildah Action
-        id: build_image
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: ${{ env.IMAGE_TAGS }}
-          containerfiles: |
-            ./Containerfile
-
-      - name: Echo outputs
+      - name: Install Podman and Buildah
         run: |
-          echo "${{ toJSON(steps.build_image) }}"
-
-      - name: Push To GHCR
-        uses: redhat-actions/push-to-registry@v2
-        id: push
-        with:
-          image: ${{ steps.build_image.outputs.image }}
-          tags: ${{ steps.build_image.outputs.tags }}
-          registry: ${{ env.IMAGE_REGISTRY }}
-          username: ${{ env.REGISTRY_USER }}
-          password: ${{ env.REGISTRY_PASSWORD }}
-          extra-args: |
-            --disable-content-trust
-
-      - name: Echo outputs
+          sudo apt-get update
+          sudo apt-get install -y podman buildah
+      - name: Build image
         run: |
-          echo "${{ toJSON(steps.push.outputs) }}"
+          buildah build -t ${{ env.IMAGE_NAME }}:upload -f Containerfile .
+      - name: Save image as file
+        run: podman image save ${{ env.IMAGE_NAME }}:upload -o image.tar
+      - name: Upload image as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-image
+          path: image.tar
+          retention-days: 1
+
+  e2e-tests:
+    name: "Run E2E playwright tests"
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    needs: [build-container-image]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Download Imagefile
+        uses: actions/download-artifact@v4
+        with:
+          name: container-image
+      - name: Load image
+        run: podman load -i image.tar
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+      - name: Install dependencies
+        working-directory: e2e
+        run: npm ci
+      - name: Install Playwright Browsers
+        working-directory: e2e
+        run: npx playwright install --with-deps
+      - name: Start containers
+        run: podman run -d -p 3000:80 --replace --name corewar ${{ env.IMAGE_NAME }}:upload
+      - name: Run Playwright tests
+        working-directory: e2e
+        run: task test
+      - name: Upload Playwright trace if tests failed
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-trace
+          path: e2e/test-results
+          retention-days: 14
+      - name: Stop containers
+        run: podman stop corewar
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: e2e/playwright-report/
+          retention-days: 30
+
+  upload:
+    name: "Upload image to ghcr"
+    runs-on: ubuntu-latest
+    needs: [build-container-image, e2e-tests]
+    steps:
+      - name: Download Imagefile
+        uses: actions/download-artifact@v4
+        with:
+          name: container-image
+      - name: Load image
+        run: podman load -i image.tar
+      - name: Login Podman to ghcr.io
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Push image
+        run: |
+          podman push ${{ env.IMAGE_NAME }}:upload ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAGS }}
 
   deploy:
     name: "Deploy"
     runs-on: ubuntu-latest
-    needs: [ build-container-image ]
+    needs: [upload]
     outputs:
       url: ${{ steps.deploy_step.outputs.url }}
     steps:
       - name: Install Curl
         run: sudo apt-get install -y curl
-
       - name: Deploy by calling API
         id: deploy_step
-        run: | 
+        run: |
           response=$(curl -X POST https://corewar-deployment.schnelle.dev/deployments/${{ github.ref_name }} -H "Authorization: Bearer ${{ secrets.DEPLOYMENT_TOKEN }}")
           echo $response
           deployment_url=$(echo $response | jq -r '.url')
@@ -187,11 +205,11 @@ jobs:
   declare_environment:
     name: "Declare environment"
     runs-on: ubuntu-latest
-    needs: [ deploy ]
-    environment: 
+    needs: [deploy]
+    environment:
       name: ${{ github.ref_name }}
       url: ${{ needs.deploy.outputs.url }}
     steps:
       - name: Deployed URL
-        run: | 
+        run: |
           echo "Deployed URL: ${{ needs.deploy.outputs.url }}"
