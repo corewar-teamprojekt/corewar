@@ -1,49 +1,106 @@
+import bluePlayerIcon from "@/assets/bluePlayerIcon.svg";
+import redPlayerIcon from "@/assets/redPlayerIcon.svg";
 import { RequireLogout } from "@/components/requireLogout/RequireLogout";
-import { Button } from "@/components/ui/button.tsx";
-import { useDispatchUser } from "@/services/userContext/UserContextHelpers.ts";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { GameState } from "@/domain/GameState";
+import { Lobby } from "@/domain/Lobby";
+import { useToast } from "@/hooks/use-toast";
+import {
+	useDispatchLobby,
+	useLobby,
+} from "@/services/lobbyContext/LobbyContextHelpers";
+import { createLobby, joinLobby } from "@/services/rest/LobbyRest";
+import {
+	useDispatchUser,
+	useUser,
+} from "@/services/userContext/UserContextHelpers.ts";
+import { useEffect, useState } from "react";
+import { redirect, useNavigate } from "react-router-dom";
 
 function PlayerSelection() {
 	const navigate = useNavigate();
-	const dispatcher = useDispatchUser();
+	const userDispatcher = useDispatchUser();
+	const lobby = useLobby();
+	const user = useUser();
+	const lobbyDispatch = useDispatchLobby();
 	const [blockLogout, setBlockLogout] = useState<boolean>(false);
+	const [shouldRedirect, setShouldRedirect] = useState(false);
+	const { toast } = useToast();
 
-	function setPlayerAndRedirectToCoding(
-		actionType: "setPlayerA" | "setPlayerB",
-	) {
-		if (dispatcher) {
+	useEffect(() => {
+		if (lobby && user && shouldRedirect) {
+			navigate("/player-coding");
+			setBlockLogout(false);
+		}
+	}, [lobby, user, shouldRedirect, navigate]);
+
+	useEffect(() => {
+		function createAndJoinNewLobby() {
+			if (!user || !lobbyDispatch) {
+				return;
+			}
+			createLobby().then((lobbyId) => {
+				joinLobby(user.name, lobbyId)
+					.then(() => {
+						const newLobby = new Lobby(
+							lobbyId,
+							[user.name],
+							GameState.NOT_STARTED,
+						);
+						lobbyDispatch({ type: "join", lobby: newLobby });
+						setShouldRedirect(true);
+					})
+					.catch(() => {
+						toast({
+							title: "Oopsie👉👈",
+							description: "Something went wrong while joining the lobby 😢",
+							variant: "destructive",
+						});
+						redirect("lobby-selection");
+					});
+			});
+		}
+
+		if (!user || !lobbyDispatch) {
+			return;
+		} else if (lobby) {
+			joinLobby(user.name, lobby.id).then(() => {
+				setShouldRedirect(true);
+			});
+		} else {
+			createAndJoinNewLobby();
+		}
+	}, [user, lobby, lobbyDispatch, toast]);
+
+	function setPlayer(actionType: "setPlayerA" | "setPlayerB") {
+		if (userDispatcher) {
 			setBlockLogout(true);
-			dispatcher({
+			userDispatcher({
 				type: actionType,
 				user: null,
 			});
 		}
-		navigate("/player-coding");
-		setBlockLogout(false);
 	}
 
 	return (
 		<RequireLogout blocked={blockLogout}>
-			<div className="h-[100%] w-[100%] flex flex-row  justify-center items-center gap-[12%] ">
-				<div className="h-[30%] flex flex-col gap-y-5 justify-start items-center">
-					<h1 className="text-red-500 text-8xl font-extrabold">PLAYER A</h1>
-					<Button
-						className="max-w-[30%] min-w-[20%]"
-						onClick={() => setPlayerAndRedirectToCoding("setPlayerA")}
-					>
-						PLAY
-					</Button>
+			<div className="h-[100%] w-[100%] flex flex-col justify-center items-center ">
+				<div className="h-[100%] w-[100%] flex flex-row justify-center items-center gap-[12%]">
+					<button onClick={() => setPlayer("setPlayerA")}>
+						<img
+							src={redPlayerIcon}
+							alt="Player A Icon"
+							className="w-164 h-164 transition-transform duration-300 hover:scale-110"
+						/>
+					</button>
+					<button onClick={() => setPlayer("setPlayerB")}>
+						<img
+							src={bluePlayerIcon}
+							alt="Player B Icon"
+							className="w-164 h-164 transition-transform duration-300 hover:scale-110"
+						/>
+					</button>
 				</div>
-				<div className="h-[30%] flex flex-col gap-y-5 justify-start items-center">
-					<h1 className="text-blue-500 text-8xl font-extrabold">PLAYER B</h1>
-					<Button
-						className="max-w-[30%] min-w-[20%]"
-						onClick={() => setPlayerAndRedirectToCoding("setPlayerB")}
-					>
-						PLAY
-					</Button>
-				</div>
+				<h1 className="text-3xl font-extrabold mb-20">Select a color</h1>
 			</div>
 		</RequireLogout>
 	);
