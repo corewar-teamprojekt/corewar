@@ -35,6 +35,16 @@ internal class Jmn(
         }
     }
 
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return Jmn(aField, bField, addressModeA, addressModeB, modifier)
+    }
+
     override fun deepCopy(): AbstractInstruction {
         return Jmn(aField, bField, addressModeA, addressModeB, modifier)
     }

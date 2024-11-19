@@ -18,6 +18,16 @@ internal class Mul(
         return sourceInstructionOperand * destinationInstructionOperand
     }
 
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return Mul(aField, bField, addressModeA, addressModeB, modifier)
+    }
+
     override fun deepCopy(): AbstractInstruction {
         return Mul(aField, bField, addressModeA, addressModeB, modifier)
     }

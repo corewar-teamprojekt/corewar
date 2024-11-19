@@ -15,6 +15,16 @@ internal class Dat(
         process.program.removeProcess(process)
     }
 
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return Dat(aField, bField, addressModeA, addressModeB, modifier)
+    }
+
     override fun deepCopy(): AbstractInstruction {
         return Dat(aField, bField, addressModeA, addressModeB, modifier)
     }

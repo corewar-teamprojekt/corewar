@@ -36,7 +36,7 @@ internal class TestMov {
 
         mov1.execute(process)
 
-        var movedInstruction = shork.memoryCore.loadAbsolute(2)
+        val movedInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(movedInstruction is Dat)
         assert(movedInstruction.aField == 42)

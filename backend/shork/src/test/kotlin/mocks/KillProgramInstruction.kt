@@ -24,6 +24,16 @@ internal class KillProgramInstruction(
         }
     }
 
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return KillProgramInstruction(aField, bField, addressModeA, addressModeB, modifier)
+    }
+
     override fun deepCopy(): AbstractInstruction {
         return KillProgramInstruction(aField, bField, addressModeA, addressModeB, modifier)
     }

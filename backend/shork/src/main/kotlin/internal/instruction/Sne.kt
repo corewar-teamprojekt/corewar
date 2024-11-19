@@ -54,6 +54,16 @@ internal class Sne(
         }
     }
 
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return Sne(aField, bField, addressModeA, addressModeB, modifier)
+    }
+
     override fun deepCopy(): AbstractInstruction {
         return Sne(aField, bField, addressModeA, addressModeB, modifier)
     }

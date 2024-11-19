@@ -17,6 +17,16 @@ internal class Spl(
         process.program.createProcessAt(startAddress)
     }
 
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return Spl(aField, bField, addressModeA, addressModeB, modifier)
+    }
+
     override fun deepCopy(): AbstractInstruction {
         return Spl(aField, bField, addressModeA, addressModeB, modifier)
     }

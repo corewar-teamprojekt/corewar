@@ -15,6 +15,16 @@ internal class Ldp(
         TODO("Not yet implemented")
     }
 
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        TODO("Not yet implemented")
+    }
+
     override fun deepCopy(): AbstractInstruction {
         TODO("Not yet implemented")
     }

@@ -21,6 +21,16 @@ internal class Mod(
         return destinationInstructionOperand % sourceInstructionOperand
     }
 
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return Mod(aField, bField, addressModeA, addressModeB, modifier)
+    }
+
     override fun deepCopy(): AbstractInstruction {
         return Mod(aField, bField, addressModeA, addressModeB, modifier)
     }

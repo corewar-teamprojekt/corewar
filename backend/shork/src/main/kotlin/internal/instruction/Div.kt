@@ -21,6 +21,16 @@ internal class Div(
         return destinationInstructionOperand / sourceInstructionOperand
     }
 
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return Div(aField, bField, addressModeA, addressModeB, modifier)
+    }
+
     override fun deepCopy(): AbstractInstruction {
         return Div(aField, bField, addressModeA, addressModeB, modifier)
     }

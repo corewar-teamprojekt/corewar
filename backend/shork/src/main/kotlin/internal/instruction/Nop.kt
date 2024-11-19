@@ -14,6 +14,16 @@ internal class Nop(
 
     override fun execute(process: AbstractProcess) {}
 
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return Nop(aField, bField, addressModeA, addressModeB, modifier)
+    }
+
     override fun deepCopy(): AbstractInstruction {
         return Nop(aField, bField, addressModeA, addressModeB, modifier)
     }

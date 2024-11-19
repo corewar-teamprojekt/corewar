@@ -23,30 +23,52 @@ internal class Mov(
 
         when (modifier) {
             Modifier.A -> {
-                destinationInstruction.aField = sourceInstruction.aField
+                destinationInstruction.writeToMemory(core, destinationAddress) {
+                    it.aField = sourceInstruction.aField
+                }
             }
             Modifier.B -> {
-                destinationInstruction.bField = sourceInstruction.bField
+                destinationInstruction.writeToMemory(core, destinationAddress) {
+                    it.bField = sourceInstruction.bField
+                }
             }
             Modifier.AB -> {
-                destinationInstruction.bField = sourceInstruction.aField
+                destinationInstruction.writeToMemory(core, destinationAddress) {
+                    it.bField = sourceInstruction.aField
+                }
             }
             Modifier.BA -> {
-                destinationInstruction.aField = sourceInstruction.bField
+                destinationInstruction.writeToMemory(core, destinationAddress) {
+                    it.aField = sourceInstruction.bField
+                }
             }
             Modifier.F -> {
-                destinationInstruction.aField = sourceInstruction.aField
-                destinationInstruction.bField = sourceInstruction.bField
+                destinationInstruction.writeToMemory(core, destinationAddress) {
+                    it.aField = sourceInstruction.aField
+                    it.bField = sourceInstruction.bField
+                }
             }
             Modifier.X -> {
-                destinationInstruction.aField = sourceInstruction.bField
-                destinationInstruction.bField = sourceInstruction.aField
+                destinationInstruction.writeToMemory(core, destinationAddress) {
+                    it.aField = sourceInstruction.bField
+                    it.bField = sourceInstruction.aField
+                }
             }
             Modifier.I -> {
                 val address = core.resolveForWriting(process.programCounter, bField, addressModeB)
                 core.storeAbsolute(address, sourceInstruction.deepCopy())
             }
         }
+    }
+
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return Mov(aField, bField, addressModeA, addressModeB, modifier)
     }
 
     override fun deepCopy(): AbstractInstruction {

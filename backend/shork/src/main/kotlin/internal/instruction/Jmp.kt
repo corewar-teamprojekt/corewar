@@ -22,6 +22,16 @@ internal class Jmp(
         process.dontIncrementProgramCounter = true
     }
 
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return Jmp(aField, bField, addressModeA, addressModeB, modifier)
+    }
+
     override fun deepCopy(): AbstractInstruction {
         return Jmp(aField, bField, addressModeA, addressModeB, modifier)
     }

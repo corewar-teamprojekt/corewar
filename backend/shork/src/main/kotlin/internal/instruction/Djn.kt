@@ -22,20 +22,29 @@ internal class Djn(
             when (modifier) {
                 Modifier.A,
                 Modifier.BA -> {
-                    checkZeroInstruction.aField -= 1
-                    checkZeroInstruction.aField != 0
+                    checkZeroInstruction.writeToMemory(core, checkZeroAddress) {
+                        it.aField -= 1
+
+                        it.aField != 0
+                    }
                 }
                 Modifier.B,
                 Modifier.AB -> {
-                    checkZeroInstruction.bField -= 1
-                    checkZeroInstruction.bField != 0
+                    checkZeroInstruction.writeToMemory(core, checkZeroAddress) {
+                        it.bField -= 1
+
+                        it.bField != 0
+                    }
                 }
                 Modifier.F,
                 Modifier.X,
                 Modifier.I -> {
-                    checkZeroInstruction.aField -= 1
-                    checkZeroInstruction.bField -= 1
-                    checkZeroInstruction.aField != 0 && checkZeroInstruction.bField != 0
+                    checkZeroInstruction.writeToMemory(core, checkZeroAddress) {
+                        it.aField -= 1
+                        it.bField -= 1
+
+                        it.aField != 0 && it.bField != 0
+                    }
                 }
             }
 
@@ -43,6 +52,16 @@ internal class Djn(
             process.programCounter = absoluteJumpDestination
             process.dontIncrementProgramCounter = true
         }
+    }
+
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return Djn(aField, bField, addressModeA, addressModeB, modifier)
     }
 
     override fun deepCopy(): AbstractInstruction {

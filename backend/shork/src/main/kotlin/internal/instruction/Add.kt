@@ -18,6 +18,16 @@ internal class Add(
         return sourceInstructionOperand + destinationInstructionOperand
     }
 
+    override fun newInstance(
+        aField: Int,
+        bField: Int,
+        addressModeA: AddressMode,
+        addressModeB: AddressMode,
+        modifier: Modifier,
+    ): AbstractInstruction {
+        return Add(aField, bField, addressModeA, addressModeB, modifier)
+    }
+
     override fun deepCopy(): AbstractInstruction {
         return Add(aField, bField, addressModeA, addressModeB, modifier)
     }
