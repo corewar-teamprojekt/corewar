@@ -1,8 +1,18 @@
 import { Lobby } from "@/domain/Lobby.ts";
 import { GameState } from "@/domain/GameState.ts";
 
-export function aLobby(): Lobby {
-	return new Lobby(0, ["playerA"], GameState.NOT_STARTED);
+interface NamedLobbyParameters {
+	lobbyId?: number;
+	playersJoined?: string[];
+	gameState?: GameState;
+}
+
+export function aLobby({
+	lobbyId = 0,
+	playersJoined = ["playerA"],
+	gameState = GameState.NOT_STARTED,
+}: NamedLobbyParameters = {}): Lobby {
+	return new Lobby(lobbyId, playersJoined, gameState);
 }
 
 export function anotherLobby(): Lobby {
