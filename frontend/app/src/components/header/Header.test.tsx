@@ -143,6 +143,21 @@ describe("lobby info", () => {
 			{ timeout: 1000 },
 		);
 	});
+
+	it("hides if lobby is null", () => {
+		act(() => {
+			render(
+				<LobbyProvider>
+					<LobbyDispatcherInteractor dispatcherCommand={"leave"} lobby={null} />
+				</LobbyProvider>,
+			);
+		});
+
+		const lobbyInfoButton = screen.queryAllByRole("button", {
+			name: /Lobby ID:/,
+		});
+		expect(lobbyInfoButton).toHaveLength(0);
+	});
 });
 
 // Used to pass commands to the UserContext for testing
