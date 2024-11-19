@@ -12,6 +12,12 @@ import { aLobby } from "@/TestFactories.ts";
 
 vi.mock("react-router-dom");
 
+Object.assign(navigator, {
+	clipboard: {
+		writeText: () => {},
+	},
+});
+
 beforeEach(() => {
 	(useLocation as Mock).mockReturnValue({ pathname: "/" });
 	cleanup();
@@ -157,6 +163,49 @@ describe("lobby info", () => {
 			name: /Lobby ID:/,
 		});
 		expect(lobbyInfoButton).toHaveLength(0);
+	});
+
+	it("copies lobby id to clipboard on click", async () => {
+		const spy = vi.spyOn(navigator.clipboard, "writeText");
+
+		const lobbyId: number = 0;
+		const anotherLobbyId: number = 1;
+
+		act(() => {
+			render(
+				<LobbyProvider>
+					<LobbyDispatcherInteractor
+						dispatcherCommand={"join"}
+						lobby={aLobby({ lobbyId: lobbyId })}
+						secondaryLobbyId={anotherLobbyId}
+					/>
+				</LobbyProvider>,
+			);
+		});
+
+		const lobbyInfoButton = screen.getByRole("button", { name: /Lobby ID:/ });
+
+		lobbyInfoButton.click();
+
+		expect(spy).toHaveBeenCalledTimes(1);
+		expect(spy).toHaveBeenLastCalledWith(`${lobbyId}`);
+
+		act(() => {
+			screen.getByTestId("joinSecondary").click();
+		});
+		await waitFor(
+			() => {
+				expect(lobbyInfoButton.textContent).toEqual(
+					`Lobby ID: ${anotherLobbyId}`,
+				);
+			},
+			{ timeout: 1000 },
+		);
+
+		lobbyInfoButton.click();
+
+		expect(spy).toHaveBeenCalledTimes(2);
+		expect(spy).toHaveBeenLastCalledWith(`${anotherLobbyId}`);
 	});
 });
 
