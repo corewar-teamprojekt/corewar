@@ -2,10 +2,13 @@ import "./Header.css";
 import { User } from "@/domain/User.ts";
 import { useUser } from "@/services/userContext/UserContextHelpers.ts";
 import { useLocation } from "react-router-dom";
+import { Lobby } from "@/domain/Lobby.ts";
+import { useLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
 
 function Header() {
 	const user: User | null = useUser();
 	const location = useLocation();
+	const lobby: Lobby | null = useLobby();
 
 	return (
 		<div id="headerContainer">
@@ -14,7 +17,7 @@ function Header() {
 					{location.pathname.length !== 1 && "Corewar"}
 				</h2>
 			</div>
-			<button>Lobby ID: 0</button>
+			<button>Lobby ID: {lobby?.id}</button>
 			<div id="player">
 				{user != null && (
 					<>
