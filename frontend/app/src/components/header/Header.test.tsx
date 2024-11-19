@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { act, useEffect } from "react";
 import { UserProvider } from "@/services/userContext/UserContext.tsx";
 import Header from "@/components/header/Header.tsx";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { useDispatchUser } from "@/services/userContext/UserContextHelpers.ts";
 import { useLocation } from "react-router-dom";
 import { LobbyProvider } from "@/services/lobbyContext/LobbyContext.tsx";
@@ -112,8 +112,9 @@ describe("playerIndicator", () => {
 });
 
 describe("lobby info", () => {
-	it("display current lobby id", () => {
+	it("display current lobby id", async () => {
 		const lobbyId: number = 0;
+		const anotherLobbyId: number = 1;
 
 		act(() => {
 			render(
@@ -121,13 +122,26 @@ describe("lobby info", () => {
 					<LobbyDispatcherInteractor
 						dispatcherCommand={"join"}
 						lobby={aLobby({ lobbyId: lobbyId })}
+						secondaryLobbyId={anotherLobbyId}
 					/>
 				</LobbyProvider>,
 			);
 		});
-		const lobbyInfoButton = screen.getByRole("button");
+		const lobbyInfoButton = screen.getByRole("button", { name: /Lobby ID:/ });
 		expect(lobbyInfoButton).toBeTruthy();
-		expect(lobbyInfoButton.textContent).toContain(`Lobby ID: ${lobbyId}`);
+		expect(lobbyInfoButton.textContent).toEqual(`Lobby ID: ${lobbyId}`);
+
+		act(() => {
+			screen.getByTestId("joinSecondary").click();
+		});
+		await waitFor(
+			() => {
+				expect(lobbyInfoButton.textContent).toEqual(
+					`Lobby ID: ${anotherLobbyId}`,
+				);
+			},
+			{ timeout: 1000 },
+		);
 	});
 });
 
@@ -157,9 +171,11 @@ const UserDispatcherInteractor = ({
 const LobbyDispatcherInteractor = ({
 	dispatcherCommand,
 	lobby,
+	secondaryLobbyId = 1,
 }: {
 	dispatcherCommand: string | null;
 	lobby: Lobby | null;
+	secondaryLobbyId?: number;
 }) => {
 	const dispatch = useDispatchLobby();
 
@@ -174,5 +190,31 @@ const LobbyDispatcherInteractor = ({
 		});
 	}, [dispatch, dispatcherCommand, lobby]);
 
-	return <Header />;
+	const leave = () => {
+		if (dispatch) {
+			dispatch({
+				type: "leave",
+				lobby: null,
+			});
+		}
+	};
+
+	const joinSecondaryLobby = () => {
+		if (dispatch) {
+			dispatch({
+				type: "join",
+				lobby: aLobby({ lobbyId: secondaryLobbyId }),
+			});
+		}
+	};
+
+	return (
+		<>
+			<Header />
+			<button onClick={leave}>leave</button>
+			<button onClick={joinSecondaryLobby} data-testid="joinSecondary">
+				join secondary
+			</button>
+		</>
+	);
 };
