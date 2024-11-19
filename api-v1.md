@@ -44,6 +44,9 @@ The body must contain the desired playerName
 ### 200:
 No special response body, join was accepted.
 
+### 404:
+There is no lobby with that id.
+
 ### 409:
 Someone already joined as that player. The slot is locked and the join operation is aborted.
 
