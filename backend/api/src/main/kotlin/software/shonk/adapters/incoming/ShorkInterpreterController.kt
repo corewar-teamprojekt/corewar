@@ -61,6 +61,26 @@ fun Route.configureShorkInterpreterControllerV1() {
         result.onSuccess { call.respond(HttpStatusCode.Created, it) }
     }
 
+    post("/lobby/{lobbyId}/join") {
+        val lobbyId =
+            call.parameters["lobbyId"]?.toLongOrNull()
+                ?: return@post call.respond(HttpStatusCode.BadRequest)
+
+        @Serializable data class JoinLobbyBody(val playerName: String)
+
+        val joinLobbyBody = call.receive<JoinLobbyBody>()
+
+        val result = shorkUseCase.joinLobby(lobbyId, joinLobbyBody.playerName)
+        result.onFailure {
+            logger.error(
+                "Someone already joined as that player. The slot is locked and the join operation is aborted",
+                it,
+            )
+            call.respond(HttpStatusCode.Conflict, it.message ?: UNKNOWN_ERROR_MESSAGE)
+        }
+        result.onSuccess { call.respond(HttpStatusCode.OK, it) }
+    }
+
     post("/lobby/{lobbyId}/code/{player}") {
         val lobbyId =
             call.parameters["lobbyId"]?.toLongOrNull()
