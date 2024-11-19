@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { BASE_POLLING_INTERVAL_MS } from "@/consts";
 import { Lobby } from "@/domain/Lobby";
-import { getLobbiesV1 } from "@/services/rest/RestService";
+import { getLobbiesV1 } from "@/services/rest/LobbyRest";
 import { aLobby, mockLobbies } from "@/TestFactories";
 import {
 	act,
@@ -15,7 +15,7 @@ import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import LobbySelectionPage from "./LobbySelectionPage";
 import { useDispatchLobby } from "@/services/lobbyContext/LobbyContextHelpers";
 
-vi.mock("@/services/rest/RestService", () => ({
+vi.mock("@/services/rest/LobbyRest", () => ({
 	getLobbiesV1: vi.fn(),
 }));
 

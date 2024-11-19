@@ -1,7 +1,6 @@
 // later when more api endpoints are added, this can be split into multiple files
 
 import { Linterlint } from "@/domain/LinterLint";
-import { Lobby } from "@/domain/Lobby";
 
 export function uploadPlayerCode(
 	playerName: string,
@@ -38,20 +37,6 @@ export async function getLinterLintsV1(code: string): Promise<Linterlint[]> {
 			.json()
 			.then((data) => data.errors as Linterlint[]);
 		return lints;
-	} else {
-		return [];
-	}
-}
-
-export async function getLobbiesV1(): Promise<Lobby[]> {
-	const response = await fetch(
-		`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/lobby`,
-	);
-	if (response.ok) {
-		const lobbies = await response
-			.json()
-			.then((data) => data.lobbies as Lobby[]);
-		return lobbies;
 	} else {
 		return [];
 	}
