@@ -177,6 +177,32 @@ internal class TestSeq {
     }
 
     @Test
+    fun testNewInstanceSameValues() {
+        val seq = Seq(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.A)
+        val copy = seq.newInstance(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.A)
+
+        assert(copy is Seq)
+        assertEquals(seq.aField, copy.aField)
+        assertEquals(seq.bField, copy.bField)
+        assertEquals(seq.addressModeA, copy.addressModeA)
+        assertEquals(seq.addressModeB, copy.addressModeB)
+        assertEquals(seq.modifier, copy.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val seq = Seq(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.A)
+        val copy = seq.newInstance(2, 1, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.B)
+
+        assert(copy is Seq)
+        assertEquals(2, copy.aField)
+        assertEquals(1, copy.bField)
+        assertEquals(AddressMode.IMMEDIATE, copy.addressModeA)
+        assertEquals(AddressMode.IMMEDIATE, copy.addressModeB)
+        assertEquals(Modifier.B, copy.modifier)
+    }
+
+    @Test
     fun testDeepCopy() {
         val seq = Seq(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
         val copy = seq.deepCopy()

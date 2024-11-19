@@ -182,6 +182,33 @@ internal class TestJmz {
     }
 
     @Test
+    fun testNewInstanceSameValues() {
+        val jmz = Jmz(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance =
+            jmz.newInstance(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+
+        assert(newInstance is Jmz)
+        assertEquals(42, newInstance.aField)
+        assertEquals(69, newInstance.bField)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeA)
+        assertEquals(AddressMode.IMMEDIATE, newInstance.addressModeB)
+        assertEquals(Modifier.A, newInstance.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val jmz = Jmz(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance = jmz.newInstance(69, 1, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B)
+
+        assert(newInstance is Jmz)
+        assertEquals(69, newInstance.aField)
+        assertEquals(1, newInstance.bField)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeA)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeB)
+        assertEquals(Modifier.B, newInstance.modifier)
+    }
+
+    @Test
     fun testDeepCopy() {
         val jmz = Jmz(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
         val copy = jmz.deepCopy()

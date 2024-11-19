@@ -37,6 +37,33 @@ internal class TestNop {
     }
 
     @Test
+    fun testNewInstanceSameValues() {
+        val nop = Nop(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance =
+            nop.newInstance(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+
+        assert(newInstance is Nop)
+        assertEquals(nop.aField, newInstance.aField)
+        assertEquals(nop.bField, newInstance.bField)
+        assertEquals(nop.addressModeA, newInstance.addressModeA)
+        assertEquals(nop.addressModeB, newInstance.addressModeB)
+        assertEquals(nop.modifier, newInstance.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val nop = Nop(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance = nop.newInstance(1, 1, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B)
+
+        assert(newInstance is Nop)
+        assertEquals(1, newInstance.aField)
+        assertEquals(1, newInstance.bField)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeA)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeB)
+        assertEquals(Modifier.B, newInstance.modifier)
+    }
+
+    @Test
     fun testDeepCopy() {
         val nop = Nop(0, 1, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.F)
         val copy = nop.deepCopy()

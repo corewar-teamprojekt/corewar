@@ -240,6 +240,33 @@ internal class TestDjn {
     }
 
     @Test
+    fun testNewInstanceSameValues() {
+        val djn = Djn(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance =
+            djn.newInstance(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+
+        assert(newInstance is Djn)
+        assertEquals(djn.aField, newInstance.aField)
+        assertEquals(djn.bField, newInstance.bField)
+        assertEquals(djn.addressModeA, newInstance.addressModeA)
+        assertEquals(djn.addressModeB, newInstance.addressModeB)
+        assertEquals(djn.modifier, newInstance.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val djn = Djn(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance = djn.newInstance(1, 1, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B)
+
+        assert(newInstance is Djn)
+        assertEquals(1, newInstance.aField)
+        assertEquals(1, newInstance.bField)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeA)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeB)
+        assertEquals(Modifier.B, newInstance.modifier)
+    }
+
+    @Test
     fun testDeepCopy() {
         val djn = Djn(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
         val copy = djn.deepCopy()

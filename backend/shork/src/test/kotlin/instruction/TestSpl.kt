@@ -54,6 +54,33 @@ internal class TestSpl {
     }
 
     @Test
+    fun testNewInstanceSameValues() {
+        val spl = Spl(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance =
+            spl.newInstance(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+
+        assert(newInstance is Spl)
+        assertEquals(spl.aField, newInstance.aField)
+        assertEquals(spl.bField, newInstance.bField)
+        assertEquals(spl.addressModeA, newInstance.addressModeA)
+        assertEquals(spl.addressModeB, newInstance.addressModeB)
+        assertEquals(spl.modifier, newInstance.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val spl = Spl(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance = spl.newInstance(1, 1, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B)
+
+        assert(newInstance is Spl)
+        assertEquals(1, newInstance.aField)
+        assertEquals(1, newInstance.bField)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeA)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeB)
+        assertEquals(Modifier.B, newInstance.modifier)
+    }
+
+    @Test
     fun testDeepCopy() {
         val spl = Spl(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
         val copy = spl.deepCopy()

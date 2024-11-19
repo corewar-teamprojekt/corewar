@@ -171,6 +171,32 @@ internal class TestSne {
     }
 
     @Test
+    fun testNewInstanceSameValues() {
+        val sne = Sne(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.A)
+        val copy = sne.newInstance(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.A)
+
+        assert(copy is Sne)
+        assertEquals(copy.aField, sne.aField)
+        assertEquals(copy.bField, sne.bField)
+        assertEquals(copy.addressModeA, sne.addressModeA)
+        assertEquals(copy.addressModeB, sne.addressModeB)
+        assertEquals(copy.modifier, sne.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val sne = Sne(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.A)
+        val copy = sne.newInstance(2, 1, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.B)
+
+        assert(copy is Sne)
+        assertEquals(2, copy.aField)
+        assertEquals(1, copy.bField)
+        assertEquals(AddressMode.IMMEDIATE, copy.addressModeA)
+        assertEquals(AddressMode.IMMEDIATE, copy.addressModeB)
+        assertEquals(Modifier.B, copy.modifier)
+    }
+
+    @Test
     fun testDeepCopy() {
         val sne = Sne(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
         val copy = sne.deepCopy()

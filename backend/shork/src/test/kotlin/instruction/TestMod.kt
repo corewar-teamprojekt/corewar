@@ -153,6 +153,33 @@ internal class TestMod {
     }
 
     @Test
+    fun testNewInstanceSameValues() {
+        val mod = Mod(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance =
+            mod.newInstance(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+
+        assert(newInstance is Mod)
+        assertEquals(mod.aField, newInstance.aField)
+        assertEquals(mod.bField, newInstance.bField)
+        assertEquals(mod.addressModeA, newInstance.addressModeA)
+        assertEquals(mod.addressModeB, newInstance.addressModeB)
+        assertEquals(mod.modifier, newInstance.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val mod = Mod(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance = mod.newInstance(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B)
+
+        assert(newInstance is Mod)
+        assertEquals(1, newInstance.aField)
+        assertEquals(2, newInstance.bField)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeA)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeB)
+        assertEquals(Modifier.B, newInstance.modifier)
+    }
+
+    @Test
     fun div() {
         val mod = Mod(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
         val copy = mod.deepCopy()

@@ -24,6 +24,33 @@ internal class TestDat {
     }
 
     @Test
+    fun testNewInstanceSameValues() {
+        val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance =
+            dat.newInstance(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+
+        assert(newInstance is Dat)
+        assertEquals(dat.aField, newInstance.aField)
+        assertEquals(dat.bField, newInstance.bField)
+        assertEquals(dat.addressModeA, newInstance.addressModeA)
+        assertEquals(dat.addressModeB, newInstance.addressModeB)
+        assertEquals(dat.modifier, newInstance.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance = dat.newInstance(1, 1, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B)
+
+        assert(newInstance is Dat)
+        assertEquals(1, newInstance.aField)
+        assertEquals(1, newInstance.bField)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeA)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeB)
+        assertEquals(Modifier.B, newInstance.modifier)
+    }
+
+    @Test
     fun testDeepCopy() {
         val dat = Dat(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
         val copy = dat.deepCopy()

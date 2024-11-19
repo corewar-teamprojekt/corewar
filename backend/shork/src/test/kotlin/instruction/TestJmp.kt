@@ -50,6 +50,33 @@ internal class TestJmp {
     }
 
     @Test
+    fun testNewInstanceSameValues() {
+        val jmp = Jmp(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance =
+            jmp.newInstance(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+
+        assert(newInstance is Jmp)
+        assertEquals(jmp.aField, newInstance.aField)
+        assertEquals(jmp.bField, newInstance.bField)
+        assertEquals(jmp.addressModeA, newInstance.addressModeA)
+        assertEquals(jmp.addressModeB, newInstance.addressModeB)
+        assertEquals(jmp.modifier, newInstance.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val jmp = Jmp(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance = jmp.newInstance(69, 1, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B)
+
+        assert(newInstance is Jmp)
+        assertEquals(69, newInstance.aField)
+        assertEquals(1, newInstance.bField)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeA)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeB)
+        assertEquals(Modifier.B, newInstance.modifier)
+    }
+
+    @Test
     fun testDeepCopy() {
         val jmp = Jmp(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
         val copy = jmp.deepCopy()

@@ -34,7 +34,7 @@ internal class TestSub {
 
         sub.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 0)
@@ -50,7 +50,7 @@ internal class TestSub {
 
         sub.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 5)
@@ -66,7 +66,7 @@ internal class TestSub {
 
         sub.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 5)
@@ -82,7 +82,7 @@ internal class TestSub {
 
         sub.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == -2)
@@ -98,7 +98,7 @@ internal class TestSub {
 
         sub.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 0)
@@ -114,7 +114,7 @@ internal class TestSub {
 
         sub.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == 0)
@@ -130,13 +130,40 @@ internal class TestSub {
 
         sub.execute(process)
 
-        var resultInstruction = shork.memoryCore.loadAbsolute(2)
+        val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
         assert(resultInstruction.aField == -2)
         assert(resultInstruction.bField == 2)
         assert(resultInstruction.addressModeA == AddressMode.IMMEDIATE)
         assert(resultInstruction.addressModeB == AddressMode.IMMEDIATE)
+    }
+
+    @Test
+    fun testNewInstanceSameValues() {
+        val sub = Sub(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance =
+            sub.newInstance(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+
+        assert(newInstance is Sub)
+        assertEquals(sub.aField, newInstance.aField)
+        assertEquals(sub.bField, newInstance.bField)
+        assertEquals(sub.addressModeA, newInstance.addressModeA)
+        assertEquals(sub.addressModeB, newInstance.addressModeB)
+        assertEquals(sub.modifier, newInstance.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val sub = Sub(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance = sub.newInstance(1, 1, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B)
+
+        assert(newInstance is Sub)
+        assertEquals(1, newInstance.aField)
+        assertEquals(1, newInstance.bField)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeA)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeB)
+        assertEquals(Modifier.B, newInstance.modifier)
     }
 
     @Test

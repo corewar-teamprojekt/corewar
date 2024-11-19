@@ -182,6 +182,33 @@ internal class TestJmn {
     }
 
     @Test
+    fun testNewInstanceSameValues() {
+        val jmn = Jmn(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance =
+            jmn.newInstance(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+
+        assert(newInstance is Jmn)
+        assertEquals(jmn.aField, newInstance.aField)
+        assertEquals(jmn.bField, newInstance.bField)
+        assertEquals(jmn.addressModeA, newInstance.addressModeA)
+        assertEquals(jmn.addressModeB, newInstance.addressModeB)
+        assertEquals(jmn.modifier, newInstance.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val jmn = Jmn(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance = jmn.newInstance(1, 1, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B)
+
+        assert(newInstance is Jmn)
+        assertEquals(1, newInstance.aField)
+        assertEquals(1, newInstance.bField)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeA)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeB)
+        assertEquals(Modifier.B, newInstance.modifier)
+    }
+
+    @Test
     fun testDeepCopy() {
         val jmn = Jmn(42, 0, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
         val copy = jmn.deepCopy()

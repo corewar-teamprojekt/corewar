@@ -148,6 +148,33 @@ internal class TestMov {
     }
 
     @Test
+    fun testNewInstanceSameValues() {
+        val mov = Mov(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance =
+            mov.newInstance(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+
+        assert(newInstance is Mov)
+        assertEquals(42, newInstance.aField)
+        assertEquals(69, newInstance.bField)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeA)
+        assertEquals(AddressMode.IMMEDIATE, newInstance.addressModeB)
+        assertEquals(Modifier.A, newInstance.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val mov = Mov(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val newInstance = mov.newInstance(69, 1, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B)
+
+        assert(newInstance is Mov)
+        assertEquals(69, newInstance.aField)
+        assertEquals(1, newInstance.bField)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeA)
+        assertEquals(AddressMode.DIRECT, newInstance.addressModeB)
+        assertEquals(Modifier.B, newInstance.modifier)
+    }
+
+    @Test
     fun testDeepCopy() {
         val mov = Mov(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
         val copy = mov.deepCopy()

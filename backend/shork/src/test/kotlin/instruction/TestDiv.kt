@@ -153,6 +153,32 @@ internal class TestDiv {
     }
 
     @Test
+    fun testNewInstanceSameValues() {
+        val div = Div(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val copy = div.newInstance(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+
+        assert(copy is Div)
+        assertEquals(div.aField, copy.aField)
+        assertEquals(div.bField, copy.bField)
+        assertEquals(div.addressModeA, copy.addressModeA)
+        assertEquals(div.addressModeB, copy.addressModeB)
+        assertEquals(div.modifier, copy.modifier)
+    }
+
+    @Test
+    fun testNewInstanceDifferentValues() {
+        val div = Div(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
+        val copy = div.newInstance(1337, 37, AddressMode.IMMEDIATE, AddressMode.DIRECT, Modifier.B)
+
+        assert(copy is Div)
+        assertEquals(1337, copy.aField)
+        assertEquals(37, copy.bField)
+        assertEquals(AddressMode.IMMEDIATE, copy.addressModeA)
+        assertEquals(AddressMode.DIRECT, copy.addressModeB)
+        assertEquals(Modifier.B, copy.modifier)
+    }
+
+    @Test
     fun div() {
         val div = Div(42, 69, AddressMode.DIRECT, AddressMode.IMMEDIATE, Modifier.A)
         val copy = div.deepCopy()
