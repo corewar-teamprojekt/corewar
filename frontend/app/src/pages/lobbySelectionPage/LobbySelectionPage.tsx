@@ -5,7 +5,7 @@ import { BASE_POLLING_INTERVAL_MS } from "@/consts";
 import { Lobby } from "@/domain/Lobby";
 import { usePageVisibility } from "@/lib/usePageVisibility";
 import { useDispatchLobby } from "@/services/lobbyContext/LobbyContextHelpers";
-import { getLobbiesV1 } from "@/services/rest/RestService";
+import { getLobbiesV1 } from "@/services/rest/LobbyRest";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
