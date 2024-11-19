@@ -10,6 +10,10 @@ function Header() {
 	const location = useLocation();
 	const lobby: Lobby | null = useLobby();
 
+	const copyLobbyIdToClipboard = async () => {
+		await navigator.clipboard.writeText(lobby ? lobby.id.toString() : "");
+	};
+
 	return (
 		<div id="headerContainer">
 			<div id="headerText">
@@ -17,7 +21,9 @@ function Header() {
 					{location.pathname.length !== 1 && "Corewar"}
 				</h2>
 			</div>
-			{lobby !== null && <button>Lobby ID: {lobby?.id}</button>}
+			{lobby !== null && (
+				<button onClick={copyLobbyIdToClipboard}>Lobby ID: {lobby?.id}</button>
+			)}
 			<div id="player">
 				{user != null && (
 					<>
