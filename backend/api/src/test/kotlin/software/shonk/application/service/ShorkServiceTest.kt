@@ -210,6 +210,29 @@ class ShorkServiceTest {
     }
 
     @Test
+    fun `join lobby with valid playerName`() {
+        val shorkService = ShorkService(MockShork())
+        shorkService.createLobby("playerA")
+        shorkService.joinLobby(0L, "playerB")
+        assertEquals(true, shorkService.lobbies[0]?.joinedPlayers?.contains("playerB"))
+    }
+
+    @Test
+    fun `join lobby with duplicate (invalid) playerName`() {
+        val shorkService = ShorkService(MockShork())
+        shorkService.createLobby("playerA")
+        shorkService.joinLobby(0L, "playerA")
+        assertEquals(1, shorkService.lobbies[0]?.joinedPlayers?.size)
+    }
+
+    @Test
+    fun `join nonexistent lobby`() {
+        val shorkService = ShorkService(MockShork())
+        val result = shorkService.joinLobby(0L, "playerA")
+        assertEquals(result.isFailure, true)
+    }
+
+    @Test
     fun `test get all lobbies`() {
         val shorkService = ShorkService(MockShork())
         shorkService.createLobby("playerA")
