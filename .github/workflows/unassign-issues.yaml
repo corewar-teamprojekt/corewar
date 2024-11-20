@@ -33,11 +33,11 @@ jobs:
         -q ".[] | select (.assignees | length > 0) | select((now - (.updatedAt | fromdateiso8601)) > $TIMEOUT) | if(.projectItems | all(.status.name == \"Todo\")) then . else empty end")
 
         echo "Unassigning the following issues:"
-        echo $issues | jq -r ".jql"
+        echo $issues | jq -r ".url"
         echo "Executing the following commands:"
 
         commands=$(echo $issues | jq -r ".url as \$url | .assignees[] | \"gh issue edit \(\$url) --remove-assignee \(.login)\"")
+
         echo $commands
 
-        echo $commands | xargs -n 1 bash -c
-
+        echo "$commands" | xargs -I {} bash -c "{}"
