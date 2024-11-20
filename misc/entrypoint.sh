@@ -33,6 +33,7 @@ echo "Services running"
 
 # Trap SIGINT to stop services on exit
 trap stop_services SIGINT
+trap stop_services SIGTERM
 
 # Start services
 start_nginx
