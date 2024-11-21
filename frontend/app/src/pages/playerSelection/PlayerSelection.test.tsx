@@ -1,19 +1,28 @@
 import {
-	useDispatchUser,
-	useUser,
-} from "@/services/userContext/UserContextHelpers.ts";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+	act,
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+} from "@testing-library/react";
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import PlayerSelection from "./PlayerSelection";
 
+import { Toaster } from "@/components/ui/toaster";
+import { Lobby } from "@/domain/Lobby";
+import { LobbyProvider } from "@/services/lobbyContext/LobbyContext";
+import {
+	useDispatchLobby,
+	useLobby,
+} from "@/services/lobbyContext/LobbyContextHelpers";
+import { createLobby, joinLobby } from "@/services/rest/LobbyRest";
+import { UserProvider } from "@/services/userContext/UserContext";
+import { useUser } from "@/services/userContext/UserContextHelpers";
+import { aLobby, anotherLobby } from "@/TestFactories";
 import "@testing-library/jest-dom";
+import { useEffect } from "react";
+import type { RouterProviderProps } from "react-router-dom";
 import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
-import PlayerCodingPage from "../playerCodeInput/PlayerCodingPage";
-import { User } from "@/domain/User.ts";
-
-vi.mock("@/services/userContext/UserContextHelpers.ts", () => ({
-	useDispatchUser: vi.fn(),
-}));
 
 const testRouterConfig = [
 	{
@@ -22,63 +31,309 @@ const testRouterConfig = [
 	},
 	{
 		path: "/player-coding",
-		element: <PlayerCodingPage />,
+		element: <TestLobbyAndUserPage />,
+	},
+	{
+		path: "/lobby-selection",
+		element: <TestLobbyAndUserPage />,
 	},
 	{
 		path: "/player-selection",
-		element: <PlayerSelection />,
+		element: (
+			<>
+				<PlayerSelection />
+				<Toaster />
+			</>
+		),
 	},
 ];
 
-vi.mock("@/services/userContext/UserContextHelpers");
+vi.mock("@/services/rest/LobbyRest", () => ({
+	createLobby: vi.fn(),
+	joinLobby: vi.fn(),
+}));
 
 describe("PlayerSelection", () => {
-	beforeEach(() =>
-		(useUser as Mock).mockReturnValue(new User("playerA", "#ffeefff")),
-	);
+	beforeEach(() => {
+		vi.resetAllMocks();
+	});
 
 	it("renders Player A and Player B buttons", () => {
 		const router = createMemoryRouter(testRouterConfig);
-		render(<RouterProvider router={router} />);
-
-		expect(screen.getByText("PLAYER A")).toBeInTheDocument();
-		expect(screen.getByText("PLAYER B")).toBeInTheDocument();
-		expect(screen.getAllByText("PLAY")).toHaveLength(2);
+		render(
+			<UserProvider>
+				<LobbyProvider>
+					<TestRouter router={router} />
+					<Toaster />
+				</LobbyProvider>
+			</UserProvider>,
+		);
+		const buttonA = screen.getByAltText("Player A Icon");
+		const buttonB = screen.getByAltText("Player B Icon");
+		expect(buttonA).toBeInTheDocument();
+		expect(buttonB).toBeInTheDocument();
+	});
+	describe("disabled the corresponding button if the player is already in the lobby", () => {
+		it("for Button A", async () => {
+			const router = createMemoryRouter(testRouterConfig);
+			act(() => {
+				render(
+					<UserProvider>
+						<LobbyProvider>
+							<TestRouter lobby={aLobby()} router={router} />
+							<Toaster />
+						</LobbyProvider>
+					</UserProvider>,
+				);
+			});
+			const buttonA = screen.getAllByRole("button")[0];
+			const buttonB = screen.getAllByRole("button")[1];
+			await waitFor(() => {
+				expect(buttonA).toBeDisabled();
+				expect(buttonB).not.toBeDisabled();
+			});
+		});
+		it("for Button B", async () => {
+			const router = createMemoryRouter(testRouterConfig);
+			act(() => {
+				render(
+					<UserProvider>
+						<LobbyProvider>
+							<TestRouter lobby={anotherLobby()} router={router} />
+							<Toaster />
+						</LobbyProvider>
+					</UserProvider>,
+				);
+			});
+			const buttonA = screen.getAllByRole("button")[0];
+			const buttonB = screen.getAllByRole("button")[1];
+			await waitFor(() => {
+				expect(buttonB).toBeDisabled();
+				expect(buttonA).not.toBeDisabled();
+			});
+		});
 	});
 
-	it("dispatches setPlayerA action and navigates to /player-coding when Player A button is clicked", async () => {
-		const mockDispatcher = vi.fn();
-		(useDispatchUser as Mock).mockReturnValue(mockDispatcher);
-
-		const router = createMemoryRouter(testRouterConfig);
-		render(<RouterProvider router={router} />);
-
-		fireEvent.click(screen.getAllByText("PLAY")[0]);
-
-		expect(mockDispatcher).toHaveBeenCalledWith({
-			type: "setPlayerA",
-			user: null,
+	describe("when no lobby is set a new one is created, the player joins it, then redirect occurs", () => {
+		it("Player A joins with new lobby", async () => {
+			const router = createMemoryRouter(testRouterConfig);
+			const expectedLobbyID = 123;
+			(createLobby as Mock).mockResolvedValue(expectedLobbyID);
+			(joinLobby as Mock).mockResolvedValue({});
+			act(() => {
+				render(
+					<UserProvider>
+						<LobbyProvider>
+							<TestRouter router={router} />
+							<Toaster />
+						</LobbyProvider>
+					</UserProvider>,
+				);
+			});
+			act(() => {
+				const buttonA = screen.getAllByRole("button")[0];
+				fireEvent.click(buttonA);
+			});
+			await waitFor(() => {
+				expect(createLobby).toHaveBeenCalled();
+			});
+			await waitFor(() => {
+				expect(joinLobby).toHaveBeenCalledWith("playerA", expectedLobbyID);
+			});
+			await waitFor(() => {
+				expect(router.state.location.pathname).toEqual("/player-coding");
+			});
+			const playerName = screen.getByTestId("playerName").textContent;
+			const lobbyId = screen.getByTestId("lobbyId").textContent;
+			expect(playerName).toEqual("playerA");
+			expect(lobbyId).toEqual(expectedLobbyID.toString());
 		});
-		await waitFor(() => {
-			expect(router.state.location.pathname).toEqual("/player-coding");
+
+		it("Player B joins with new lobby", async () => {
+			const router = createMemoryRouter(testRouterConfig);
+			const expectedLobbyID = 321;
+			(createLobby as Mock).mockResolvedValue(expectedLobbyID);
+			(joinLobby as Mock).mockResolvedValue({});
+			act(() => {
+				render(
+					<UserProvider>
+						<LobbyProvider>
+							<TestRouter router={router} />
+							<Toaster />
+						</LobbyProvider>
+					</UserProvider>,
+				);
+			});
+			act(() => {
+				const buttonB = screen.getAllByRole("button")[1];
+				fireEvent.click(buttonB);
+			});
+			await waitFor(() => {
+				expect(createLobby).toHaveBeenCalled();
+			});
+			await waitFor(() => {
+				expect(joinLobby).toHaveBeenCalledWith("playerB", expectedLobbyID);
+			});
+			await waitFor(() => {
+				expect(router.state.location.pathname).toEqual("/player-coding");
+			});
+			const playerName = screen.getByTestId("playerName").textContent;
+			const lobbyId = screen.getByTestId("lobbyId").textContent;
+			expect(playerName).toEqual("playerB");
+			expect(lobbyId).toEqual(expectedLobbyID.toString());
 		});
 	});
 
-	it("dispatches setPlayerB action and navigates to /player-coding when Player B button is clicked", async () => {
-		const mockDispatcher = vi.fn();
-		(useDispatchUser as Mock).mockReturnValue(mockDispatcher);
+	describe("when a lobby is set, the player joins it, then redirect occurs", () => {
+		it("Player A joins with new lobby", async () => {
+			const router = createMemoryRouter(testRouterConfig);
+			const expectedLobby = anotherLobby();
+			(joinLobby as Mock).mockResolvedValue({});
+			(createLobby as Mock).mockRejectedValue(
+				new Error("Should not be called"),
+			);
+			act(() => {
+				render(
+					<UserProvider>
+						<LobbyProvider>
+							<TestRouter lobby={expectedLobby} router={router} />
+							<Toaster />
+						</LobbyProvider>
+					</UserProvider>,
+				);
+			});
+			act(() => {
+				const buttonA = screen.getAllByRole("button")[0];
+				fireEvent.click(buttonA);
+			});
+			await waitFor(() => {
+				expect(joinLobby).toHaveBeenCalledWith("playerA", expectedLobby.id);
+			});
+			await waitFor(() => {
+				expect(router.state.location.pathname).toEqual("/player-coding");
+			});
+			const playerName = screen.getByTestId("playerName").textContent;
+			const lobbyId = screen.getByTestId("lobbyId").textContent;
+			expect(playerName).toEqual("playerA");
+			expect(lobbyId).toEqual(expectedLobby.id.toString());
 
-		const router = createMemoryRouter(testRouterConfig);
-		render(<RouterProvider router={router} />);
-
-		fireEvent.click(screen.getAllByText("PLAY")[1]);
-
-		expect(mockDispatcher).toHaveBeenCalledWith({
-			type: "setPlayerB",
-			user: null,
+			expect(createLobby).not.toHaveBeenCalled();
 		});
-		await waitFor(() => {
-			expect(router.state.location.pathname).toEqual("/player-coding");
+		it("Player B joins with new lobby", async () => {
+			const router = createMemoryRouter(testRouterConfig);
+			const expectedLobby = aLobby();
+			(joinLobby as Mock).mockResolvedValue({});
+			(createLobby as Mock).mockRejectedValue(
+				new Error("Should not be called"),
+			);
+			act(() => {
+				render(
+					<UserProvider>
+						<LobbyProvider>
+							<TestRouter lobby={expectedLobby} router={router} />
+							<Toaster />
+						</LobbyProvider>
+					</UserProvider>,
+				);
+			});
+			act(() => {
+				const buttonA = screen.getAllByRole("button")[1];
+				fireEvent.click(buttonA);
+			});
+			await waitFor(() => {
+				expect(joinLobby).toHaveBeenCalledWith("playerB", expectedLobby.id);
+			});
+			await waitFor(() => {
+				expect(router.state.location.pathname).toEqual("/player-coding");
+			});
+			const playerName = screen.getByTestId("playerName").textContent;
+			const lobbyId = screen.getByTestId("lobbyId").textContent;
+			expect(playerName).toEqual("playerB");
+			expect(lobbyId).toEqual(expectedLobby.id.toString());
+
+			expect(createLobby).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("when joining or creating fails, the user is redirect to lobby-selection", () => {
+		it("createlobby Fails", async () => {
+			const router = createMemoryRouter(testRouterConfig);
+			(joinLobby as Mock).mockResolvedValue({});
+			(createLobby as Mock).mockRejectedValue(
+				new Error("Should not be called"),
+			);
+			act(() => {
+				render(
+					<UserProvider>
+						<LobbyProvider>
+							<TestRouter router={router} />
+							<Toaster />
+						</LobbyProvider>
+					</UserProvider>,
+				);
+			});
+			act(() => {
+				const buttonA = screen.getAllByRole("button")[0];
+				fireEvent.click(buttonA);
+			});
+			await waitFor(() => {
+				expect(createLobby).toHaveBeenCalled();
+			});
+			await waitFor(() => {
+				expect(router.state.location.pathname).toEqual("/lobby-selection");
+			});
+		});
+
+		it("joinLobby Fails", async () => {
+			const router = createMemoryRouter(testRouterConfig);
+			(joinLobby as Mock).mockRejectedValue(new Error("Should not be called"));
+			(createLobby as Mock).mockResolvedValue({});
+			act(() => {
+				render(
+					<UserProvider>
+						<LobbyProvider>
+							<TestRouter lobby={anotherLobby()} router={router} />
+							<Toaster />
+						</LobbyProvider>
+					</UserProvider>,
+				);
+			});
+			act(() => {
+				const buttonA = screen.getAllByRole("button")[0];
+				fireEvent.click(buttonA);
+			});
+			await waitFor(() => {
+				expect(joinLobby).toHaveBeenCalled();
+			});
+			await waitFor(() => {
+				expect(router.state.location.pathname).toEqual("/lobby-selection");
+			});
 		});
 	});
 });
+
+interface TestRouterProps {
+	lobby?: Lobby | null;
+	router: RouterProviderProps["router"];
+}
+
+function TestRouter({ lobby = null, router }: Readonly<TestRouterProps>) {
+	const lobbyDispatch = useDispatchLobby();
+	useEffect(() => {
+		if (lobby && lobbyDispatch) {
+			lobbyDispatch({ type: "join", lobby: lobby });
+		}
+	}, [lobby, lobbyDispatch]);
+	return <RouterProvider router={router} />;
+}
+
+function TestLobbyAndUserPage() {
+	const lobby = useLobby();
+	const user = useUser();
+	return (
+		<>
+			<p data-testid="playerName">{user?.name}</p>
+			<p data-testid="lobbyId">{lobby?.id}</p>
+		</>
+	);
+}
