@@ -109,6 +109,14 @@ fun Route.configureShorkInterpreterControllerV1() {
         call.respond(HttpStatusCode.OK, mapOf("lobbies" to lobbiesStatus))
         return@get
     }
+
+    post("/redcode/compile/errors") {
+        @Serializable data class CompileErrorsRequest(val code: String)
+
+        val compileErrorsRequest = call.receive<CompileErrorsRequest>()
+        val errors = shorkUseCase.getCompilationErrors(compileErrorsRequest.code)
+        call.respond(mapOf("errors" to errors))
+    }
 }
 
 @Serializable data class Program(val code: String)

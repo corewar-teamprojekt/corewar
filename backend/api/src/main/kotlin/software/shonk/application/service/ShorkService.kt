@@ -5,6 +5,7 @@ import software.shonk.application.port.incoming.ShorkUseCase
 import software.shonk.domain.*
 import software.shonk.interpreter.IShork
 import software.shonk.interpreter.Settings
+import software.shonk.interpreter.internal.compiler.Compiler
 
 const val NO_LOBBY_MESSAGE = "No lobby with that id"
 
@@ -62,6 +63,18 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
                 return Result.failure(it)
             }
         return Result.success(lobby.getStatus())
+    }
+
+    override fun getCompilationErrors(code: String): List<CompileError> {
+        val compiler = Compiler(code)
+        return compiler.allErrors.map {
+            CompileError(
+                line = it.lineNumber,
+                message = it.message,
+                columnStart = it.lineCharIndexStart,
+                columnEnd = it.lineCharIndexEnd,
+            )
+        }
     }
 
     override fun createLobby(playerName: String): Result<Long> {
