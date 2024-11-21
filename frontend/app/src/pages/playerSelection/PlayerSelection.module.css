@@ -1,0 +1,14 @@
+.player-icon {
+	width: 31rem;
+	height: 31rem;
+	transition: transform 300ms;
+}
+
+.player-icon-disabled {
+	filter: grayscale(100%);
+	cursor: not-allowed;
+}
+
+.player-icon:hover {
+	transform: scale(1.1);
+}
