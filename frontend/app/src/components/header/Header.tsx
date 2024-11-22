@@ -4,14 +4,21 @@ import { useUser } from "@/services/userContext/UserContextHelpers.ts";
 import { useLocation } from "react-router-dom";
 import { Lobby } from "@/domain/Lobby.ts";
 import { useLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
+import { useToast } from "@/hooks/use-toast.ts";
 
 function Header() {
 	const user: User | null = useUser();
 	const location = useLocation();
 	const lobby: Lobby | null = useLobby();
+	const { toast } = useToast();
 
 	const copyLobbyIdToClipboard = async () => {
 		await navigator.clipboard.writeText(lobby ? lobby.id.toString() : "");
+		toast({
+			title: "Copied lobbyID to clipboard",
+			description: "",
+			variant: "default",
+		});
 	};
 
 	return (
