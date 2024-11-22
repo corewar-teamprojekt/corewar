@@ -1,0 +1,77 @@
+openapi: "3.1.0"
+info:
+  title: "corewar API"
+  description: "corewar API"
+  version: "1.0.0"
+servers:
+- url: "/"
+paths:
+  /api/v0/code/{player}:
+    post:
+      description: ""
+      parameters:
+      - name: "player"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: "string"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v0/status:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Status"
+components:
+  schemas:
+    Result:
+      type: "object"
+      properties:
+        winner:
+          type: "string"
+          enum:
+          - "A"
+          - "B"
+          - "UNDECIDED"
+      required:
+      - "winner"
+    Status:
+      type: "object"
+      properties:
+        playerASubmitted:
+          type: "boolean"
+        playerBSubmitted:
+          type: "boolean"
+        gameState:
+          type: "string"
+          enum:
+          - "NOT_STARTED"
+          - "RUNNING"
+          - "FINISHED"
+        result:
+          $ref: "#/components/schemas/Result"
+      required:
+      - "gameState"
+      - "result"
