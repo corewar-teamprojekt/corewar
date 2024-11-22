@@ -9,8 +9,13 @@ import { LobbyProvider } from "@/services/lobbyContext/LobbyContext.tsx";
 import { useDispatchLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
 import { Lobby } from "@/domain/Lobby.ts";
 import { aLobby } from "@/TestFactories.ts";
+import { useToast } from "@/hooks/use-toast.ts";
 
 vi.mock("react-router-dom");
+
+vi.mock("@/hooks/use-toast", () => ({
+	useToast: vi.fn(),
+}));
 
 Object.assign(navigator, {
 	clipboard: {
@@ -18,194 +23,233 @@ Object.assign(navigator, {
 	},
 });
 
-beforeEach(() => {
-	(useLocation as Mock).mockReturnValue({ pathname: "/" });
-	cleanup();
-});
+describe("test header", () => {
+	const mockToast = vi.fn();
 
-afterEach(() => {
-	vi.clearAllMocks();
-});
+	beforeEach(() => {
+		(useLocation as Mock).mockReturnValue({ pathname: "/" });
+		(useToast as Mock).mockReturnValue({ toast: mockToast });
+		cleanup();
+	});
 
-describe("playerIndicator", () => {
-	describe("doesn't display anything when user is null", () => {
-		it("playerName", () => {
-			act(() => {
-				render(
-					<UserProvider>
-						<UserDispatcherInteractor dispatcherCommand={null} />
-					</UserProvider>,
-				);
+	afterEach(() => {
+		vi.clearAllMocks();
+	});
+
+	describe("playerIndicator", () => {
+		describe("doesn't display anything when user is null", () => {
+			it("playerName", () => {
+				act(() => {
+					render(
+						<UserProvider>
+							<UserDispatcherInteractor dispatcherCommand={null} />
+						</UserProvider>,
+					);
+				});
+
+				expect(screen.queryByText("Player")).toBeFalsy();
 			});
 
-			expect(screen.queryByText("Player")).toBeFalsy();
+			it("playerColor", () => {
+				act(() => {
+					render(
+						<UserProvider>
+							<UserDispatcherInteractor dispatcherCommand={null} />
+						</UserProvider>,
+					);
+				});
+
+				const circle = screen.queryByRole("img");
+
+				expect(circle).toBeFalsy();
+			});
 		});
 
-		it("playerColor", () => {
-			act(() => {
-				render(
-					<UserProvider>
-						<UserDispatcherInteractor dispatcherCommand={null} />
-					</UserProvider>,
+		describe("displays userName sourced from userContext", () => {
+			it("playerA", () => {
+				act(() => {
+					render(
+						<UserProvider>
+							<UserDispatcherInteractor dispatcherCommand={"setPlayerA"} />
+						</UserProvider>,
+					);
+				});
+
+				expect(screen.getByText("playerA")).toBeTruthy();
+			});
+
+			it("playerB", () => {
+				act(() => {
+					render(
+						<UserProvider>
+							<UserDispatcherInteractor dispatcherCommand={"setPlayerB"} />
+						</UserProvider>,
+					);
+				});
+
+				expect(screen.getByText("playerB")).toBeTruthy();
+			});
+		});
+
+		describe("displays correct playerColor", () => {
+			it("render correct color for playerA", () => {
+				act(() => {
+					render(
+						<UserProvider>
+							<UserDispatcherInteractor dispatcherCommand={"setPlayerA"} />
+						</UserProvider>,
+					);
+				});
+				const circle = screen.getByRole("img");
+
+				expect(circle).toBeTruthy();
+				expect(circle.querySelector("circle")?.getAttribute("fill")).toEqual(
+					"#FF0000",
 				);
 			});
 
-			const circle = screen.queryByRole("img");
+			it("render correct color for playerA", () => {
+				act(() => {
+					render(
+						<UserProvider>
+							<UserDispatcherInteractor dispatcherCommand={"setPlayerB"} />
+						</UserProvider>,
+					);
+				});
+				const circle = screen.getByRole("img");
 
-			expect(circle).toBeFalsy();
+				expect(circle).toBeTruthy();
+				expect(circle.querySelector("circle")?.getAttribute("fill")).toEqual(
+					"#0000FF",
+				);
+			});
 		});
 	});
 
-	describe("displays userName sourced from userContext", () => {
-		it("playerA", () => {
+	describe("lobby info", () => {
+		it("display current lobby id", async () => {
+			const lobbyId: number = 0;
+			const anotherLobbyId: number = 1;
+
 			act(() => {
 				render(
-					<UserProvider>
-						<UserDispatcherInteractor dispatcherCommand={"setPlayerA"} />
-					</UserProvider>,
+					<LobbyProvider>
+						<LobbyDispatcherInteractor
+							dispatcherCommand={"join"}
+							lobby={aLobby({ lobbyId: lobbyId })}
+							secondaryLobbyId={anotherLobbyId}
+						/>
+					</LobbyProvider>,
+				);
+			});
+			const lobbyInfoButton = screen.getByRole("button", { name: /Lobby ID:/ });
+			expect(lobbyInfoButton).toBeTruthy();
+			expect(lobbyInfoButton.textContent).toEqual(`Lobby ID: ${lobbyId}`);
+
+			act(() => {
+				screen.getByTestId("joinSecondary").click();
+			});
+			await waitFor(
+				() => {
+					expect(lobbyInfoButton.textContent).toEqual(
+						`Lobby ID: ${anotherLobbyId}`,
+					);
+				},
+				{ timeout: 1000 },
+			);
+		});
+
+		it("hides if lobby is null", () => {
+			act(() => {
+				render(
+					<LobbyProvider>
+						<LobbyDispatcherInteractor
+							dispatcherCommand={"leave"}
+							lobby={null}
+						/>
+					</LobbyProvider>,
 				);
 			});
 
-			expect(screen.getByText("playerA")).toBeTruthy();
+			const lobbyInfoButton = screen.queryAllByRole("button", {
+				name: /Lobby ID:/,
+			});
+			expect(lobbyInfoButton).toHaveLength(0);
 		});
 
-		it("playerB", () => {
+		it("copies lobby id to clipboard on click", async () => {
+			const spy = vi.spyOn(navigator.clipboard, "writeText");
+
+			const lobbyId: number = 0;
+			const anotherLobbyId: number = 1;
+
 			act(() => {
 				render(
-					<UserProvider>
-						<UserDispatcherInteractor dispatcherCommand={"setPlayerB"} />
-					</UserProvider>,
+					<LobbyProvider>
+						<LobbyDispatcherInteractor
+							dispatcherCommand={"join"}
+							lobby={aLobby({ lobbyId: lobbyId })}
+							secondaryLobbyId={anotherLobbyId}
+						/>
+					</LobbyProvider>,
 				);
 			});
 
-			expect(screen.getByText("playerB")).toBeTruthy();
-		});
-	});
+			const lobbyInfoButton = screen.getByRole("button", { name: /Lobby ID:/ });
 
-	describe("displays correct playerColor", () => {
-		it("render correct color for playerA", () => {
+			lobbyInfoButton.click();
+
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenLastCalledWith(`${lobbyId}`);
+
+			act(() => {
+				screen.getByTestId("joinSecondary").click();
+			});
+			await waitFor(
+				() => {
+					expect(lobbyInfoButton.textContent).toEqual(
+						`Lobby ID: ${anotherLobbyId}`,
+					);
+				},
+				{ timeout: 1000 },
+			);
+
+			lobbyInfoButton.click();
+
+			expect(spy).toHaveBeenCalledTimes(2);
+			expect(spy).toHaveBeenLastCalledWith(`${anotherLobbyId}`);
+		});
+
+		it("displays toast on click", async () => {
+			const lobbyId: number = 0;
+
 			act(() => {
 				render(
-					<UserProvider>
-						<UserDispatcherInteractor dispatcherCommand={"setPlayerA"} />
-					</UserProvider>,
+					<LobbyProvider>
+						<LobbyDispatcherInteractor
+							dispatcherCommand={"join"}
+							lobby={aLobby({ lobbyId: lobbyId })}
+						/>
+					</LobbyProvider>,
 				);
 			});
-			const circle = screen.getByRole("img");
 
-			expect(circle).toBeTruthy();
-			expect(circle.querySelector("circle")?.getAttribute("fill")).toEqual(
-				"#FF0000",
+			const lobbyInfoButton = screen.getByRole("button", { name: /Lobby ID:/ });
+
+			expect(mockToast).toHaveBeenCalledTimes(0);
+			lobbyInfoButton.click();
+			await waitFor(
+				() => {
+					expect(mockToast).toHaveBeenCalledTimes(1);
+				},
+				{ timeout: 100 },
 			);
-		});
-
-		it("render correct color for playerA", () => {
-			act(() => {
-				render(
-					<UserProvider>
-						<UserDispatcherInteractor dispatcherCommand={"setPlayerB"} />
-					</UserProvider>,
-				);
+			expect(mockToast).toHaveBeenCalledWith({
+				title: "Copied lobbyID to clipboard",
+				description: "",
+				variant: "default",
 			});
-			const circle = screen.getByRole("img");
-
-			expect(circle).toBeTruthy();
-			expect(circle.querySelector("circle")?.getAttribute("fill")).toEqual(
-				"#0000FF",
-			);
 		});
-	});
-});
-
-describe("lobby info", () => {
-	it("display current lobby id", async () => {
-		const lobbyId: number = 0;
-		const anotherLobbyId: number = 1;
-
-		act(() => {
-			render(
-				<LobbyProvider>
-					<LobbyDispatcherInteractor
-						dispatcherCommand={"join"}
-						lobby={aLobby({ lobbyId: lobbyId })}
-						secondaryLobbyId={anotherLobbyId}
-					/>
-				</LobbyProvider>,
-			);
-		});
-		const lobbyInfoButton = screen.getByRole("button", { name: /Lobby ID:/ });
-		expect(lobbyInfoButton).toBeTruthy();
-		expect(lobbyInfoButton.textContent).toEqual(`Lobby ID: ${lobbyId}`);
-
-		act(() => {
-			screen.getByTestId("joinSecondary").click();
-		});
-		await waitFor(
-			() => {
-				expect(lobbyInfoButton.textContent).toEqual(
-					`Lobby ID: ${anotherLobbyId}`,
-				);
-			},
-			{ timeout: 1000 },
-		);
-	});
-
-	it("hides if lobby is null", () => {
-		act(() => {
-			render(
-				<LobbyProvider>
-					<LobbyDispatcherInteractor dispatcherCommand={"leave"} lobby={null} />
-				</LobbyProvider>,
-			);
-		});
-
-		const lobbyInfoButton = screen.queryAllByRole("button", {
-			name: /Lobby ID:/,
-		});
-		expect(lobbyInfoButton).toHaveLength(0);
-	});
-
-	it("copies lobby id to clipboard on click", async () => {
-		const spy = vi.spyOn(navigator.clipboard, "writeText");
-
-		const lobbyId: number = 0;
-		const anotherLobbyId: number = 1;
-
-		act(() => {
-			render(
-				<LobbyProvider>
-					<LobbyDispatcherInteractor
-						dispatcherCommand={"join"}
-						lobby={aLobby({ lobbyId: lobbyId })}
-						secondaryLobbyId={anotherLobbyId}
-					/>
-				</LobbyProvider>,
-			);
-		});
-
-		const lobbyInfoButton = screen.getByRole("button", { name: /Lobby ID:/ });
-
-		lobbyInfoButton.click();
-
-		expect(spy).toHaveBeenCalledTimes(1);
-		expect(spy).toHaveBeenLastCalledWith(`${lobbyId}`);
-
-		act(() => {
-			screen.getByTestId("joinSecondary").click();
-		});
-		await waitFor(
-			() => {
-				expect(lobbyInfoButton.textContent).toEqual(
-					`Lobby ID: ${anotherLobbyId}`,
-				);
-			},
-			{ timeout: 1000 },
-		);
-
-		lobbyInfoButton.click();
-
-		expect(spy).toHaveBeenCalledTimes(2);
-		expect(spy).toHaveBeenLastCalledWith(`${anotherLobbyId}`);
 	});
 });
 
