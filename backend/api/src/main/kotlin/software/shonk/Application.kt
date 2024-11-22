@@ -4,6 +4,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
+import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
@@ -26,6 +27,7 @@ fun main() {
             moduleApiV0()
             moduleApiV1()
             koinModule()
+            staticResources()
         }
         .start(wait = true)
 }
@@ -52,11 +54,20 @@ fun Application.module() {
 }
 
 fun Application.moduleApiV0() {
-    routing { route("/api/v0") { configureShorkInterpreterControllerV0() } }
+    routing {
+        route("/api/v0") {
+            staticResources("/docs", "openapi/v0", index = "scalar.html")
+            configureShorkInterpreterControllerV0()
+        }
+    }
 }
 
 fun Application.moduleApiV1() {
     routing { route("/api/v1") { configureShorkInterpreterControllerV1() } }
+}
+
+fun Application.staticResources() {
+    routing { staticResources("/resources", "static") }
 }
 
 fun Application.koinModule() {
