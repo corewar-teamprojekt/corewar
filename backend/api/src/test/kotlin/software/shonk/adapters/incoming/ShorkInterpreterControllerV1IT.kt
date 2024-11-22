@@ -344,8 +344,9 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
                 contentType(ContentType.Application.Json)
                 setBody("{\"playerName\":\"playerA\"}")
             }
-        assertEquals(HttpStatusCode.Conflict, result.status)
+        assertEquals(HttpStatusCode.NotFound, result.status)
     }
+
     @Test
     fun `test get all lobbies when there is only one and it's not initialized`() = runTest {
         client.post("/api/v1/lobby") {
