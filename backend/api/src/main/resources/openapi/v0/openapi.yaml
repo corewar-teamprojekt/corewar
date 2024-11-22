@@ -8,13 +8,21 @@ servers:
 paths:
   /api/v0/code/{player}:
     post:
-      description: ""
+      description: "Stores the program of a given player in current v0Lobby, creates\
+        \ that lobby if there is no current v0Lobby. <br> <br> <br> Path Parameter\
+        \ - {player}: The name of the player whose code is being submitted. For this\
+        \ endpoint ONLY 'playerA' and 'playerB' are valid! <br> Body: The program\
+        \ of the player, in plain text <br> <br> <br> Response 200: The game will\
+        \ automatically start once the second player has submitted. <br> Response\
+        \ 400: Game is in `RUNNING` state or a player still has to submit code. <br>\
+        \ The message field contains an explanation of what went wrong. <br> `{ <br>\
+        \ \"message\": String, <br> }`"
       parameters:
-      - name: "player"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "player"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       requestBody:
         content:
           text/plain:
@@ -36,7 +44,11 @@ paths:
                 type: "object"
   /api/v0/status:
     get:
-      description: ""
+      description: "Returns either the status of the current game, or the status /\
+        \ result of the last game if there is no currently active game. <br> playerXSubmitted\
+        \ will only be true if code for player X has been submitted <br> result will\
+        \ only be valid when gameState is FINISHED <br> playerXSubmitted will switch\
+        \ back to false once the gameState switches to FINISHED"
       responses:
         "200":
           description: "OK"
