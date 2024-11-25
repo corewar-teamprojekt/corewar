@@ -3,7 +3,7 @@ import { LobbyStatus } from "@/domain/LobbyStatus";
 import { GameState } from "@/domain/GameState.ts";
 
 interface LobbyDTO {
-	lobbyId: number;
+	id: number;
 	playersJoined: string[];
 	gameState: GameState;
 }
@@ -16,7 +16,7 @@ export async function getLobbiesV1(): Promise<Lobby[]> {
 		const data = await response.json();
 		return data.lobbies.map(
 			(lobby: LobbyDTO) =>
-				new Lobby(lobby.lobbyId, lobby.playersJoined, lobby.gameState),
+				new Lobby(lobby.id, lobby.playersJoined, lobby.gameState),
 		);
 	} else {
 		return [];

@@ -16,7 +16,7 @@ describe("getLobbiesV1", () => {
 				return HttpResponse.json({
 					lobbies: [
 						{
-							lobbyId: lobbyId,
+							id: lobbyId,
 							playersJoined: playersJoined,
 							gameState: gameState,
 						},
