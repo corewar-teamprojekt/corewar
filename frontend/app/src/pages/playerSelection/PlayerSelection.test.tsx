@@ -15,7 +15,7 @@ import {
 	useDispatchLobby,
 	useLobby,
 } from "@/services/lobbyContext/LobbyContextHelpers";
-import { createLobby, joinLobby } from "@/services/rest/LobbyRest";
+import { createLobbyV1, joinLobbyV1 } from "@/services/rest/LobbyRest";
 import { UserProvider } from "@/services/userContext/UserContext";
 import { useUser } from "@/services/userContext/UserContextHelpers";
 import { aLobby, anotherLobby } from "@/TestFactories";
@@ -49,8 +49,8 @@ const testRouterConfig = [
 ];
 
 vi.mock("@/services/rest/LobbyRest", () => ({
-	createLobby: vi.fn(),
-	joinLobby: vi.fn(),
+	createLobbyV1: vi.fn(),
+	joinLobbyV1: vi.fn(),
 }));
 
 describe("PlayerSelection", () => {
@@ -118,8 +118,8 @@ describe("PlayerSelection", () => {
 		it("Player A joins with new lobby", async () => {
 			const router = createMemoryRouter(testRouterConfig);
 			const expectedLobbyID = 123;
-			(createLobby as Mock).mockResolvedValue(expectedLobbyID);
-			(joinLobby as Mock).mockResolvedValue({});
+			(createLobbyV1 as Mock).mockResolvedValue(expectedLobbyID);
+			(joinLobbyV1 as Mock).mockResolvedValue({});
 			act(() => {
 				render(
 					<UserProvider>
@@ -135,10 +135,7 @@ describe("PlayerSelection", () => {
 				fireEvent.click(buttonA);
 			});
 			await waitFor(() => {
-				expect(createLobby).toHaveBeenCalled();
-			});
-			await waitFor(() => {
-				expect(joinLobby).toHaveBeenCalledWith("playerA", expectedLobbyID);
+				expect(createLobbyV1).toHaveBeenCalledWith("playerA");
 			});
 			await waitFor(() => {
 				expect(router.state.location.pathname).toEqual("/player-coding");
@@ -147,13 +144,14 @@ describe("PlayerSelection", () => {
 			const lobbyId = screen.getByTestId("lobbyId").textContent;
 			expect(playerName).toEqual("playerA");
 			expect(lobbyId).toEqual(expectedLobbyID.toString());
+			expect(joinLobbyV1).not.toHaveBeenCalled();
 		});
 
 		it("Player B joins with new lobby", async () => {
 			const router = createMemoryRouter(testRouterConfig);
 			const expectedLobbyID = 321;
-			(createLobby as Mock).mockResolvedValue(expectedLobbyID);
-			(joinLobby as Mock).mockResolvedValue({});
+			(createLobbyV1 as Mock).mockResolvedValue(expectedLobbyID);
+			(joinLobbyV1 as Mock).mockResolvedValue({});
 			act(() => {
 				render(
 					<UserProvider>
@@ -169,10 +167,7 @@ describe("PlayerSelection", () => {
 				fireEvent.click(buttonB);
 			});
 			await waitFor(() => {
-				expect(createLobby).toHaveBeenCalled();
-			});
-			await waitFor(() => {
-				expect(joinLobby).toHaveBeenCalledWith("playerB", expectedLobbyID);
+				expect(createLobbyV1).toHaveBeenCalledWith("playerB");
 			});
 			await waitFor(() => {
 				expect(router.state.location.pathname).toEqual("/player-coding");
@@ -181,6 +176,7 @@ describe("PlayerSelection", () => {
 			const lobbyId = screen.getByTestId("lobbyId").textContent;
 			expect(playerName).toEqual("playerB");
 			expect(lobbyId).toEqual(expectedLobbyID.toString());
+			expect(joinLobbyV1).not.toHaveBeenCalled();
 		});
 	});
 
@@ -188,8 +184,8 @@ describe("PlayerSelection", () => {
 		it("Player A joins with new lobby", async () => {
 			const router = createMemoryRouter(testRouterConfig);
 			const expectedLobby = anotherLobby();
-			(joinLobby as Mock).mockResolvedValue({});
-			(createLobby as Mock).mockRejectedValue(
+			(joinLobbyV1 as Mock).mockResolvedValue({});
+			(createLobbyV1 as Mock).mockRejectedValue(
 				new Error("Should not be called"),
 			);
 			act(() => {
@@ -207,7 +203,7 @@ describe("PlayerSelection", () => {
 				fireEvent.click(buttonA);
 			});
 			await waitFor(() => {
-				expect(joinLobby).toHaveBeenCalledWith("playerA", expectedLobby.id);
+				expect(joinLobbyV1).toHaveBeenCalledWith("playerA", expectedLobby.id);
 			});
 			await waitFor(() => {
 				expect(router.state.location.pathname).toEqual("/player-coding");
@@ -217,13 +213,13 @@ describe("PlayerSelection", () => {
 			expect(playerName).toEqual("playerA");
 			expect(lobbyId).toEqual(expectedLobby.id.toString());
 
-			expect(createLobby).not.toHaveBeenCalled();
+			expect(createLobbyV1).not.toHaveBeenCalled();
 		});
 		it("Player B joins with new lobby", async () => {
 			const router = createMemoryRouter(testRouterConfig);
 			const expectedLobby = aLobby();
-			(joinLobby as Mock).mockResolvedValue({});
-			(createLobby as Mock).mockRejectedValue(
+			(joinLobbyV1 as Mock).mockResolvedValue({});
+			(createLobbyV1 as Mock).mockRejectedValue(
 				new Error("Should not be called"),
 			);
 			act(() => {
@@ -241,7 +237,7 @@ describe("PlayerSelection", () => {
 				fireEvent.click(buttonA);
 			});
 			await waitFor(() => {
-				expect(joinLobby).toHaveBeenCalledWith("playerB", expectedLobby.id);
+				expect(joinLobbyV1).toHaveBeenCalledWith("playerB", expectedLobby.id);
 			});
 			await waitFor(() => {
 				expect(router.state.location.pathname).toEqual("/player-coding");
@@ -251,15 +247,15 @@ describe("PlayerSelection", () => {
 			expect(playerName).toEqual("playerB");
 			expect(lobbyId).toEqual(expectedLobby.id.toString());
 
-			expect(createLobby).not.toHaveBeenCalled();
+			expect(createLobbyV1).not.toHaveBeenCalled();
 		});
 	});
 
 	describe("when joining or creating fails, the user is redirect to lobby-selection", () => {
 		it("createlobby Fails", async () => {
 			const router = createMemoryRouter(testRouterConfig);
-			(joinLobby as Mock).mockResolvedValue({});
-			(createLobby as Mock).mockRejectedValue(
+			(joinLobbyV1 as Mock).mockResolvedValue({});
+			(createLobbyV1 as Mock).mockRejectedValue(
 				new Error("Should not be called"),
 			);
 			act(() => {
@@ -277,7 +273,7 @@ describe("PlayerSelection", () => {
 				fireEvent.click(buttonA);
 			});
 			await waitFor(() => {
-				expect(createLobby).toHaveBeenCalled();
+				expect(createLobbyV1).toHaveBeenCalled();
 			});
 			await waitFor(() => {
 				expect(router.state.location.pathname).toEqual("/lobby-selection");
@@ -286,8 +282,10 @@ describe("PlayerSelection", () => {
 
 		it("joinLobby Fails", async () => {
 			const router = createMemoryRouter(testRouterConfig);
-			(joinLobby as Mock).mockRejectedValue(new Error("Should not be called"));
-			(createLobby as Mock).mockResolvedValue({});
+			(joinLobbyV1 as Mock).mockRejectedValue(
+				new Error("Should not be called"),
+			);
+			(createLobbyV1 as Mock).mockResolvedValue({});
 			act(() => {
 				render(
 					<UserProvider>
@@ -303,7 +301,7 @@ describe("PlayerSelection", () => {
 				fireEvent.click(buttonA);
 			});
 			await waitFor(() => {
-				expect(joinLobby).toHaveBeenCalled();
+				expect(joinLobbyV1).toHaveBeenCalled();
 			});
 			await waitFor(() => {
 				expect(router.state.location.pathname).toEqual("/lobby-selection");
