@@ -105,7 +105,7 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
         return lobbies.keys.mapNotNull { lobbyId ->
             getLobbyStatus(lobbyId).getOrNull()?.let { status ->
                 LobbyStatus(
-                    lobbyId = lobbyId,
+                    id = lobbyId,
                     playersJoined = lobbies[lobbyId]?.programs?.keys?.toList().orEmpty(),
                     gameState = status.gameState.toString(),
                 )

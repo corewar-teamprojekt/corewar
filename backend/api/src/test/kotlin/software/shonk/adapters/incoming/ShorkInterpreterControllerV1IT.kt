@@ -365,7 +365,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
 
         assertTrue(
             parsedLobbies.contains(
-                LobbyStatus(lobbyId = 0L, playersJoined = emptyList(), gameState = "NOT_STARTED")
+                LobbyStatus(id = 0L, playersJoined = emptyList(), gameState = "NOT_STARTED")
             )
         )
     }
@@ -408,18 +408,14 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
 
             assertTrue(
                 parsedLobbies.contains(
-                    LobbyStatus(
-                        lobbyId = 1L,
-                        playersJoined = emptyList(),
-                        gameState = "NOT_STARTED",
-                    )
+                    LobbyStatus(id = 1L, playersJoined = emptyList(), gameState = "NOT_STARTED")
                 )
             )
 
             assertTrue(
                 parsedLobbies.contains(
                     LobbyStatus(
-                        lobbyId = 2L,
+                        id = 2L,
                         playersJoined = listOf("playerA", "playerB"),
                         gameState = "FINISHED",
                     )
@@ -429,7 +425,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             assertTrue(
                 parsedLobbies.contains(
                     LobbyStatus(
-                        lobbyId = 0L,
+                        id = 0L,
                         playersJoined = listOf("playerA"),
                         gameState = "NOT_STARTED",
                     )
