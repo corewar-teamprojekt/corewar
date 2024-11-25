@@ -8,7 +8,7 @@ import {
 	useDispatchLobby,
 	useLobby,
 } from "@/services/lobbyContext/LobbyContextHelpers";
-import { createLobby, joinLobby } from "@/services/rest/LobbyRest";
+import { createLobbyV1, joinLobbyV1 } from "@/services/rest/LobbyRest";
 import {
 	useDispatchUser,
 	useUser,
@@ -43,19 +43,24 @@ function PlayerSelection() {
 			if (!lobbyDispatch) {
 				return;
 			}
-			joinLobby(userName, lobbyId)
-				.catch(handleLobbyError)
-				.then(() => {
-					if (!lobby || lobby.id !== lobbyId) {
-						const newLobby = new Lobby(
-							lobbyId,
-							[userName],
-							GameState.NOT_STARTED,
-						);
-						lobbyDispatch({ type: "join", lobby: newLobby });
-					}
-					setShouldRedirect(true);
-				});
+			await joinLobbyV1(userName, lobbyId).catch(handleLobbyError);
+			if (!lobby || lobby.id !== lobbyId) {
+				const newLobby = new Lobby(lobbyId, [userName], GameState.NOT_STARTED);
+				lobbyDispatch({ type: "join", lobby: newLobby });
+			}
+			setShouldRedirect(true);
+		}
+
+		async function createLobbyWithPlayer(userName: string) {
+			if (!lobbyDispatch) {
+				return;
+			}
+			const lobbyID = await createLobbyV1(userName).catch(handleLobbyError);
+			if (lobbyID) {
+				const newLobby = new Lobby(lobbyID, [userName], GameState.NOT_STARTED);
+				lobbyDispatch({ type: "join", lobby: newLobby });
+			}
+			setShouldRedirect(true);
 		}
 
 		function handleLobbyError() {
@@ -69,18 +74,22 @@ function PlayerSelection() {
 			setBlockLogout(false);
 		}
 
-		if (!user || !lobbyDispatch) {
+		if (!user || !lobbyDispatch || shouldRedirect) {
 			return;
 		} else if (lobby) {
 			joinLobbyWithPlayer(user.name, lobby.id);
 		} else {
-			createLobby()
-				.catch(handleLobbyError)
-				.then((lobbyID) => {
-					if (lobbyID) joinLobbyWithPlayer(user.name, lobbyID);
-				});
+			createLobbyWithPlayer(user.name);
 		}
-	}, [user, lobby, lobbyDispatch, toast, userDispatcher, navigate]);
+	}, [
+		user,
+		lobby,
+		lobbyDispatch,
+		toast,
+		userDispatcher,
+		navigate,
+		shouldRedirect,
+	]);
 
 	function setPlayer(actionType: "setPlayerA" | "setPlayerB") {
 		if (userDispatcher) {
