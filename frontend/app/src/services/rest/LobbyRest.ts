@@ -1,15 +1,23 @@
 import { Lobby } from "@/domain/Lobby";
 import { LobbyStatus } from "@/domain/LobbyStatus";
+import { GameState } from "@/domain/GameState.ts";
+
+interface LobbyDTO {
+	lobbyId: number;
+	playersJoined: string[];
+	gameState: GameState;
+}
 
 export async function getLobbiesV1(): Promise<Lobby[]> {
 	const response = await fetch(
 		`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/lobby`,
 	);
 	if (response.ok) {
-		const lobbies = await response
-			.json()
-			.then((data) => data.lobbies as Lobby[]);
-		return lobbies;
+		const data = await response.json();
+		return data.lobbies.map(
+			(lobby: LobbyDTO) =>
+				new Lobby(lobby.lobbyId, lobby.playersJoined, lobby.gameState),
+		);
 	} else {
 		return [];
 	}
