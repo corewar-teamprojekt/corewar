@@ -5,6 +5,6 @@ export interface LobbyStatus {
 	playerBSubmitted: boolean;
 	gameState: GameState;
 	result: {
-		winner: "A" | "b" | "DRAW";
+		winner: "A" | "B" | "DRAW";
 	};
 }
