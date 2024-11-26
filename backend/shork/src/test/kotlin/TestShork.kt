@@ -39,4 +39,11 @@ internal class TestShork {
 
         assertEquals(GameOutcome(null, OutcomeKind.DRAW), result.getOrThrow().outcome)
     }
+
+    @Test
+    fun `test run fails if initial instruction is invalid`() {
+        val settings = Settings(initialInstruction = "JMP.A $0 $0")
+        val internalSettings = settings.toInternalSettings()
+        assert(internalSettings.isFailure)
+    }
 }
