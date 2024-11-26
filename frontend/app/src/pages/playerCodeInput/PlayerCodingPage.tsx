@@ -2,14 +2,16 @@ import ConfirmActionDialog from "@/components/confirmActionDialog/ConfirmActionD
 import ProgrammInput from "@/components/ProgramInput/ProgramInput";
 import { RequireUser } from "@/components/requireUser.tsx/RequireUser";
 import { useToast } from "@/hooks/use-toast";
-import { uploadPlayerCode } from "@/services/rest/RestService";
 import { useUser } from "@/services/userContext/UserContextHelpers";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { submitCodeV1 } from "@/services/rest/LobbyRest.ts";
+import { useLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
 
 export default function PlayerCodingPageV2() {
 	const navigate = useNavigate();
 	const user = useUser();
+	const lobby = useLobby();
 	const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 	const [code, setCode] = useState("");
 	const { toast } = useToast();
@@ -24,7 +26,11 @@ export default function PlayerCodingPageV2() {
 			console.error("No user provided");
 			return;
 		}
-		uploadPlayerCode(user.name, code)
+		if (!lobby) {
+			console.error("No lobby provided");
+			return;
+		}
+		submitCodeV1(lobby.id, user.name, code)
 			.then((response) => {
 				if (response.status >= 200 && response.status < 300) {
 					displaySuccessToastAndNavigate();

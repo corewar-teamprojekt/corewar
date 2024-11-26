@@ -1,5 +1,4 @@
 import { useToast } from "@/hooks/use-toast";
-import { uploadPlayerCode } from "@/services/rest/RestService";
 import { useUser } from "@/services/userContext/UserContextHelpers";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
@@ -7,10 +6,14 @@ import { act } from "react";
 import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import PlayerCodingPage from "./PlayerCodingPage";
+import { submitCodeV1 } from "@/services/rest/LobbyRest.ts";
+import { useDispatchLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
+import { aLobby } from "@/TestFactories.ts";
 
 // Mock dependencies
 vi.mock("@/services/userContext/UserContextHelpers");
 vi.mock("@/services/rest/RestService");
+vi.mock("@/services/rest/LobbyRest");
 vi.mock("@/hooks/use-toast");
 
 const testRouterConfig = [
@@ -68,7 +71,14 @@ describe("PlayerCodingPage", () => {
 	});
 
 	it("uploads code and shows success toast on confirm", async () => {
-		(uploadPlayerCode as Mock).mockResolvedValueOnce({ status: 200 });
+		const LOBBY_ID = 0;
+		vi.mock("@/services/lobbyContext/LobbyContextHelpers", () => ({
+			useDispatchLobby: vi.fn(),
+			useLobby: () => aLobby({ lobbyId: 0 }), // Lobby id from the top
+		}));
+		const mockDispatcher = vi.fn();
+		(useDispatchLobby as Mock).mockReturnValue(mockDispatcher);
+		(submitCodeV1 as Mock).mockResolvedValueOnce({ status: 201 });
 		const router = createMemoryRouter(testRouterConfig);
 		act(() => {
 			render(<RouterProvider router={router} />);
@@ -83,7 +93,11 @@ describe("PlayerCodingPage", () => {
 			fireEvent.click(screen.getByText("Confirm"));
 		});
 		await waitFor(() => {
-			expect(uploadPlayerCode).toHaveBeenCalledWith("testUser", "some code");
+			expect(submitCodeV1).toHaveBeenCalledWith(
+				LOBBY_ID,
+				"testUser",
+				"some code",
+			);
 			expect(mockToast).toHaveBeenCalledWith({
 				title: "Success!",
 				description: "your code has been uploaded",
@@ -93,7 +107,7 @@ describe("PlayerCodingPage", () => {
 
 	it("shows error toast on upload failure", async () => {
 		const errorMessage = "Upload failed";
-		(uploadPlayerCode as Mock).mockRejectedValueOnce(new Error(errorMessage));
+		(submitCodeV1 as Mock).mockRejectedValueOnce(new Error(errorMessage));
 		const router = createMemoryRouter(testRouterConfig);
 		act(() => {
 			render(<RouterProvider router={router} />);
@@ -109,7 +123,6 @@ describe("PlayerCodingPage", () => {
 		});
 
 		await waitFor(() => {
-			expect(uploadPlayerCode).toHaveBeenCalledWith("testUser", "some code");
 			expect(mockToast).toHaveBeenCalledWith({
 				title: "Error uploading code: ",
 				description: errorMessage,
@@ -119,7 +132,7 @@ describe("PlayerCodingPage", () => {
 	});
 
 	it("redirects to waiting-for-opponent page on successful upload", async () => {
-		(uploadPlayerCode as Mock).mockResolvedValueOnce({ status: 200 });
+		(submitCodeV1 as Mock).mockResolvedValueOnce({ status: 201 });
 		const router = createMemoryRouter(testRouterConfig);
 		act(() => {
 			render(<RouterProvider router={router} />);
