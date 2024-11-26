@@ -1,28 +1,34 @@
 import LoadingSpinner from "@/components/loadingSpinner/LoadingSpinner.tsx";
 import { RequireUser } from "@/components/requireUser.tsx/RequireUser";
 import { GameState } from "@/domain/GameState.ts";
-import { StatusResponse } from "@/domain/StatusResponse.ts";
 import { BASE_POLLING_INTERVAL_MS } from "@/consts.ts";
 import { usePageVisibility } from "@/lib/usePageVisibility.ts";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./WaitingForResult.module.css";
-import { getStatusV0 } from "@/services/rest/RestService.ts";
+import { getLobbyStatusV1 } from "@/services/rest/LobbyRest.ts";
+import { useLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
 
 function WaitingForResultPage() {
 	const isPageVisible = usePageVisibility();
 	const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
 	const [isPollingEnabled, setIsPollingEnabled] = useState(true);
 	const navigate = useNavigate();
+	const lobby = useLobby();
 
 	useEffect(() => {
 		const pollingCallback = async () => {
 			console.debug("Polling game status...");
 
-			const response = await getStatusV0();
-			const data: StatusResponse = await response.json();
+			if (!lobby) {
+				console.error("No lobby!? How the f*ck did you manage to do this???");
+				return;
+			}
+			const status = await getLobbyStatusV1(lobby.id);
 
-			if (data.gameState === GameState.FINISHED) {
+			console.log(status);
+
+			if (status.gameState === GameState.FINISHED) {
 				setIsPollingEnabled(false);
 				console.log("Game finished. Stopped polling. Rerouting");
 				navigate("/result-display");
@@ -52,7 +58,7 @@ function WaitingForResultPage() {
 		return () => {
 			stopPolling();
 		};
-	}, [isPageVisible, isPollingEnabled, navigate]);
+	}, [lobby, isPageVisible, isPollingEnabled, navigate]);
 
 	return (
 		<RequireUser>
