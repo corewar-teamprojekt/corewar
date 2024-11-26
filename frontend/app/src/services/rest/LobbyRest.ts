@@ -37,9 +37,7 @@ export async function createLobbyV1(playerName: string): Promise<number> {
 
 export async function getLobbyStatusV1(lobbyId: number): Promise<LobbyStatus> {
 	return await fetch(
-		`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/lobby/` +
-			lobbyId +
-			"/status",
+		`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/lobby/status/${lobbyId}`,
 	).then((response) => response.json().then((data) => data as LobbyStatus));
 }
 
@@ -58,6 +56,25 @@ export async function joinLobbyV1(
 			},
 			body: JSON.stringify({
 				playerName: playerName,
+			}),
+		},
+	);
+}
+
+export async function submitCodeV1(
+	lobbyId: number,
+	playerName: string,
+	code: string,
+): Promise<Response> {
+	return await fetch(
+		`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/lobby/${lobbyId}/code/${playerName}`,
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				code: code,
 			}),
 		},
 	);
