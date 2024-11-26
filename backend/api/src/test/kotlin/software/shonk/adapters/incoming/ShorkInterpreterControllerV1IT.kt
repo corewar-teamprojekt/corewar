@@ -238,7 +238,12 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
                 setBody("{\"playerName\":\"playerA\"}")
             }
         assertEquals(HttpStatusCode.Created, result.status)
-        assertEquals("0", result.bodyAsText())
+        val responseId =
+            Json.parseToJsonElement(result.bodyAsText())
+                .jsonObject["lobbyId"]!!
+                .jsonPrimitive
+                .content
+        assertEquals("0", responseId)
     }
 
     @Test
@@ -259,11 +264,26 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
                 setBody("{\"playerName\":\"playerC\"}")
             }
         assertEquals(HttpStatusCode.Created, result.status)
-        assertEquals("0", result.bodyAsText())
+        val responseId0 =
+            Json.parseToJsonElement(result.bodyAsText())
+                .jsonObject["lobbyId"]!!
+                .jsonPrimitive
+                .content
+        assertEquals("0", responseId0)
         assertEquals(HttpStatusCode.Created, result2.status)
-        assertEquals("1", result2.bodyAsText())
+        val responseId1 =
+            Json.parseToJsonElement(result2.bodyAsText())
+                .jsonObject["lobbyId"]!!
+                .jsonPrimitive
+                .content
+        assertEquals("1", responseId1)
         assertEquals(HttpStatusCode.Created, result3.status)
-        assertEquals("2", result3.bodyAsText())
+        val responseId2 =
+            Json.parseToJsonElement(result3.bodyAsText())
+                .jsonObject["lobbyId"]!!
+                .jsonPrimitive
+                .content
+        assertEquals("2", responseId2)
     }
 
     @Test
