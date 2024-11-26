@@ -46,7 +46,7 @@ function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 					<h2 className="text-3xl font-semibold">
 						Competitively optimizing assembly code
 					</h2>
-					<Button onClick={() => navigate("/player-selection")}>
+					<Button onClick={() => navigate("/lobby-selection")}>
 						<h2 className="text-2xl font-semibold">Play</h2>
 					</Button>
 				</div>

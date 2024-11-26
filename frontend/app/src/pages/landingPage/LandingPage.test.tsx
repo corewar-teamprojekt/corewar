@@ -15,6 +15,10 @@ const testRouterConfig = [
 		path: "/player-selection",
 		element: <PlayerSelection />,
 	},
+	{
+		path: "/lobby-selection",
+		element: <p>Lobby selection fake</p>,
+	},
 ];
 
 vi.mock("@/services/userContext/UserContextHelpers");
@@ -25,7 +29,7 @@ describe("hero button", () => {
 		cleanup();
 	});
 
-	it("routes to player-selection", async () => {
+	it("routes to lobby-selection", async () => {
 		const router = createMemoryRouter(testRouterConfig);
 		act(() => {
 			render(<RouterProvider router={router} />);
@@ -38,7 +42,7 @@ describe("hero button", () => {
 		});
 
 		await waitFor(() => {
-			expect(router.state.location.pathname).toEqual("/player-selection");
+			expect(router.state.location.pathname).toEqual("/lobby-selection");
 		});
 	});
 });
