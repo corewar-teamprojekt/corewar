@@ -1,4 +1,3 @@
-import { getStatusV0 } from "@/services/rest/RestService";
 import { useUser } from "@/services/userContext/UserContextHelpers";
 import "@testing-library/jest-dom";
 import {
@@ -11,10 +10,12 @@ import {
 import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import ResultDisplayPage from "./ResultDisplayPage";
+import { getLobbyStatusV1 } from "@/services/rest/LobbyRest.ts";
+import { aLobby } from "@/TestFactories.ts";
 
 // Mock the getStatusV0 function
-vi.mock("@/services/rest/RestService", () => ({
-	getStatusV0: vi.fn(),
+vi.mock("@/services/rest/LobbyRest", () => ({
+	getLobbyStatusV1: vi.fn(),
 }));
 vi.mock("@/services/userContext/UserContextHelpers");
 
@@ -56,17 +57,14 @@ describe("ResultDisplayPage", () => {
 	it("should make an API request and display the result", async () => {
 		const router = createMemoryRouter(testRouterConfig);
 
-		(getStatusV0 as Mock).mockResolvedValue({
-			ok: true,
-			json: async () => mockResult,
-		});
+		(getLobbyStatusV1 as Mock).mockResolvedValue(mockResult);
 
 		act(() => {
 			render(<RouterProvider router={router} />);
 		});
 
 		await waitFor(() => {
-			expect(getStatusV0).toHaveBeenCalled();
+			expect(getLobbyStatusV1).toHaveBeenCalled();
 		});
 
 		//just test if the fields from the MockResponse are in the document, if they are displayed correctly should be tested in the JsonDisplay.test.tsx
@@ -78,9 +76,14 @@ describe("ResultDisplayPage", () => {
 	});
 
 	it("should navigate to player selection page on button click", async () => {
+		vi.mock("@/services/lobbyContext/LobbyContextHelpers", () => ({
+			useDispatchLobby: vi.fn(),
+			useLobby: () => aLobby(), // Lobby id from the top
+		}));
+
 		const router = createMemoryRouter(testRouterConfig);
 
-		(getStatusV0 as Mock).mockResolvedValue({
+		(getLobbyStatusV1 as Mock).mockResolvedValue({
 			ok: true,
 			json: async () => mockResult,
 		});

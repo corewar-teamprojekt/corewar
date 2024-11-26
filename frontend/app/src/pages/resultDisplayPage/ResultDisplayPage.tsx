@@ -1,23 +1,24 @@
 import JsonDisplay from "@/components/jsonDisplay/JsonDisplay";
 import { RequireUser } from "@/components/requireUser.tsx/RequireUser";
 import { Button } from "@/components/ui/button";
-import { getStatusV0 } from "@/services/rest/RestService";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getLobbyStatusV1 } from "@/services/rest/LobbyRest.ts";
+import { useLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
+import { LobbyStatus } from "@/domain/LobbyStatus.ts";
 
 export default function ResultDisplayPage() {
-	const [result, setResult] = useState(null);
+	const [result, setResult] = useState<LobbyStatus | null>(null);
 	const navigate = useNavigate();
+	const lobby = useLobby();
 
 	useEffect(() => {
-		getStatusV0().then((response) => {
-			if (response.ok) {
-				response.json().then((data) => {
-					setResult(data);
-				});
-			}
-		});
-	}, []);
+		if (!lobby) {
+			console.error("Lobby is undefined");
+			return;
+		}
+		getLobbyStatusV1(lobby.id).then((response) => setResult(response));
+	}, [lobby]);
 
 	return (
 		<RequireUser>
