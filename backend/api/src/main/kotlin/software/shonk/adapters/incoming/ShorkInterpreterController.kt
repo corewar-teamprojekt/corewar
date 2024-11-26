@@ -35,7 +35,7 @@ fun Route.configureShorkInterpreterControllerV1() {
         return@get
     }
 
-    get("lobby/status/{lobbyId}") {
+    get("lobby/{lobbyId}/status") {
         val lobbyId =
             call.parameters["lobbyId"]?.toLongOrNull()
                 ?: return@get call.respond(HttpStatusCode.BadRequest)

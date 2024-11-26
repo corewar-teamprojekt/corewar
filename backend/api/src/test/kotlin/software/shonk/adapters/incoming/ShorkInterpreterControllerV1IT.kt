@@ -82,7 +82,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
 
     @Test
     fun `test get lobby status with invalid ID`() = runTest {
-        val result = client.get("/api/v1/lobby/status/1")
+        val result = client.get("/api/v1/lobby/1/status")
         assertEquals(HttpStatusCode.BadRequest, result.status)
         assert(result.bodyAsText().contains("No lobby with that id"))
     }
@@ -93,7 +93,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             contentType(ContentType.Application.Json)
             setBody("{\"playerName\":\"playerA\"}")
         }
-        val result = client.get("/api/v1/lobby/status/0")
+        val result = client.get("/api/v1/lobby/0/status")
         val responseData = parseStatus(result)
         assertEquals("false", responseData["playerASubmitted"])
         assertEquals("false", responseData["playerBSubmitted"])
@@ -117,7 +117,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             setBody("someOtherString")
         }
 
-        val result = client.get("/api/v1/lobby/status/0")
+        val result = client.get("/api/v1/lobby/0/status")
         val responseData = parseStatus(result)
         assertEquals("true", responseData["playerASubmitted"])
         assertEquals("true", responseData["playerBSubmitted"])
@@ -153,7 +153,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             assertEquals(HttpStatusCode.BadRequest, result.status)
             assert(result.bodyAsText().contains("No player with that name in the lobby"))
 
-            val resultStatus = client.get("/api/v1/lobby/status/0")
+            val resultStatus = client.get("/api/v1/lobby/0/status")
             val responseData = parseStatus(resultStatus)
             assertEquals("false", responseData["playerASubmitted"])
             assertEquals("false", responseData["playerBSubmitted"])
@@ -173,7 +173,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             setBody("someString")
         }
 
-        val result = client.get("/api/v1/lobby/status/0")
+        val result = client.get("/api/v1/lobby/0/status")
         val responseData = parseStatus(result)
         assertEquals("true", responseData["playerASubmitted"])
         assertEquals("false", responseData["playerBSubmitted"])
@@ -197,7 +197,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             setBody("someShortString")
         }
 
-        val result = client.get("/api/v1/lobby/status/0")
+        val result = client.get("/api/v1/lobby/0/status")
         val responseData = parseStatus(result)
         assertEquals("FINISHED", responseData["gameState"])
     }
@@ -222,7 +222,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             setBody("someNewString")
         }
 
-        val result = client.get("/api/v1/lobby/status/0")
+        val result = client.get("/api/v1/lobby/0/status")
         val responseData = parseStatus(result)
         assertEquals("true", responseData["playerASubmitted"])
         assertEquals("false", responseData["playerBSubmitted"])
