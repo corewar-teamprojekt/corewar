@@ -120,7 +120,7 @@ Player path variable has to be one of [A, B]
 
 Gets a list of all existing lobbies and their details.
 
-playersJoined contains a list of all playerNames that joined the lobby
+playersJoined contains a list of all playerNames that joined the lobby. Joined means joined, not code submitted!
 
 ## responses:
 ### 200:
