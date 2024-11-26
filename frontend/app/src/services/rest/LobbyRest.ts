@@ -37,7 +37,7 @@ export async function createLobbyV1(playerName: string): Promise<number> {
 
 export async function getLobbyStatusV1(lobbyId: number): Promise<LobbyStatus> {
 	return await fetch(
-		`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/lobby/status/${lobbyId}`,
+		`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/lobby/${lobbyId}/status`,
 	).then((response) => response.json().then((data) => data as LobbyStatus));
 }
 

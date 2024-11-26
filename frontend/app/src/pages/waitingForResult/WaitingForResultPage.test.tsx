@@ -69,7 +69,7 @@ describe("backend polling", () => {
 		await waitFor(
 			() => {
 				expect(mockFetch).toHaveBeenCalledWith(
-					`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/lobby/status/${LOBBY_ID}`,
+					`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/lobby/${LOBBY_ID}/status`,
 				);
 			},
 			{
