@@ -27,40 +27,46 @@ function PlayerSelection() {
 	const user = useUser();
 
 	const [blockLogout, setBlockLogout] = useState<boolean>(false);
-	const [shouldRedirect, setShouldRedirect] = useState(false);
+	const [shouldRedirect] = useState(false);
 
 	const { toast } = useToast();
-
-	useEffect(() => {
-		if (lobby && user && shouldRedirect) {
-			navigate("/player-coding");
-			setBlockLogout(false);
-		}
-	}, [lobby, user, shouldRedirect, navigate]);
 
 	useEffect(() => {
 		async function joinLobbyWithPlayer(userName: string, lobbyId: number) {
 			if (!lobbyDispatch) {
 				return;
 			}
-			await joinLobbyV1(userName, lobbyId).catch(handleLobbyError);
-			if (!lobby || lobby.id !== lobbyId) {
-				const newLobby = new Lobby(lobbyId, [userName], GameState.NOT_STARTED);
-				lobbyDispatch({ type: "join", lobby: newLobby });
-			}
-			setShouldRedirect(true);
+			await joinLobbyV1(userName, lobbyId).then(() => {
+				if (!lobby || lobby.id !== lobbyId) {
+					const newLobby = new Lobby(
+						lobbyId,
+						[userName],
+						GameState.NOT_STARTED,
+					);
+					lobbyDispatch({ type: "join", lobby: newLobby });
+				}
+				navigate("/player-coding");
+				setBlockLogout(false);
+			}, handleLobbyError);
 		}
 
 		async function createLobbyWithPlayer(userName: string) {
 			if (!lobbyDispatch) {
 				return;
 			}
-			const lobbyID = await createLobbyV1(userName).catch(handleLobbyError);
-			if (lobbyID) {
-				const newLobby = new Lobby(lobbyID, [userName], GameState.NOT_STARTED);
-				lobbyDispatch({ type: "join", lobby: newLobby });
-			}
-			setShouldRedirect(true);
+			await createLobbyV1(userName).then((lobbyID) => {
+				console.log(lobbyID);
+				if (lobbyID) {
+					const newLobby = new Lobby(
+						lobbyID,
+						[userName],
+						GameState.NOT_STARTED,
+					);
+					lobbyDispatch({ type: "join", lobby: newLobby });
+				}
+				navigate("/player-coding");
+				setBlockLogout(false);
+			}, handleLobbyError);
 		}
 
 		function handleLobbyError() {
