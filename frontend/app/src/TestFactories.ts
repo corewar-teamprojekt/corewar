@@ -1,5 +1,6 @@
 import { Lobby } from "@/domain/Lobby.ts";
 import { GameState } from "@/domain/GameState.ts";
+import { LobbyStatus } from "./domain/LobbyStatus";
 
 interface NamedLobbyParameters {
 	lobbyId?: number;
@@ -33,3 +34,28 @@ export function mockLobbies(): Lobby[] {
 		new Lobby(10, ["Oscar"], GameState.NOT_STARTED),
 	];
 }
+
+export const mockResultWinnerA: LobbyStatus = {
+	playerASubmitted: true,
+	playerBSubmitted: true,
+	gameState: GameState.FINISHED,
+	result: {
+		winner: "A",
+	},
+};
+export const mockResultWinnerB: LobbyStatus = {
+	playerASubmitted: true,
+	playerBSubmitted: true,
+	gameState: GameState.FINISHED,
+	result: {
+		winner: "B",
+	},
+};
+export const mockResultDraw: LobbyStatus = {
+	playerASubmitted: true,
+	playerBSubmitted: true,
+	gameState: GameState.FINISHED,
+	result: {
+		winner: "DRAW",
+	},
+};
