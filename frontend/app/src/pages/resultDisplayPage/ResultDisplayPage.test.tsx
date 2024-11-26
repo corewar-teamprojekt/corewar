@@ -1,4 +1,15 @@
-import { useUser } from "@/services/userContext/UserContextHelpers";
+import {
+	aLobby,
+	mockResultDraw,
+	mockResultWinnerA,
+	mockResultWinnerB,
+} from "@/TestFactories";
+import {
+	useDispatchLobby,
+	useLobby,
+} from "@/services/lobbyContext/LobbyContextHelpers";
+import { getLobbyStatusV1 } from "@/services/rest/LobbyRest";
+import { playerA, useUser } from "@/services/userContext/UserContextHelpers";
 import "@testing-library/jest-dom";
 import {
 	act,
@@ -8,17 +19,16 @@ import {
 	waitFor,
 } from "@testing-library/react";
 import { createMemoryRouter, Navigate, RouterProvider } from "react-router-dom";
-import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
+import { afterEach, describe, expect, it, Mock, vi } from "vitest";
 import ResultDisplayPage from "./ResultDisplayPage";
-import { getLobbyStatusV1 } from "@/services/rest/LobbyRest.ts";
-import { aLobby } from "@/TestFactories.ts";
-import { useDispatchLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
 
 // Mock the getStatusV0 function
 vi.mock("@/services/rest/LobbyRest", () => ({
 	getLobbyStatusV1: vi.fn(),
 }));
 vi.mock("@/services/userContext/UserContextHelpers");
+
+vi.mock("@/services/lobbyContext/LobbyContextHelpers");
 
 const testRouterConfig = [
 	{
@@ -35,30 +45,18 @@ const testRouterConfig = [
 	},
 ];
 
-const mockResult = {
-	playerASubmitted: true,
-	playerBSubmitted: true,
-	gameState: "FINISHED",
-	result: {
-		winner: "A",
-	},
-};
-
-const mockUser = { name: "testUser" };
-
 describe("ResultDisplayPage", () => {
-	beforeEach(() => {
-		(useUser as Mock).mockReturnValue(mockUser);
-	});
-
 	afterEach(() => {
 		vi.clearAllMocks();
 	});
 
 	it("should make an API request and display the result", async () => {
+		const expectedLobby = aLobby();
+		(useUser as Mock).mockReturnValue(playerA);
+		(useLobby as Mock).mockReturnValue(expectedLobby);
 		const router = createMemoryRouter(testRouterConfig);
 
-		(getLobbyStatusV1 as Mock).mockResolvedValue(mockResult);
+		(getLobbyStatusV1 as Mock).mockResolvedValue(mockResultWinnerA);
 
 		act(() => {
 			render(<RouterProvider router={router} />);
@@ -67,28 +65,68 @@ describe("ResultDisplayPage", () => {
 		await waitFor(() => {
 			expect(getLobbyStatusV1).toHaveBeenCalled();
 		});
+	});
 
-		//just test if the fields from the MockResponse are in the document, if they are displayed correctly should be tested in the JsonDisplay.test.tsx
-		expect(await screen.findByText(/playerASubmitted/)).toBeInTheDocument();
-		expect(await screen.findByText(/playerBSubmitted/)).toBeInTheDocument();
-		expect(await screen.findByText(/gameState/)).toBeInTheDocument();
-		expect(await screen.findByText(/result/)).toBeInTheDocument();
-		expect(await screen.findByText(/winner/)).toBeInTheDocument();
+	it("should display 'You won!' when the user is the winner", async () => {
+		(useUser as Mock).mockReturnValue(playerA);
+		(useLobby as Mock).mockReturnValue(aLobby());
+		const router = createMemoryRouter(testRouterConfig);
+
+		(getLobbyStatusV1 as Mock).mockResolvedValue(mockResultWinnerA);
+
+		act(() => {
+			render(<RouterProvider router={router} />);
+		});
+
+		await waitFor(() => {
+			expect(screen.getByText("You won!")).toBeInTheDocument();
+			expect(screen.getByAltText("playerA icon")).toBeInTheDocument();
+		});
+	});
+
+	it("should display 'You lost!' when the user is not the winner", async () => {
+		(useUser as Mock).mockReturnValue(playerA);
+		(useLobby as Mock).mockReturnValue(aLobby());
+		const router = createMemoryRouter(testRouterConfig);
+
+		(getLobbyStatusV1 as Mock).mockResolvedValue(mockResultWinnerB);
+
+		act(() => {
+			render(<RouterProvider router={router} />);
+		});
+
+		await waitFor(() => {
+			expect(screen.getByText("You lost!")).toBeInTheDocument();
+			expect(screen.getByAltText("playerB icon")).toBeInTheDocument();
+		});
+	});
+
+	it("should display 'It's a draw!' when the result is a draw", async () => {
+		(useUser as Mock).mockReturnValue(playerA);
+		(useLobby as Mock).mockReturnValue(aLobby());
+		const router = createMemoryRouter(testRouterConfig);
+
+		(getLobbyStatusV1 as Mock).mockResolvedValue(mockResultDraw);
+
+		act(() => {
+			render(<RouterProvider router={router} />);
+		});
+
+		await waitFor(() => {
+			expect(screen.getByText("It's a draw!")).toBeInTheDocument();
+			expect(screen.getByAltText("draw icon")).toBeInTheDocument();
+		});
 	});
 
 	it("should navigate to lobby selection page and leave lobby on button click", async () => {
 		const mockLobbyReducer = vi.fn();
-		vi.mock("@/services/lobbyContext/LobbyContextHelpers", () => ({
-			useDispatchLobby: vi.fn(),
-			useLobby: () => aLobby(), // Lobby id from the top
-		}));
 		(useDispatchLobby as Mock).mockReturnValue(mockLobbyReducer);
 
 		const router = createMemoryRouter(testRouterConfig);
 
 		(getLobbyStatusV1 as Mock).mockResolvedValue({
 			ok: true,
-			json: async () => mockResult,
+			json: async () => mockResultWinnerA,
 		});
 
 		act(() => {
