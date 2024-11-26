@@ -14,5 +14,5 @@ interface IShork {
      * @see GameResult
      * @see Settings.instructionLimit
      */
-    fun run(settings: Settings, programs: Map<String, String>): GameResult
+    fun run(settings: Settings, programs: Map<String, String>): Result<GameResult>
 }

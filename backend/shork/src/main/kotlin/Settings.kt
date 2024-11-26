@@ -1,8 +1,7 @@
 package software.shonk.interpreter
 
-import software.shonk.interpreter.internal.addressing.AddressMode
-import software.shonk.interpreter.internal.addressing.Modifier
-import software.shonk.interpreter.internal.instruction.Dat
+import software.shonk.interpreter.internal.compiler.Compiler
+import software.shonk.interpreter.internal.settings.InternalSettings
 
 /**
  * The settings for the interpreter
@@ -45,23 +44,39 @@ class Settings(
      */
     val randomSeparation: Boolean = false,
 ) {
-    internal fun toInternalSettings() =
-        software.shonk.interpreter.internal.settings.InternalSettings(
-            coreSize,
-            instructionLimit,
-            Dat(
-                42,
-                1337,
-                AddressMode.DIRECT,
-                AddressMode.DIRECT,
-                Modifier.I,
-            ), // TODO: replace with actual instruction once the parser exists
-            maximumTicks,
-            maximumProcessesPerPlayer,
-            readDistance,
-            writeDistance,
-            minimumSeparation,
-            separation,
-            randomSeparation,
+    internal fun toInternalSettings(): Result<InternalSettings> {
+        val compiler = Compiler(initialInstruction)
+        val instructions = compiler.instructions
+
+        if (compiler.errorsOccured) {
+            return Result.failure(
+                IllegalArgumentException("Initital instruction is not a valid redcode instruction")
+            )
+        } else if (instructions.size > 1) {
+            return Result.failure(
+                IllegalArgumentException(
+                    "Initial instruction cannot contain more than one instruction."
+                )
+            )
+        } else if (instructions.size < 1) {
+            return Result.failure(
+                IllegalArgumentException("Initial instruction cannot be an empty String")
+            )
+        }
+
+        return Result.success(
+            InternalSettings(
+                coreSize,
+                instructionLimit,
+                instructions.get(0),
+                maximumTicks,
+                maximumProcessesPerPlayer,
+                readDistance,
+                writeDistance,
+                minimumSeparation,
+                separation,
+                randomSeparation,
+            )
         )
+    }
 }
