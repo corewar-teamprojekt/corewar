@@ -1,33 +1,37 @@
 import LoadingSpinner from "@/components/loadingSpinner/LoadingSpinner.tsx";
 import { RequireUser } from "@/components/requireUser.tsx/RequireUser";
 import { GameState } from "@/domain/GameState.ts";
-import { StatusResponse } from "@/domain/StatusResponse.ts";
 import { BASE_POLLING_INTERVAL_MS } from "@/consts.ts";
 import { usePageVisibility } from "@/lib/usePageVisibility.ts";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./WaitingForOpponent.module.css";
-import { getStatusV0 } from "@/services/rest/RestService.ts";
+import { useLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
+import { getLobbyStatusV1 } from "@/services/rest/LobbyRest.ts";
 
 function WaitingForOpponentPage() {
 	const isPageVisible = usePageVisibility();
 	const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
 	const [isPollingEnabled, setIsPollingEnabled] = useState(true);
 	const navigate = useNavigate();
+	const lobby = useLobby();
 
 	useEffect(() => {
 		const pollingCallback = async () => {
 			console.debug("Polling game status...");
 
-			const response = await getStatusV0();
-
-			if (response.status >= 500) {
+			if (!lobby) {
+				console.error("No lobby!? How the f*ck did you manage to do this???");
 				return;
 			}
+			const status = await getLobbyStatusV1(lobby.id);
 
-			const data: StatusResponse = await response.json();
+			// TODO: Change getLobbyStatusV1 to include status IF WE STILL WANT TO KEEP THIS PART BELOW
+			/*			if (status.status >= 500) {
+				return;
+			}*/
 
-			if (data.gameState != GameState.NOT_STARTED) {
+			if (status.gameState != GameState.NOT_STARTED) {
 				setIsPollingEnabled(false);
 				console.log("Game started. Stopped polling. Rerouting");
 				navigate("/waiting-for-result");
@@ -57,7 +61,7 @@ function WaitingForOpponentPage() {
 		return () => {
 			stopPolling();
 		};
-	}, [isPageVisible, isPollingEnabled, navigate]);
+	}, [lobby, isPageVisible, isPollingEnabled, navigate]);
 
 	return (
 		<RequireUser>
