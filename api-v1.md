@@ -70,7 +70,18 @@ playerXSubmitted will switch back to false once the gameState switches to `FINIS
     "gameState": One of [NOT_STARTED, RUNNING, FINISHED], 
     "result": {
         "winner": One of [A, B, DRAW], 
-    }
+    },
+    "visualizationData": [ 
+        {
+            "playerId": One of [A, B],
+            "programCounterBefore": number,
+            "programCounterAfter": number,
+            "programCountersOfOtherProcesses": [number],
+            "memoryReads": [number], 
+            "memoryWrites": [number],
+            "processDied": boolean,
+        }
+    ]
 }
 ```
 
