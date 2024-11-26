@@ -10,8 +10,14 @@ import software.shonk.interpreter.internal.program.Program
 class Shork : IShork {
     private val logger = LoggerFactory.getLogger(Shork::class.java)
 
-    override fun run(settings: Settings, programs: Map<String, String>): GameResult {
-        val internalSettings = settings.toInternalSettings()
+    override fun run(settings: Settings, programs: Map<String, String>): Result<GameResult> {
+        var internalSettings =
+            settings
+                .toInternalSettings()
+                .getOrElse({
+                    return Result.failure(it)
+                })
+
         val shork = InternalShork(internalSettings)
 
         var address = -1 * settings.separation
@@ -74,6 +80,6 @@ class Shork : IShork {
                 }
             }
 
-        return GameResult(outcome = outcome, roundInformation = emptyList())
+        return Result.success(GameResult(outcome = outcome, roundInformation = emptyList()))
     }
 }

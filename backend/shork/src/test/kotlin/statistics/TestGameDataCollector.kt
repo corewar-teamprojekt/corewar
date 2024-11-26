@@ -2,6 +2,7 @@ package statistics
 
 import mocks.KillProgramInstruction
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import software.shonk.interpreter.Settings
 import software.shonk.interpreter.internal.InternalShork
@@ -15,9 +16,16 @@ internal class TestGameDataCollector {
      * Single method tests:
      */
 
+    val settings = Settings().toInternalSettings().getOrThrow()
+    var shork = InternalShork(settings)
+
+    @BeforeEach
+    fun setupShork() {
+        shork = InternalShork(settings)
+    }
+
     @Test
     fun `test collectMemoryRead`() {
-        val shork = InternalShork(Settings().toInternalSettings())
         val collector: IGameDataCollector = GameDataCollector()
 
         val shorky = Program("shorky", shork)
@@ -35,7 +43,6 @@ internal class TestGameDataCollector {
 
     @Test
     fun `test collectMemoryWrite`() {
-        val shork = InternalShork(Settings().toInternalSettings())
         val collector: IGameDataCollector = GameDataCollector()
 
         val shorky = Program("shorky", shork)
@@ -53,7 +60,6 @@ internal class TestGameDataCollector {
 
     @Test
     fun `test collect process data before tick`() {
-        val shork = InternalShork(Settings().toInternalSettings())
         val collector: IGameDataCollector = GameDataCollector()
 
         val shorky = Program("shorky", shork)
@@ -75,7 +81,6 @@ internal class TestGameDataCollector {
 
     @Test
     fun `test collect process data after tick`() {
-        val shork = InternalShork(Settings().toInternalSettings())
         val collector: IGameDataCollector = GameDataCollector()
 
         val shorky = Program("shorky", shork)
@@ -97,7 +102,6 @@ internal class TestGameDataCollector {
 
     @Test
     fun `test other program counter of other processes`() {
-        val shork = InternalShork(Settings().toInternalSettings())
         val collector: IGameDataCollector = GameDataCollector()
 
         val shorky = Program("shorky", shork)
@@ -126,7 +130,6 @@ internal class TestGameDataCollector {
 
     @Test
     fun `test process died`() {
-        val shork = InternalShork(Settings().toInternalSettings())
         val collector: IGameDataCollector = GameDataCollector()
 
         val shorky = Program("shorky", shork)
@@ -152,7 +155,6 @@ internal class TestGameDataCollector {
 
     @Test
     fun `test single player single round, single process`() {
-        val shork = InternalShork(Settings().toInternalSettings())
         val collector: IGameDataCollector = GameDataCollector()
 
         val shorky = Program("shorky", shork)
@@ -190,7 +192,6 @@ internal class TestGameDataCollector {
 
     @Test
     fun `test single player multiple rounds, single process`() {
-        val shork = InternalShork(Settings().toInternalSettings())
         val collector: IGameDataCollector = GameDataCollector()
 
         val shorky = Program("shorky", shork)
@@ -250,7 +251,6 @@ internal class TestGameDataCollector {
 
     @Test
     fun `test multiple players single round, single process`() {
-        val shork = InternalShork(Settings().toInternalSettings())
         val collector: IGameDataCollector = GameDataCollector()
 
         val shorky = Program("shorky", shork)
@@ -317,7 +317,6 @@ internal class TestGameDataCollector {
 
     @Test
     fun `test multiple players multiple rounds, single process`() {
-        val shork = InternalShork(Settings().toInternalSettings())
         val collector: IGameDataCollector = GameDataCollector()
 
         val shorky = Program("shorky", shork)
@@ -432,7 +431,6 @@ internal class TestGameDataCollector {
 
     @Test
     fun `test single player single round, multiple processes`() {
-        val shork = InternalShork(Settings().toInternalSettings())
         val collector: IGameDataCollector = GameDataCollector()
 
         val shorky = Program("shorky", shork)
@@ -499,7 +497,6 @@ internal class TestGameDataCollector {
 
     @Test
     fun `test multiple players multiple rounds, multiple processes`() {
-        val shork = InternalShork(Settings().toInternalSettings())
         val collector: IGameDataCollector = GameDataCollector()
 
         val shorky = Program("shorky", shork)

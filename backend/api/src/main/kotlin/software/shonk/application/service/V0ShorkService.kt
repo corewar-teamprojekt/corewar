@@ -1,5 +1,6 @@
 package software.shonk.application.service
 
+import kotlin.getOrThrow
 import software.shonk.application.port.incoming.V0ShorkUseCase
 import software.shonk.domain.GameState
 import software.shonk.domain.Result
@@ -34,7 +35,8 @@ class V0ShorkService(private val shork: IShork) : V0ShorkUseCase {
         gameState = GameState.RUNNING
         winner = Winner.UNDECIDED
 
-        val winningPlayer: String? = shork.run(currentSettings, programs).outcome.player
+        val gameOutcome = shork.run(currentSettings, programs).getOrThrow()
+        val winningPlayer = gameOutcome.outcome.player
         gameState = GameState.FINISHED
 
         if (winningPlayer == "playerA") {

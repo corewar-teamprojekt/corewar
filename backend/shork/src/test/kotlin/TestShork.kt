@@ -18,7 +18,7 @@ internal class TestShork {
         val programs = mapOf("impy" to "mov 0, 1", "blahaj" to "jmp $1, 0")
         val result = shork.run(settings, programs)
 
-        assertEquals(GameOutcome("impy", OutcomeKind.WIN), result.outcome)
+        assertEquals(GameOutcome("impy", OutcomeKind.WIN), result.getOrThrow().outcome)
     }
 
     @Test
@@ -27,7 +27,7 @@ internal class TestShork {
         val programs = mapOf<String, String>()
         val result = shork.run(settings, programs)
 
-        assertEquals(GameOutcome(null, OutcomeKind.DRAW), result.outcome)
+        assertEquals(GameOutcome(null, OutcomeKind.DRAW), result.getOrThrow().outcome)
     }
 
     @Test
@@ -37,6 +37,6 @@ internal class TestShork {
         val programs = mapOf("impy" to "jmp 0, 0", "blahaj" to "jmp 0, 0")
         val result = shork.run(settings, programs)
 
-        assertEquals(GameOutcome(null, OutcomeKind.DRAW), result.outcome)
+        assertEquals(GameOutcome(null, OutcomeKind.DRAW), result.getOrThrow().outcome)
     }
 }
