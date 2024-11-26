@@ -15,7 +15,7 @@ class V0ShorkService(private val shork: IShork) : V0ShorkUseCase {
     private var gameState: GameState = GameState.NOT_STARTED
     private var winner: Winner = Winner.UNDECIDED
 
-    private var currentSettings: Settings = Settings(42, 100, "DAT", 100)
+    private var currentSettings: Settings = Settings()
 
     override fun setSettings(settings: Settings) {
         currentSettings = settings

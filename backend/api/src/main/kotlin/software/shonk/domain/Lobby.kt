@@ -9,7 +9,7 @@ data class Lobby(
     val shork: IShork,
     var gameState: GameState = GameState.NOT_STARTED,
     var winner: Winner = Winner.UNDECIDED,
-    var currentSettings: Settings = Settings(42, 100, "DAT", 100),
+    var currentSettings: Settings = Settings(),
     var joinedPlayers: ArrayList<String> = ArrayList<String>(),
 ) {
     fun setSettings(settings: Settings) {
