@@ -238,9 +238,6 @@ class ShorkServiceTest {
         shorkService.createLobby("playerA")
         shorkService.createLobby("playerA")
         shorkService.createLobby("playerA")
-        shorkService.addProgramToLobby(0L, "playerA", "someOtherProgram")
-        shorkService.addProgramToLobby(2L, "playerA", "someProgram")
-        shorkService.addProgramToLobby(2L, "playerB", "someOtherProgram")
         val result = shorkService.getAllLobbies()
 
         assertEquals(3, result.size)
@@ -252,17 +249,13 @@ class ShorkServiceTest {
 
         assertTrue(
             result.contains(
-                LobbyStatus(id = 1L, playersJoined = emptyList(), gameState = "NOT_STARTED")
+                LobbyStatus(id = 1L, playersJoined = listOf("playerA"), gameState = "NOT_STARTED")
             )
         )
 
         assertTrue(
             result.contains(
-                LobbyStatus(
-                    id = 2L,
-                    playersJoined = listOf("playerA", "playerB"),
-                    gameState = "FINISHED",
-                )
+                LobbyStatus(id = 2L, playersJoined = listOf("playerA"), gameState = "NOT_STARTED")
             )
         )
     }
@@ -275,10 +268,6 @@ class ShorkServiceTest {
         shorkService.createLobby("playerA")
         shorkService.createLobby("playerB")
         shorkService.deleteLobby(1L)
-        shorkService.addProgramToLobby(0L, "playerA", "")
-        shorkService.addProgramToLobby(2L, "playerA", "someProgram")
-        shorkService.addProgramToLobby(2L, "playerB", "someOtherProgram")
-        shorkService.addProgramToLobby(3L, "playerB", "someOtherProgram")
 
         val result = shorkService.getAllLobbies()
 
@@ -291,11 +280,7 @@ class ShorkServiceTest {
 
         assertTrue(
             result.contains(
-                LobbyStatus(
-                    id = 2L,
-                    playersJoined = listOf("playerA", "playerB"),
-                    gameState = "FINISHED",
-                )
+                LobbyStatus(id = 2L, playersJoined = listOf("playerA"), gameState = "NOT_STARTED")
             )
         )
 

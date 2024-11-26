@@ -385,7 +385,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
 
         assertTrue(
             parsedLobbies.contains(
-                LobbyStatus(id = 0L, playersJoined = emptyList(), gameState = "NOT_STARTED")
+                LobbyStatus(id = 0L, playersJoined = listOf("playerA"), gameState = "NOT_STARTED")
             )
         )
     }
@@ -406,20 +406,6 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
                 setBody("{\"playerName\":\"playerA\"}")
             }
 
-            client.post("/api/v1/lobby/0/code/playerA") {
-                contentType(ContentType.Application.Json)
-                setBody("")
-            }
-
-            client.post("/api/v1/lobby/2/code/playerA") {
-                contentType(ContentType.Application.Json)
-                setBody("someString")
-            }
-            client.post("/api/v1/lobby/2/code/playerB") {
-                contentType(ContentType.Application.Json)
-                setBody("someOtherString")
-            }
-
             val result = client.get("/api/v1/lobby")
             val parsedLobbies = parseAllLobbies(result)
 
@@ -428,16 +414,10 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
 
             assertTrue(
                 parsedLobbies.contains(
-                    LobbyStatus(id = 1L, playersJoined = emptyList(), gameState = "NOT_STARTED")
-                )
-            )
-
-            assertTrue(
-                parsedLobbies.contains(
                     LobbyStatus(
-                        id = 2L,
-                        playersJoined = listOf("playerA", "playerB"),
-                        gameState = "FINISHED",
+                        id = 0L,
+                        playersJoined = listOf("playerA"),
+                        gameState = "NOT_STARTED",
                     )
                 )
             )
@@ -445,7 +425,17 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             assertTrue(
                 parsedLobbies.contains(
                     LobbyStatus(
-                        id = 0L,
+                        id = 1L,
+                        playersJoined = listOf("playerA"),
+                        gameState = "NOT_STARTED",
+                    )
+                )
+            )
+
+            assertTrue(
+                parsedLobbies.contains(
+                    LobbyStatus(
+                        id = 2L,
                         playersJoined = listOf("playerA"),
                         gameState = "NOT_STARTED",
                     )

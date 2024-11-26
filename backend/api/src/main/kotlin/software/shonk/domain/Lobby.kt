@@ -10,7 +10,7 @@ data class Lobby(
     var gameState: GameState = GameState.NOT_STARTED,
     var winner: Winner = Winner.UNDECIDED,
     var currentSettings: Settings = Settings(),
-    var joinedPlayers: ArrayList<String> = ArrayList<String>(),
+    var joinedPlayers: MutableList<String> = mutableListOf(),
 ) {
     fun setSettings(settings: Settings) {
         currentSettings = settings

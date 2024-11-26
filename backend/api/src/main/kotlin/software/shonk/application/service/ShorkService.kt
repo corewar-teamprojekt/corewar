@@ -103,13 +103,13 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
 
     override fun getAllLobbies(): List<LobbyStatus> {
         return lobbies.keys.mapNotNull { lobbyId ->
-            getLobbyStatus(lobbyId).getOrNull()?.let { status ->
-                LobbyStatus(
-                    id = lobbyId,
-                    playersJoined = lobbies[lobbyId]?.programs?.keys?.toList().orEmpty(),
-                    gameState = status.gameState.toString(),
-                )
-            }
+            val status = getLobbyStatus(lobbyId).getOrNull() ?: return@mapNotNull null
+            val playersJoined = lobbies[lobbyId]?.joinedPlayers ?: return@mapNotNull null
+            return@mapNotNull LobbyStatus(
+                id = lobbyId,
+                playersJoined = playersJoined,
+                gameState = status.gameState.toString(),
+            )
         }
     }
 
