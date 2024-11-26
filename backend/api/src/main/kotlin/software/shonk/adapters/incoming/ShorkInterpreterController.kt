@@ -58,7 +58,9 @@ fun Route.configureShorkInterpreterControllerV1() {
             logger.error("Failed to create lobby, player name is invalid", it)
             call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
         }
-        result.onSuccess { call.respond(HttpStatusCode.Created, it) }
+        result.onSuccess {
+            call.respond(HttpStatusCode.Created, CreateLobbyResponse(it.toString()))
+        }
     }
 
     post("/lobby/{lobbyId}/join") {
@@ -120,3 +122,5 @@ fun Route.configureShorkInterpreterControllerV1() {
 }
 
 @Serializable data class Program(val code: String)
+
+@Serializable data class CreateLobbyResponse(val lobbyId: String)
