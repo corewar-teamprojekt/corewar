@@ -4,7 +4,7 @@ internal enum class TokenType {
     // Operators
     PLUS,
     MINUS,
-    STAR,
+    STAR, // Star is also Address mode
     SLASH,
     MODULO,
 
@@ -18,8 +18,8 @@ internal enum class TokenType {
     I,
 
     // Address modes
-    HASHTAG,
     DOLLAR,
+    HASHTAG,
     AT,
     LEFT_BRACE,
     RIGHT_BRACE,
@@ -141,6 +141,14 @@ internal enum class TokenType {
                 LDP,
                 STP,
             )
+        }
+
+        fun modifiers(): List<TokenType> {
+            return listOf(A, B, AB, BA, F, X, I)
+        }
+
+        fun addressModes(): List<TokenType> {
+            return listOf(DOLLAR, HASHTAG, AT, LEFT_BRACE, RIGHT_BRACE, LOWER_THAN, GREATER_THAN)
         }
     }
 }

@@ -24,7 +24,7 @@ internal class Parser(private val tokens: List<Token>) {
     }
 
     private fun isAtEnd(): Boolean {
-        return current >= tokens.size
+        return current >= (tokens.size - 1)
     }
 
     private fun peek(): Token {
@@ -69,15 +69,32 @@ internal class Parser(private val tokens: List<Token>) {
     private fun instruction(): AbstractInstruction? {
         val token = advance()
         var modifier = modifier()
-        val (aField, modeA) = field()
-        if (peek().type != TokenType.COMMA) {
-            val nextToken = peek()
-            emitError("Expected comma after A Address but found ${nextToken.type}", nextToken)
-            advanceToNextInstruction()
+
+        // Ensure the first field is specified
+        var field = field()
+        if (field == null) {
+            emitError("Expected aField with modifier", peek())
             return null
         }
-        advance() // Skip the comma
-        val (bField, modeB) = field()
+        val (aField, modeA) = field
+
+        if (peek().type == TokenType.COMMA) {
+            advance() // Skip the comma
+            field = field()
+        } else {
+            if (isInstructionToken(peek()) || isAtEnd()) {
+                field = defaultField()
+            } else {
+                // We only allow the comma to be absent if the second field is missing
+                val nextToken = peek()
+                emitError("Expected comma after A Address but found ${nextToken.type}", nextToken)
+                advanceToNextInstruction()
+                return null
+            }
+        }
+
+        // Allow the second field to be missing and fill in a default
+        val (bField, modeB) = field ?: defaultField()
 
         // Handle if no modifier has been specified
         if (modifier == null) {
@@ -203,12 +220,16 @@ internal class Parser(private val tokens: List<Token>) {
         }
     }
 
-    private fun field(): Pair<Int, AddressMode> {
+    private fun defaultField(): Pair<Int, AddressMode> {
+        return Pair(0, AddressMode.DIRECT)
+    }
+
+    private fun field(): Pair<Int, AddressMode>? {
         var addressMode = AddressMode.DIRECT
 
         if (isAtEnd()) {
             emitError("Unexpected end of file, expected addressmode and/or address", peek())
-            return Pair(0, addressMode)
+            return null
         }
 
         var token = advance()
@@ -258,6 +279,14 @@ internal class Parser(private val tokens: List<Token>) {
 
     private fun isInstructionToken(token: Token): Boolean {
         return token.type in TokenType.instructions()
+    }
+
+    private fun isModifierToken(token: Token): Boolean {
+        return token.type in TokenType.modifiers()
+    }
+
+    private fun isAddressModeToken(token: Token): Boolean {
+        return token.type in TokenType.addressModes()
     }
 
     private fun emitError(
