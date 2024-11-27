@@ -7,30 +7,44 @@ test("complete userflow", async ({ browser }) => {
     const playerBContext = await browser.newContext();
     const playerBPage = await playerBContext.newPage();
 
+    // Landing page
     await playerAPage.goto("/");
     await playerAPage.getByText("Play").click();
 
-    await playerAPage.locator('div').filter({ hasText: /^PLAYER APLAY$/ }).getByRole('button').click();
+    // Lobby selection page
+    await playerAPage.getByRole('button', { name: 'create lobby' }).click();
 
+    // Player selection page
+    await playerAPage.locator('button:has([alt="Player A Icon"])').click();
+
+    // Player code input page
     await playerAPage.getByRole("textbox").focus()
     await playerAPage.locator('.view-lines').click();
     await playerAPage.keyboard.type('ADD 1, 1');
     await playerAPage.getByRole('button', { name: 'upload' }).click();
     await playerAPage.getByRole('button', { name: 'Confirm' }).click();
 
+    // Waiting for opponent page
     await expect(playerAPage.getByText("Waiting for opponent...")).toBeVisible();
 
+    // Landing page
     await playerBPage.goto("/");
     await playerBPage.getByText("Play").click();
 
-    await playerBPage.locator('div').filter({ hasText: /^PLAYER BPLAY$/ }).getByRole('button').click();
+    // Lobby selection page
+    await playerBPage.getByRole('button', { name: 'join' }).click();
 
+    // Player selection page
+    await playerBPage.locator('button:has([alt="Player B Icon"])').click();
+
+    // Player code input page
     await playerBPage.getByRole("textbox").focus()
     await playerBPage.locator('.view-lines').click();
     await playerBPage.keyboard.type('ADD 1, 1');
     await playerBPage.getByRole('button', { name: 'upload' }).click();
     await playerBPage.getByRole('button', { name: 'Confirm' }).click();
 
+    // Waiting for opponent page
     await expect(playerBPage.getByText("Waiting for opponent...")).toBeVisible();
 
     await expect(playerAPage.getByText("Waiting for game result...")).toBeVisible();
@@ -43,5 +57,5 @@ test("complete userflow", async ({ browser }) => {
     await expect(playAgainButton).toBeVisible();
     await playAgainButton.click();
 
-    await expect(playerAPage).toHaveURL(/.*player-selection/);
+    await expect(playerAPage).toHaveURL(/.*lobby-selection/);
 });
