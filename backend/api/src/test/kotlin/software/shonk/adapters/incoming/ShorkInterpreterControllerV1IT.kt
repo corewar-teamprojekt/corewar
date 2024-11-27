@@ -48,12 +48,12 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
         }
         client.post("/api/v1/lobby/0/code/playerA") {
             contentType(ContentType.Application.Json)
-            setBody("someString")
+            setBody("{\"code\": \"someString\"}")
         }
 
         client.post("/api/v1/lobby/0/code/playerB") {
             contentType(ContentType.Application.Json)
-            setBody("someOtherString")
+            setBody("{\"code\": \"someOtherString\"}")
         }
 
         val result = client.get("/api/v1/lobby/0/code/playerA")
@@ -109,12 +109,12 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
         }
         client.post("/api/v1/lobby/0/code/playerA") {
             contentType(ContentType.Application.Json)
-            setBody("someString")
+            setBody("{\"code\":\"someString\"}")
         }
 
         client.post("/api/v1/lobby/0/code/playerB") {
             contentType(ContentType.Application.Json)
-            setBody("someOtherString")
+            setBody("{\"code\":\"someOtherString\"}")
         }
 
         val result = client.get("/api/v1/lobby/0/status")
@@ -132,7 +132,11 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             setBody("{\"playerName\":\"playerA\"}")
         }
         val player = "playerA"
-        val result = client.post("/api/v1/lobby/0/code/$player")
+        val result =
+            client.post("/api/v1/lobby/0/code/$player") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"code\":\"weDontCareWhatsInHereForThisTest\"}")
+            }
         assertEquals(HttpStatusCode.OK, result.status)
     }
 
@@ -170,7 +174,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
         val player = "playerA"
         client.post("/api/v1/lobby/0/code/$player") {
             contentType(ContentType.Application.Json)
-            setBody("someString")
+            setBody("{\"code\":\"someString\"}")
         }
 
         val result = client.get("/api/v1/lobby/0/status")
@@ -189,12 +193,12 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
         }
         client.post("/api/v1/lobby/0/code/playerA") {
             contentType(ContentType.Application.Json)
-            setBody("someVeryLongString")
+            setBody("{\"code\":\"someVeryLongString\"}")
         }
 
         client.post("/api/v1/lobby/0/code/playerB") {
             contentType(ContentType.Application.Json)
-            setBody("someShortString")
+            setBody("{\"code\":\"someShortString\"}")
         }
 
         val result = client.get("/api/v1/lobby/0/status")
@@ -210,16 +214,16 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
         }
         client.post("/api/v1/lobby/0/code/playerA") {
             contentType(ContentType.Application.Json)
-            setBody("someString")
+            setBody("{\"code\":\"someString\"}")
         }
 
         client.post("/api/v1/lobby/0/code/playerB") {
             contentType(ContentType.Application.Json)
-            setBody("someOtherString")
+            setBody("{\"code\":\"someOtherString\"}")
         }
         client.post("/api/v1/lobby/0/code/playerA") {
             contentType(ContentType.Application.Json)
-            setBody("someNewString")
+            setBody("{\"code\":\"someNewString\"}")
         }
 
         val result = client.get("/api/v1/lobby/0/status")
