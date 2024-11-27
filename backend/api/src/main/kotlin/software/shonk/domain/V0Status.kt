@@ -3,9 +3,9 @@ package software.shonk.domain
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Status(
+data class V0Status(
     val playerASubmitted: Boolean,
     val playerBSubmitted: Boolean,
     val gameState: GameState,
-    val result: GameResult,
+    val result: V0Result,
 )

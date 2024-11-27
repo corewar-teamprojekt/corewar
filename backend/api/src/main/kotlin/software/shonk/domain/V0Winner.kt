@@ -3,8 +3,8 @@ package software.shonk.domain
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class Winner {
+enum class V0Winner {
     A,
     B,
-    DRAW,
+    UNDECIDED,
 }

@@ -26,7 +26,7 @@ class ShorkServiceTest {
                 playerASubmitted = true,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
-                result = Result(winner = Winner.UNDECIDED),
+                result = GameResult(winner = Winner.DRAW),
             ),
         )
     }
@@ -42,7 +42,7 @@ class ShorkServiceTest {
                 playerASubmitted = false,
                 playerBSubmitted = true,
                 gameState = GameState.NOT_STARTED,
-                result = Result(winner = Winner.UNDECIDED),
+                result = GameResult(winner = Winner.DRAW),
             ),
         )
     }
@@ -58,7 +58,7 @@ class ShorkServiceTest {
                 playerASubmitted = false,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
-                result = Result(winner = Winner.UNDECIDED),
+                result = GameResult(winner = Winner.DRAW),
             ),
         )
     }
@@ -75,7 +75,7 @@ class ShorkServiceTest {
                 playerASubmitted = true,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
-                result = Result(winner = Winner.UNDECIDED),
+                result = GameResult(winner = Winner.DRAW),
             ),
         )
         assertEquals(
@@ -84,7 +84,7 @@ class ShorkServiceTest {
                 playerASubmitted = false,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
-                result = Result(winner = Winner.UNDECIDED),
+                result = GameResult(winner = Winner.DRAW),
             ),
         )
     }

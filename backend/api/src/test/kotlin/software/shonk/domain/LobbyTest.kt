@@ -29,7 +29,7 @@ class LobbyTest {
                 playerASubmitted = false,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
-                result = Result(Winner.UNDECIDED),
+                result = GameResult(Winner.DRAW),
             )
         assertEquals(someStatus, lobby.getStatus())
     }
@@ -45,7 +45,7 @@ class LobbyTest {
                 playerASubmitted = true,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
-                result = Result(Winner.UNDECIDED),
+                result = GameResult(Winner.DRAW),
             )
         assertEquals(someStatus, lobby.getStatus())
     }
@@ -61,7 +61,7 @@ class LobbyTest {
                 playerASubmitted = false,
                 playerBSubmitted = true,
                 gameState = GameState.NOT_STARTED,
-                result = Result(Winner.UNDECIDED),
+                result = GameResult(Winner.DRAW),
             )
         assertEquals(someStatus, lobby.getStatus())
     }
@@ -91,7 +91,7 @@ class LobbyTest {
                 playerASubmitted = true,
                 playerBSubmitted = true,
                 gameState = GameState.FINISHED,
-                result = Result(Winner.A),
+                result = GameResult(Winner.A),
             )
         assertEquals(someStatus, lobby.getStatus())
     }

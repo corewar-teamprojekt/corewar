@@ -25,7 +25,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
     private suspend fun parseStatus(response: HttpResponse): Map<String, String> {
         val responseJson = Json.parseToJsonElement(response.bodyAsText()).jsonObject
         val result = responseJson["result"]?.jsonObject
-        val resultWinner = result?.get("winner")?.jsonPrimitive?.content ?: "UNDECIDED"
+        val resultWinner = result?.get("winner")?.jsonPrimitive?.content ?: "DRAW"
         return mapOf(
             "playerASubmitted" to responseJson["playerASubmitted"]!!.jsonPrimitive.content,
             "playerBSubmitted" to responseJson["playerBSubmitted"]!!.jsonPrimitive.content,
@@ -98,7 +98,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
         assertEquals("false", responseData["playerASubmitted"])
         assertEquals("false", responseData["playerBSubmitted"])
         assertEquals("NOT_STARTED", responseData["gameState"])
-        assertEquals("UNDECIDED", responseData["result.winner"])
+        assertEquals("DRAW", responseData["result.winner"])
     }
 
     @Test
@@ -162,7 +162,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             assertEquals("false", responseData["playerASubmitted"])
             assertEquals("false", responseData["playerBSubmitted"])
             assertEquals("NOT_STARTED", responseData["gameState"])
-            assertEquals("UNDECIDED", responseData["result.winner"])
+            assertEquals("DRAW", responseData["result.winner"])
         }
 
     @Test
@@ -182,7 +182,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
         assertEquals("true", responseData["playerASubmitted"])
         assertEquals("false", responseData["playerBSubmitted"])
         assertEquals("NOT_STARTED", responseData["gameState"])
-        assertEquals("UNDECIDED", responseData["result.winner"])
+        assertEquals("DRAW", responseData["result.winner"])
     }
 
     @Test
@@ -231,7 +231,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
         assertEquals("true", responseData["playerASubmitted"])
         assertEquals("false", responseData["playerBSubmitted"])
         assertEquals("NOT_STARTED", responseData["gameState"])
-        assertEquals("UNDECIDED", responseData["result.winner"])
+        assertEquals("DRAW", responseData["result.winner"])
     }
 
     @Test

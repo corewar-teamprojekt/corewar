@@ -8,7 +8,7 @@ data class Lobby(
     val programs: HashMap<String, String>,
     val shork: IShork,
     var gameState: GameState = GameState.NOT_STARTED,
-    var winner: Winner = Winner.UNDECIDED,
+    var winner: Winner = Winner.DRAW,
     var currentSettings: Settings = Settings(),
     var joinedPlayers: MutableList<String> = mutableListOf(),
 ) {
@@ -25,7 +25,7 @@ data class Lobby(
             playerASubmitted = programs.containsKey("playerA"),
             playerBSubmitted = programs.containsKey("playerB"),
             gameState = gameState,
-            result = Result(winner),
+            result = GameResult(winner),
         )
 
     fun addProgram(name: String, program: String) {
