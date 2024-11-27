@@ -103,7 +103,7 @@ export default function LobbySelectionPage() {
 	}
 
 	function filterFullLobbies(lobbies: Lobby[]): Lobby[] {
-		return lobbies.filter((lobby) => lobby.isLobbyFull() === false);
+		return lobbies.filter((lobby) => !lobby.isLobbyFull());
 	}
 	return (
 		<RequireLogout blocked={false}>

@@ -12,6 +12,7 @@ import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import ResultDisplayPage from "./ResultDisplayPage";
 import { getLobbyStatusV1 } from "@/services/rest/LobbyRest.ts";
 import { aLobby } from "@/TestFactories.ts";
+import { useDispatchLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
 
 // Mock the getStatusV0 function
 vi.mock("@/services/rest/LobbyRest", () => ({
@@ -29,7 +30,7 @@ const testRouterConfig = [
 		element: <ResultDisplayPage />,
 	},
 	{
-		path: "/player-selection",
+		path: "/lobby-selection",
 		element: <div>hehe :3</div>,
 	},
 ];
@@ -75,11 +76,13 @@ describe("ResultDisplayPage", () => {
 		expect(await screen.findByText(/winner/)).toBeInTheDocument();
 	});
 
-	it("should navigate to player selection page on button click", async () => {
+	it("should navigate to lobby selection page and leave lobby on button click", async () => {
+		const mockLobbyReducer = vi.fn();
 		vi.mock("@/services/lobbyContext/LobbyContextHelpers", () => ({
 			useDispatchLobby: vi.fn(),
 			useLobby: () => aLobby(), // Lobby id from the top
 		}));
+		(useDispatchLobby as Mock).mockReturnValue(mockLobbyReducer);
 
 		const router = createMemoryRouter(testRouterConfig);
 
@@ -95,6 +98,10 @@ describe("ResultDisplayPage", () => {
 			const button = screen.getByRole("button", { name: /Play again/i });
 			fireEvent.click(button);
 		});
-		expect(router.state.location.pathname).toEqual("/player-selection");
+		expect(router.state.location.pathname).toEqual("/lobby-selection");
+		expect(mockLobbyReducer).toHaveBeenCalledWith({
+			type: "leave",
+			lobby: null,
+		});
 	});
 });
