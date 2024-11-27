@@ -50,8 +50,8 @@ test("complete userflow", async ({ browser }) => {
     await expect(playerAPage.getByText("Waiting for game result...")).toBeVisible();
     await expect(playerBPage.getByText("Waiting for game result...")).toBeVisible();
 
-    await expect(playerAPage.getByText("Result: Player A vs Player B")).toBeVisible();
-    await expect(playerBPage.getByText("Result: Player A vs Player B")).toBeVisible();
+    await expect(playerAPage.getByText("It's a draw!")).toBeVisible();
+    await expect(playerBPage.getByText("It's a draw!")).toBeVisible();
 
     const playAgainButton = playerAPage.getByRole('button', { name: 'Play again' });
     await expect(playAgainButton).toBeVisible();

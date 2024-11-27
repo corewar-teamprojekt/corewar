@@ -46,7 +46,7 @@ export default function ResultDisplayPageV2() {
 			!user
 		) {
 			return <img src={icon} alt="draw icon" className={"w-164 h-164"} />;
-		} else if (lobbyStatus?.result.winner === "A") {
+		} else if (lobbyStatus.result.winner === "A") {
 			return (
 				<img src={redPlayerIcon} alt="playerA icon" className={"w-164 h-164"} />
 			);
