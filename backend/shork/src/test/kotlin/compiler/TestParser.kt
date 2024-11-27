@@ -20,6 +20,54 @@ import software.shonk.interpreter.internal.instruction.Sne
 
 internal class TestParser {
     @Test
+    fun `parser allows missing B-Field`() {
+        val program =
+            listOf(
+                Token(TokenType.MOV, "MOV", "", 1, 0, 0),
+                Token(TokenType.DOT, ".", "", 1, 0, 0),
+                Token(TokenType.B, "B", "", 1, 0, 0),
+                Token(TokenType.NUMBER, "42", 42, 1, 0, 0),
+                Token(TokenType.EOF, "", "", 1, 0, 0),
+            )
+
+        val expected = listOf(Mov(42, 0, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B))
+
+        val parser = Parser(program)
+        val instructions = parser.parse()
+
+        assertEquals(expected, instructions)
+    }
+
+    @Test
+    fun `parser allows missing B-Field with an instruction afterwards`() {
+        val program =
+            listOf(
+                Token(TokenType.MOV, "MOV", "", 1, 0, 0),
+                Token(TokenType.DOT, ".", "", 1, 0, 0),
+                Token(TokenType.B, "B", "", 1, 0, 0),
+                Token(TokenType.NUMBER, "42", 42, 1, 0, 0),
+                Token(TokenType.DJN, "MOV", "", 1, 0, 0),
+                Token(TokenType.DOT, ".", "", 1, 0, 0),
+                Token(TokenType.X, "B", "", 1, 0, 0),
+                Token(TokenType.NUMBER, "69", 42, 1, 0, 0),
+                Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                Token(TokenType.NUMBER, "1337", 0, 1, 0, 0),
+                Token(TokenType.EOF, "", "", 1, 0, 0),
+            )
+
+        val expected =
+            listOf(
+                Mov(42, 0, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B),
+                Djn(69, 1337, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.X),
+            )
+
+        val parser = Parser(program)
+        val instructions = parser.parse()
+
+        assertEquals(expected, instructions)
+    }
+
+    @Test
     fun `CMP is alias for SEQ`() {
         val program =
             listOf(
