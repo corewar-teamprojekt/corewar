@@ -238,6 +238,12 @@ internal class Parser(private val tokens: List<Token>) {
             return null
         }
 
+        peek().let {
+            if (it.type != TokenType.NUMBER && !isAddressModeToken(it)) {
+                return null
+            }
+        }
+
         var token = advance()
         if (token.type != TokenType.NUMBER) {
             addressMode =

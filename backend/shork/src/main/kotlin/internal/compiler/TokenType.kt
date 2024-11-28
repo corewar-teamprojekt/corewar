@@ -148,7 +148,16 @@ internal enum class TokenType {
         }
 
         fun addressModes(): List<TokenType> {
-            return listOf(DOLLAR, HASHTAG, AT, LEFT_BRACE, RIGHT_BRACE, LOWER_THAN, GREATER_THAN)
+            return listOf(
+                DOLLAR,
+                HASHTAG,
+                AT,
+                LEFT_BRACE,
+                RIGHT_BRACE,
+                LOWER_THAN,
+                GREATER_THAN,
+                STAR,
+            )
         }
     }
 }
