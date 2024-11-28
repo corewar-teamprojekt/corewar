@@ -3,6 +3,7 @@ import Header from "@/components/header/Header.tsx";
 import Footer from "@/components/footer/Footer.tsx";
 import styles from "./BasePage.module.css";
 import { Outlet } from "react-router-dom";
+import HexagonalBoardBackground from "@/components/hexagonalBoardBackground/HexagonalBoardBackground.tsx";
 
 function GridCell({ isRed, isBlue }: { isRed: boolean; isBlue: boolean }) {
 	return (
@@ -61,9 +62,7 @@ function BasePage() {
 
 	return (
 		<div id={styles["everything"]}>
-			<div id={styles["background-animation"]}>
-				<div id={styles["cellContainer"]}>{gridCells}</div>
-			</div>
+			<HexagonalBoardBackground />
 			<Header />
 			<div id={styles["mainContent"]}>
 				<div id={styles["layoutingContainer"]}>
