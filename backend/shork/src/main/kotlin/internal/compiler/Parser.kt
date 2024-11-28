@@ -73,7 +73,14 @@ internal class Parser(private val tokens: List<Token>) {
         // Ensure the first field is specified
         var field = field()
         if (field == null) {
-            emitError("Expected aField with modifier", peek())
+            if (isAtEnd()) {
+                emitError(
+                    "Unexpected end of file, expected address mode and/or address for A-Field",
+                    token,
+                )
+            } else {
+                emitError("Expected aField with modifier", peek())
+            }
             return null
         }
         val (aField, modeA) = field
@@ -228,7 +235,6 @@ internal class Parser(private val tokens: List<Token>) {
         var addressMode = AddressMode.DIRECT
 
         if (isAtEnd()) {
-            emitError("Unexpected end of file, expected addressmode and/or address", peek())
             return null
         }
 
