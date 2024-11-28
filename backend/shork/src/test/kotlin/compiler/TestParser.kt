@@ -121,6 +121,14 @@ internal class TestParser {
         assertEquals(expected, instructions)
     }
 
+    @ParameterizedTest
+    @MethodSource("provideDefaultModifierTests")
+    fun testDefaultModifierHandling(program: List<Token>, expected: AbstractInstruction) {
+        val instruction = Parser(program).parse().first()
+
+        assertEquals(expected, instruction)
+    }
+
     companion object {
         private val addressModes =
             listOf(
@@ -613,6 +621,355 @@ internal class TestParser {
             }
 
             return arguments
+        }
+
+        @JvmStatic
+        fun provideDefaultModifierTests(): List<Arguments> {
+            return provideAllSimpleDefaultModifier() +
+                `provide A Mode immediate, B whatever then Modifier is AB`() +
+                `provide B-Mode immediate, A-Mode whatever then Modifier is B`() +
+                `provide neither address mode is immediate`() +
+                `provide A not immediate, B whatever then Modifier is B`()
+        }
+
+        // Some instructions always get the same default modifier, no matter the address modes
+        private fun provideAllSimpleDefaultModifier(): List<Arguments> {
+            val inputWithExpected = mutableListOf<Pair<List<Token>, AbstractInstruction>>()
+
+            val firstAddress = 42
+            val secondAddress = 1337
+
+            val instructionWithModifier =
+                listOf(
+                    // DAT and NOP always get F, no matter the address modes
+                    Triple(TokenType.DAT, Dat::class, Modifier.F),
+                    Triple(TokenType.NOP, Nop::class, Modifier.F),
+                    // JMP, JMZ, JMN, DJN, SPL always get B, no matter the address modes
+                    Triple(TokenType.JMP, Jmp::class, Modifier.B),
+                    Triple(TokenType.JMZ, Jmz::class, Modifier.B),
+                    Triple(TokenType.JMN, Jmn::class, Modifier.B),
+                    Triple(TokenType.DJN, Djn::class, Modifier.B),
+                    Triple(TokenType.SPL, Spl::class, Modifier.B),
+                )
+
+            for (instruction in instructionWithModifier) {
+                for (firstAddressMode in addressModes) {
+                    for (secondAddressMode in addressModes) {
+                        val tokens =
+                            listOf(
+                                Token(instruction.first, instruction.first.toString(), "", 1, 0, 0),
+                                Token(firstAddressMode.third, firstAddressMode.second, "", 1, 0, 0),
+                                Token(
+                                    TokenType.NUMBER,
+                                    firstAddress.toString(),
+                                    firstAddress,
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                                Token(
+                                    secondAddressMode.third,
+                                    secondAddressMode.second,
+                                    "",
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(
+                                    TokenType.NUMBER,
+                                    secondAddress.toString(),
+                                    secondAddress,
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(TokenType.EOF, "", "", 1, 0, 0),
+                            )
+
+                        val expectedInstance =
+                            instruction.second.constructors
+                                .first()
+                                .call(
+                                    firstAddress,
+                                    secondAddress,
+                                    firstAddressMode.first,
+                                    secondAddressMode.first,
+                                    instruction.third,
+                                )
+
+                        inputWithExpected.add(Pair(tokens, expectedInstance))
+                    }
+                }
+            }
+
+            return inputWithExpected.map { Arguments.of(it.first, it.second) }
+        }
+
+        // MOV, SEQ, SNE, CMP, ADD, SUB, MUL, DIV, MOD, SLT, LDP, STP
+        private fun `provide A Mode immediate, B whatever then Modifier is AB`(): List<Arguments> {
+            val inputWithExpected = mutableListOf<Pair<List<Token>, AbstractInstruction>>()
+
+            val firstAddress = 42
+            val secondAddress = 1337
+
+            val instructionWithModifier =
+                listOf(
+                    Pair(TokenType.MOV, Mov::class),
+                    Pair(TokenType.SEQ, Seq::class),
+                    Pair(TokenType.SNE, Sne::class),
+                    Pair(TokenType.CMP, Seq::class),
+                    Pair(TokenType.ADD, Add::class),
+                    Pair(TokenType.SUB, Sub::class),
+                    Pair(TokenType.MUL, Mul::class),
+                    Pair(TokenType.DIV, Div::class),
+                    Pair(TokenType.MOD, Mod::class),
+                    Pair(TokenType.SLT, Slt::class),
+                    Pair(TokenType.LDP, Ldp::class),
+                    Pair(TokenType.STP, Stp::class),
+                )
+
+            for (instruction in instructionWithModifier) {
+                for (addressMode in addressModes) {
+                    val tokens =
+                        listOf(
+                            Token(instruction.first, instruction.first.toString(), "", 1, 0, 0),
+                            Token(TokenType.HASHTAG, "#", "", 1, 0, 0),
+                            Token(TokenType.NUMBER, firstAddress.toString(), firstAddress, 1, 0, 0),
+                            Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                            Token(addressMode.third, addressMode.second, "", 1, 0, 0),
+                            Token(
+                                TokenType.NUMBER,
+                                secondAddress.toString(),
+                                secondAddress,
+                                1,
+                                0,
+                                0,
+                            ),
+                            Token(TokenType.EOF, "", "", 1, 0, 0),
+                        )
+
+                    val expectedInstance =
+                        instruction.second.constructors
+                            .first()
+                            .call(
+                                firstAddress,
+                                secondAddress,
+                                AddressMode.IMMEDIATE,
+                                addressMode.first,
+                                Modifier.AB,
+                            )
+
+                    inputWithExpected.add(Pair(tokens, expectedInstance))
+                }
+            }
+
+            return inputWithExpected.map { Arguments.of(it.first, it.second) }
+        }
+
+        // MOV, SEQ, SNE, CMP, ADD, SUB, MUL, DIV, MOD, SLT, LDP, STP
+        private fun `provide B-Mode immediate, A-Mode whatever then Modifier is B`():
+            List<Arguments> {
+            val inputWithExpected = mutableListOf<Pair<List<Token>, AbstractInstruction>>()
+
+            val firstAddress = 42
+            val secondAddress = 1337
+
+            val instructionWithModifier =
+                listOf(
+                    Pair(TokenType.MOV, Mov::class),
+                    Pair(TokenType.SEQ, Seq::class),
+                    Pair(TokenType.SNE, Sne::class),
+                    Pair(TokenType.CMP, Seq::class),
+                    Pair(TokenType.ADD, Add::class),
+                    Pair(TokenType.SUB, Sub::class),
+                    Pair(TokenType.MUL, Mul::class),
+                    Pair(TokenType.DIV, Div::class),
+                    Pair(TokenType.MOD, Mod::class),
+                )
+
+            for (instruction in instructionWithModifier) {
+                for (addressMode in addressModes.filter { it.first != AddressMode.IMMEDIATE }) {
+                    val tokens =
+                        listOf(
+                            Token(instruction.first, instruction.first.toString(), "", 1, 0, 0),
+                            Token(addressMode.third, addressMode.second, "", 1, 0, 0),
+                            Token(TokenType.NUMBER, firstAddress.toString(), firstAddress, 1, 0, 0),
+                            Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                            Token(TokenType.HASHTAG, "#", "", 1, 0, 0),
+                            Token(
+                                TokenType.NUMBER,
+                                secondAddress.toString(),
+                                secondAddress,
+                                1,
+                                0,
+                                0,
+                            ),
+                            Token(TokenType.EOF, "", "", 1, 0, 0),
+                        )
+
+                    val expectedInstance =
+                        instruction.second.constructors
+                            .first()
+                            .call(
+                                firstAddress,
+                                secondAddress,
+                                addressMode.first,
+                                AddressMode.IMMEDIATE,
+                                Modifier.B,
+                            )
+
+                    inputWithExpected.add(Pair(tokens, expectedInstance))
+                }
+            }
+
+            return inputWithExpected.map { Arguments.of(it.first, it.second) }
+        }
+
+        // MOV, SEQ, SNE, CMP, ADD, SUB, MUL, DIV, MOD
+        private fun `provide neither address mode is immediate`(): List<Arguments> {
+            val inputWithExpected = mutableListOf<Pair<List<Token>, AbstractInstruction>>()
+            val firstAddress = 42
+            val secondAddress = 1337
+
+            val instructionWithModifier =
+                listOf(
+                    // MOV, SEQ, SNE, CMP are always I
+                    Triple(TokenType.MOV, Mov::class, Modifier.I),
+                    Triple(TokenType.SEQ, Seq::class, Modifier.I),
+                    Triple(TokenType.SNE, Sne::class, Modifier.I),
+                    Triple(TokenType.CMP, Seq::class, Modifier.I),
+                    // The arithmetic instructions are always F
+                    Triple(TokenType.ADD, Add::class, Modifier.F),
+                    Triple(TokenType.SUB, Sub::class, Modifier.F),
+                    Triple(TokenType.MUL, Mul::class, Modifier.F),
+                    Triple(TokenType.DIV, Div::class, Modifier.F),
+                    Triple(TokenType.MOD, Mod::class, Modifier.F),
+                )
+
+            val addressModesNoImmediate = addressModes.filter { it.first != AddressMode.IMMEDIATE }
+
+            for (instruction in instructionWithModifier) {
+                for (firstAddressMode in addressModesNoImmediate) {
+                    for (secondAddressMode in addressModesNoImmediate) {
+                        val tokens =
+                            listOf(
+                                Token(instruction.first, instruction.first.toString(), "", 1, 0, 0),
+                                Token(firstAddressMode.third, firstAddressMode.second, "", 1, 0, 0),
+                                Token(
+                                    TokenType.NUMBER,
+                                    firstAddress.toString(),
+                                    firstAddress,
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                                Token(
+                                    secondAddressMode.third,
+                                    secondAddressMode.second,
+                                    "",
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(
+                                    TokenType.NUMBER,
+                                    secondAddress.toString(),
+                                    secondAddress,
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(TokenType.EOF, "", "", 1, 0, 0),
+                            )
+
+                        val expectedInstance =
+                            instruction.second.constructors
+                                .first()
+                                .call(
+                                    firstAddress,
+                                    secondAddress,
+                                    firstAddressMode.first,
+                                    secondAddressMode.first,
+                                    instruction.third,
+                                )
+
+                        inputWithExpected.add(Pair(tokens, expectedInstance))
+                    }
+                }
+            }
+
+            return inputWithExpected.map { Arguments.of(it.first, it.second) }
+        }
+
+        private fun `provide A not immediate, B whatever then Modifier is B`(): List<Arguments> {
+            val inputWithExpected = mutableListOf<Pair<List<Token>, AbstractInstruction>>()
+            val firstAddress = 42
+            val secondAddress = 1337
+
+            val instructionWithModifier =
+                listOf(
+                    // SLT, LDP, STP are always B
+                    Triple(TokenType.SLT, Slt::class, Modifier.B),
+                    Triple(TokenType.LDP, Ldp::class, Modifier.B),
+                    Triple(TokenType.STP, Stp::class, Modifier.B),
+                )
+
+            val addressModesNoImmediate = addressModes.filter { it.first != AddressMode.IMMEDIATE }
+
+            for (instruction in instructionWithModifier) {
+                for (firstAddressMode in addressModesNoImmediate) {
+                    for (secondAddressMode in addressModes) {
+                        val tokens =
+                            listOf(
+                                Token(instruction.first, instruction.first.toString(), "", 1, 0, 0),
+                                Token(firstAddressMode.third, firstAddressMode.second, "", 1, 0, 0),
+                                Token(
+                                    TokenType.NUMBER,
+                                    firstAddress.toString(),
+                                    firstAddress,
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                                Token(
+                                    secondAddressMode.third,
+                                    secondAddressMode.second,
+                                    "",
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(
+                                    TokenType.NUMBER,
+                                    secondAddress.toString(),
+                                    secondAddress,
+                                    1,
+                                    0,
+                                    0,
+                                ),
+                                Token(TokenType.EOF, "", "", 1, 0, 0),
+                            )
+
+                        val expectedInstance =
+                            instruction.second.constructors
+                                .first()
+                                .call(
+                                    firstAddress,
+                                    secondAddress,
+                                    firstAddressMode.first,
+                                    secondAddressMode.first,
+                                    instruction.third,
+                                )
+
+                        inputWithExpected.add(Pair(tokens, expectedInstance))
+                    }
+                }
+            }
+
+            return inputWithExpected.map { Arguments.of(it.first, it.second) }
         }
     }
 }

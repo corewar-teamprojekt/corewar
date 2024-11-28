@@ -170,7 +170,6 @@ internal class Parser(private val tokens: List<Token>) {
             TokenType.MUL,
             TokenType.DIV,
             TokenType.MOD -> {
-
                 if (modeA == AddressMode.IMMEDIATE) {
                     Modifier.AB
                 } else if (modeB == AddressMode.IMMEDIATE) {
@@ -182,7 +181,6 @@ internal class Parser(private val tokens: List<Token>) {
             TokenType.SLT,
             TokenType.LDP,
             TokenType.STP -> {
-
                 if (modeA == AddressMode.IMMEDIATE) {
                     Modifier.AB
                 } else {
