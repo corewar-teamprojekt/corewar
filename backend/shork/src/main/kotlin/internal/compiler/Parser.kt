@@ -105,62 +105,7 @@ internal class Parser(private val tokens: List<Token>) {
 
         // Handle if no modifier has been specified
         if (modifier == null) {
-            when (token.type) {
-                TokenType.DAT,
-                TokenType.NOP -> {
-                    modifier = Modifier.F
-                }
-                TokenType.MOV,
-                TokenType.CMP,
-                TokenType.SEQ,
-                TokenType.SNE -> {
-                    modifier =
-                        if (modeA == AddressMode.IMMEDIATE) {
-                            Modifier.AB
-                        } else if (modeB == AddressMode.IMMEDIATE) {
-                            Modifier.B
-                        } else {
-                            Modifier.I
-                        }
-                }
-                TokenType.ADD,
-                TokenType.SUB,
-                TokenType.MUL,
-                TokenType.DIV,
-                TokenType.MOD -> {
-                    modifier =
-                        if (modeA == AddressMode.IMMEDIATE) {
-                            Modifier.AB
-                        } else if (modeB == AddressMode.IMMEDIATE) {
-                            Modifier.B
-                        } else {
-                            Modifier.F
-                        }
-                }
-                TokenType.SLT,
-                TokenType.LDP,
-                TokenType.STP -> {
-                    modifier =
-                        if (modeA == AddressMode.IMMEDIATE) {
-                            Modifier.AB
-                        } else {
-                            Modifier.B
-                        }
-                }
-                TokenType.JMP,
-                TokenType.JMZ,
-                TokenType.JMN,
-                TokenType.DJN,
-                TokenType.SPL -> {
-                    modifier = Modifier.B
-                }
-                else -> {
-                    if (isInstructionToken(token)) {
-                        emitError("Default modifier handling not implemented for $token", token)
-                    }
-                    modifier = Modifier.I
-                }
-            }
+            modifier = getDefaultModifier(token, modeA, modeB)
         }
 
         return when (token.type) {
@@ -198,6 +143,64 @@ internal class Parser(private val tokens: List<Token>) {
             else -> {
                 emitError("Unexpected token, expected an instruction", token)
                 null
+            }
+        }
+    }
+
+    private fun getDefaultModifier(token: Token, modeA: AddressMode, modeB: AddressMode): Modifier {
+        return when (token.type) {
+            TokenType.DAT,
+            TokenType.NOP -> {
+                Modifier.F
+            }
+            TokenType.MOV,
+            TokenType.CMP,
+            TokenType.SEQ,
+            TokenType.SNE -> {
+                if (modeA == AddressMode.IMMEDIATE) {
+                    Modifier.AB
+                } else if (modeB == AddressMode.IMMEDIATE) {
+                    Modifier.B
+                } else {
+                    Modifier.I
+                }
+            }
+            TokenType.ADD,
+            TokenType.SUB,
+            TokenType.MUL,
+            TokenType.DIV,
+            TokenType.MOD -> {
+
+                if (modeA == AddressMode.IMMEDIATE) {
+                    Modifier.AB
+                } else if (modeB == AddressMode.IMMEDIATE) {
+                    Modifier.B
+                } else {
+                    Modifier.F
+                }
+            }
+            TokenType.SLT,
+            TokenType.LDP,
+            TokenType.STP -> {
+
+                if (modeA == AddressMode.IMMEDIATE) {
+                    Modifier.AB
+                } else {
+                    Modifier.B
+                }
+            }
+            TokenType.JMP,
+            TokenType.JMZ,
+            TokenType.JMN,
+            TokenType.DJN,
+            TokenType.SPL -> {
+                Modifier.B
+            }
+            else -> {
+                if (isInstructionToken(token)) {
+                    emitError("Default modifier handling not implemented for $token", token)
+                }
+                Modifier.I
             }
         }
     }
