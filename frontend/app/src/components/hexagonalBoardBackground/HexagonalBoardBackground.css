@@ -1,0 +1,11 @@
+.background-animation {
+	position: fixed;
+	z-index: -1;
+	top: -300px;
+	left: -300px;
+	height: auto;
+	width: auto;
+	opacity: 0.2;
+
+	transform: rotateZ(15deg);
+}

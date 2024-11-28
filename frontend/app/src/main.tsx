@@ -16,6 +16,7 @@ import LobbySelectionPage from "./pages/lobbySelectionPage/LobbySelectionPage.ts
 import PlayerCodingPage from "./pages/playerCodeInput/PlayerCodingPage.tsx";
 import ResultDisplayPage from "./pages/resultDisplayPage/ResultDisplayPage.tsx";
 import { LobbyProvider } from "./services/lobbyContext/LobbyContext.tsx";
+
 const router = createBrowserRouter([
 	{
 		path: "/",
