@@ -1,0 +1,368 @@
+openapi: "3.1.0"
+info:
+  title: "backend API"
+  description: "backend API"
+  version: "1.0.0"
+servers:
+- url: "https://backend"
+paths:
+  /api/v0/code/{player}:
+    post:
+      description: "Stores the program of a given player in current v0Lobby, creates\
+        \ that lobby if there is no <br> current v0Lobby. <br> Path Parameter - {player}:\
+        \ The name of the player whose code is being <br> submitted. For this endpoint\
+        \ ONLY 'playerA' and 'playerB' are valid! Body: The program of the <br> player,\
+        \ in plain text <br> Response 200: The game will automatically start once\
+        \ the second <br> player has submitted. Response 400: Game is in `RUNNING`\
+        \ state or a player still has to <br> submit code. The message field contains\
+        \ an explanation of what went wrong. <br> { \"message\": String, }"
+      parameters:
+      - name: "player"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: "string"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v0/status:
+    get:
+      description: "Returns either the status of the current game, or the status /\
+        \ result of the last game if <br> there is no currently active game. <br>\
+        \ playerXSubmitted will only be true if code for player X has been submitted\
+        \ <br> result will only be valid when gameState is FINISHED <br> playerXSubmitted\
+        \ will switch back to false once the gameState switches to FINISHED"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/V0Status"
+  /api/v1/lobby:
+    get:
+      description: "Gets a list of all existing lobbies and their details. The playersJoined\
+        \ attribute contains a <br> list of all playerNames that joined the lobby.\
+        \ Joined means joined, not code submitted! <br> Response 200: The post operation\
+        \ was successful. response: { \"lobbies\": <br> [ { \"id\": number, \"playersJoined\"\
+        : string, \"gameState\": One of [NOT_STARTED, RUNNING, FINISHED], <br> },\
+        \ ... ] }"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Map_String"
+    post:
+      description: "Creates a new lobby and returns the id of the newly created one,\
+        \ which identifies the lobby <br> uniquely. If the lobby doesn't exist or\
+        \ the playerName is invalid, the create operation is <br> aborted. The body\
+        \ must contain the desired playerName of the player creating the lobby. body:\
+        \ <br> { \"playerName\": String, } <br> Response 201: The response contains\
+        \ the id of the created lobby. response: { \"lobbyId\": <br> String, } <br>\
+        \ Response 400: Failed to create a lobby, because the playerName is invalid."
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CreateLobbyResponse"
+  /api/v1/lobby/{lobbyId}/code/{player}:
+    get:
+      description: "Returns the player program code from a lobby which was specified\
+        \ in the path parameters. Path <br> parameter - {lobbyId}: The lobby id from\
+        \ which the player code has to be gotten. Path <br> parameter - {player}:\
+        \ The player path variable has to be one of [A,B]. <br> Response 200: The\
+        \ body contains the player code from the player, which was specified in the\
+        \ <br> path. response: { \"code\": String, } <br> Response 400: An incorrect\
+        \ player has been specified in the path/request. response: { <br> \"message\"\
+        : String, } <br> Response 404: No code has been submitted for the specified\
+        \ player yet or the lobby does not <br> exist."
+      parameters:
+      - name: "player"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "lobbyId"
+        in: "path"
+        required: true
+        schema:
+          type: "number"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Program"
+    post:
+      description: "Posts the player code to a specific lobby, which is specified\
+        \ in the path parameters. If the <br> gamestate of the game in the specified\
+        \ lobby is FINISHED, then the lobby gets reset, so a new <br> game can be\
+        \ played and the new code gets submitted correctly. Path parameter - {lobbyId}:\
+        \ The <br> lobby id which the player code is to be submitted. Path parameter\
+        \ - {player}: The player path <br> variable has to be one of [A,B]. <br> The\
+        \ body must contain the code that is to be submitted. body: { \"code\": String,\
+        \ } <br> Response 201: The post operation was successful. <br> Response 400:\
+        \ An incorrect player has been specified in the path/request. body: { \"message\"\
+        : <br> String, } <br> Response 404: The lobby doesn't exist."
+      parameters:
+      - name: "lobbyId"
+        in: "path"
+        required: true
+        schema:
+          type: "number"
+      - name: "player"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitCodeRequest"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/lobby/{lobbyId}/join:
+    post:
+      description: "This endpoint is used to join an existing lobby with the desired\
+        \ playerName. The body must <br> contain the desired playerName. If the player\
+        \ is already in the lobby, the join operation is <br> aborted. Players who\
+        \ want to join must have a unique playerName. body: { \"playername\": <br>\
+        \ String, } <br> Response 200: No special response body, join was accepted.\
+        \ <br> Response 404: The lobby you are trying to join doesn't exist. <br>\
+        \ Response 409: Someone already joined as that player. The slot is locked\
+        \ and the join <br> operation is aborted."
+      parameters:
+      - name: "lobbyId"
+        in: "path"
+        required: true
+        schema:
+          type: "number"
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "409":
+          description: "Conflict"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Unit"
+  /api/v1/lobby/{lobbyId}/status:
+    get:
+      description: "Returns either the status of the current game in a lobby or the\
+        \ status of the last finished <br> game in a lobby. Path parameter - {lobbyId}:\
+        \ The id of the lobby, which status you want to <br> get. Keep in mind, that\
+        \ in this api version there is no default lobby! <br> playerXSubmitted will\
+        \ only be true if code for player X has been submitted. <br> Result will only\
+        \ be valid when gameState is FINISHED, beforehand it is undefined. <br> playerXSubmitted\
+        \ will switch back to false once the gameState switches to FINISHED and a\
+        \ <br> player in the lobby submits new code to the lobby. <br> Response 400:\
+        \ The lobby id is invalid, so the id wasn't given as the path parameter OR\
+        \ the <br> lobby you are trying to get the status from, doesn't exist. <br>\
+        \ Response 200: The GET request is valid and the lobby status including the\
+        \ visualisation data <br> is returned. Body of the Response 200: <br> { \"\
+        playerASubmitted\": boolean, <br> \"playerBSubmitted\": boolean, \"gameState\"\
+        : One of [NOT_STARTED, RUNNING, FINISHED], \"result\": <br> { \"winner\":\
+        \ One of [A, B, DRAW], }, \"visualizationData\": [ { \"playerId\": One of\
+        \ [A, B], <br> \"programCounterBefore\": number, \"programCounterAfter\":\
+        \ number, <br> \"programCountersOfOtherProcesses\": number, \"memoryReads\"\
+        : number, \"memoryWrites\": number, <br> \"processDied\": boolean, } ] }"
+      parameters:
+      - name: "lobbyId"
+        in: "path"
+        required: true
+        schema:
+          type: "number"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Status"
+  /api/v1/redcode/compile/errors:
+    post:
+      description: "Retrieves the errors encountered during the compilation of the\
+        \ redcode. If no errors were <br> encountered during compilation, the provided\
+        \ error array is empty. The body must contain the <br> code that is to be\
+        \ checked. body: { \"code\": String, } <br> Response 200: The post operation\
+        \ was successful. response: { \"errors\": <br> [ { \"line\": number, \"message\"\
+        : string, \"columnStart\": number, \"columnEnd\": number, }, ] }"
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Map_String"
+components:
+  schemas:
+    V0Result:
+      type: "object"
+      properties:
+        winner:
+          type: "string"
+          enum:
+          - "A"
+          - "B"
+          - "UNDECIDED"
+      required:
+      - "winner"
+    V0Status:
+      type: "object"
+      properties:
+        playerASubmitted:
+          type: "boolean"
+        playerBSubmitted:
+          type: "boolean"
+        gameState:
+          type: "string"
+          enum:
+          - "NOT_STARTED"
+          - "RUNNING"
+          - "FINISHED"
+        result:
+          $ref: "#/components/schemas/V0Result"
+      required:
+      - "gameState"
+      - "result"
+    Map:
+      type: "object"
+      properties: {}
+    Map_String:
+      type: "string"
+    CreateLobbyResponse:
+      type: "object"
+      properties:
+        lobbyId:
+          type: "string"
+      required:
+      - "lobbyId"
+    Program:
+      type: "object"
+      properties:
+        code:
+          type: "string"
+      required:
+      - "code"
+    SubmitCodeRequest:
+      type: "object"
+      properties:
+        code:
+          type: "string"
+      required:
+      - "code"
+    Unit:
+      type: "object"
+      properties: {}
+    GameResult:
+      type: "object"
+      properties:
+        winner:
+          type: "string"
+          enum:
+          - "A"
+          - "B"
+          - "DRAW"
+      required:
+      - "winner"
+    Status:
+      type: "object"
+      properties:
+        playerASubmitted:
+          type: "boolean"
+        playerBSubmitted:
+          type: "boolean"
+        gameState:
+          type: "string"
+          enum:
+          - "NOT_STARTED"
+          - "RUNNING"
+          - "FINISHED"
+        result:
+          $ref: "#/components/schemas/GameResult"
+      required:
+      - "gameState"
+      - "result"
