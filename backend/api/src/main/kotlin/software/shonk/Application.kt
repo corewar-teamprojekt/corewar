@@ -64,7 +64,12 @@ fun Application.moduleApiV0() {
 }
 
 fun Application.moduleApiV1() {
-    routing { route("/api/v1") { configureShorkInterpreterControllerV1() } }
+    routing {
+        route("/api/v1") {
+            staticResources("/docs", "openapi/v1", index = "scalar.html")
+            configureShorkInterpreterControllerV1()
+        }
+    }
 }
 
 fun Application.staticResources() {
