@@ -1,6 +1,3 @@
-import bluePlayerIcon from "@/assets/bluePlayerIcon.svg";
-import icon from "@/assets/icon.svg";
-import redPlayerIcon from "@/assets/redPlayerIcon.svg";
 import { Button } from "@/components/ui/button";
 import { LobbyStatus } from "@/domain/LobbyStatus";
 import {
@@ -45,15 +42,25 @@ export default function ResultDisplayPageV2() {
 			!lobby ||
 			!user
 		) {
-			return <img src={icon} alt="draw icon" className={"w-164 h-164"} />;
+			return (
+				<img
+					src={"corewarIcon.svg"}
+					alt="draw icon"
+					className={"w-164 h-164"}
+				/>
+			);
 		} else if (lobbyStatus.result.winner === "A") {
 			return (
-				<img src={redPlayerIcon} alt="playerA icon" className={"w-164 h-164"} />
+				<img
+					src={"redPlayerIcon.svg"}
+					alt="playerA icon"
+					className={"w-164 h-164"}
+				/>
 			);
 		} else {
 			return (
 				<img
-					src={bluePlayerIcon}
+					src={"bluePlayerIcon.svg"}
 					alt="playerB icon"
 					className={"w-164 h-164"}
 				/>
