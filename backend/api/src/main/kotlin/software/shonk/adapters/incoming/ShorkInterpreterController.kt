@@ -29,8 +29,7 @@ fun Route.configureShorkInterpreterControllerV1() {
      * Response 400: An incorrect player has been specified in the path/request. response: {
      * "message": String, }
      *
-     * Response 404: No code has been submitted for the specified player yet or the lobby does not
-     * exist.
+     * Response 404: If lobby doesn't exist.
      */
     get("/lobby/{lobbyId}/code/{player}") {
         val player = call.parameters["player"]
@@ -87,9 +86,9 @@ fun Route.configureShorkInterpreterControllerV1() {
 
     /**
      * Creates a new lobby and returns the id of the newly created one, which identifies the lobby
-     * uniquely. If the lobby doesn't exist or the playerName is invalid, the create operation is
-     * aborted. The body must contain the desired playerName of the player creating the lobby. body:
-     * { "playerName": String, }
+     * uniquely. If the playerName is invalid, the create operation is aborted. The body must
+     * contain the desired playerName of the player creating the lobby. body: { "playerName":
+     * String, }
      *
      * Response 201: The response contains the id of the created lobby. response: { "lobbyId":
      * String, }
