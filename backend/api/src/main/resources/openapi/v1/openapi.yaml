@@ -6,55 +6,6 @@ info:
 servers:
 - url: "https://backend"
 paths:
-  /api/v0/code/{player}:
-    post:
-      description: "Stores the program of a given player in current v0Lobby, creates\
-        \ that lobby if there is no <br> current v0Lobby. <br> Path Parameter - {player}:\
-        \ The name of the player whose code is being <br> submitted. For this endpoint\
-        \ ONLY 'playerA' and 'playerB' are valid! Body: The program of the <br> player,\
-        \ in plain text <br> Response 200: The game will automatically start once\
-        \ the second <br> player has submitted. Response 400: Game is in `RUNNING`\
-        \ state or a player still has to <br> submit code. The message field contains\
-        \ an explanation of what went wrong. <br> { \"message\": String, }"
-      parameters:
-      - name: "player"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
-      requestBody:
-        content:
-          text/plain:
-            schema:
-              type: "string"
-        required: true
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-  /api/v0/status:
-    get:
-      description: "Returns either the status of the current game, or the status /\
-        \ result of the last game if <br> there is no currently active game. <br>\
-        \ playerXSubmitted will only be true if code for player X has been submitted\
-        \ <br> result will only be valid when gameState is FINISHED <br> playerXSubmitted\
-        \ will switch back to false once the gameState switches to FINISHED"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/V0Status"
   /api/v1/lobby:
     get:
       description: "Gets a list of all existing lobbies and their details. The playersJoined\
