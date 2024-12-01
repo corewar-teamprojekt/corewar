@@ -1,5 +1,3 @@
-import bluePlayerIcon from "@/assets/bluePlayerIcon.svg";
-import redPlayerIcon from "@/assets/redPlayerIcon.svg";
 import { RequireLogout } from "@/components/requireLogout/RequireLogout";
 import { GameState } from "@/domain/GameState";
 import { Lobby } from "@/domain/Lobby";
@@ -120,7 +118,7 @@ function PlayerSelection() {
 						disabled={isButtonDisabled("playerA")}
 					>
 						<img
-							src={redPlayerIcon}
+							src={"redPlayerIcon.svg"}
 							alt="Player A Icon"
 							className={
 								styles[
@@ -136,7 +134,7 @@ function PlayerSelection() {
 						disabled={isButtonDisabled("playerB")}
 					>
 						<img
-							src={bluePlayerIcon}
+							src={"bluePlayerIcon.svg"}
 							alt="Player B Icon"
 							className={
 								styles[
