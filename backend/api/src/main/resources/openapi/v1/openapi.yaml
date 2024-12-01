@@ -11,9 +11,7 @@ paths:
       description: "Gets a list of all existing lobbies and their details. The playersJoined\
         \ attribute contains a <br> list of all playerNames that joined the lobby.\
         \ Joined means joined, not code submitted! <br> Response 200: The post operation\
-        \ was successful. response: { \"lobbies\": <br> [ { \"id\": number, \"playersJoined\"\
-        : string, \"gameState\": One of [NOT_STARTED, RUNNING, FINISHED], <br> },\
-        \ ... ] }"
+        \ was successful. <br> response: <br> <br> ``` <br> ```"
       responses:
         "200":
           description: "OK"
@@ -23,12 +21,12 @@ paths:
                 $ref: "#/components/schemas/Map_String"
     post:
       description: "Creates a new lobby and returns the id of the newly created one,\
-        \ which identifies the lobby <br> uniquely. If the lobby doesn't exist or\
-        \ the playerName is invalid, the create operation is <br> aborted. The body\
-        \ must contain the desired playerName of the player creating the lobby. body:\
-        \ <br> { \"playerName\": String, } <br> Response 201: The response contains\
-        \ the id of the created lobby. response: { \"lobbyId\": <br> String, } <br>\
-        \ Response 400: Failed to create a lobby, because the playerName is invalid."
+        \ which identifies the lobby <br> uniquely. If the playerName is invalid,\
+        \ the create operation is aborted. The body must <br> contain the desired\
+        \ playerName of the player creating the lobby. body: { \"playerName\": <br>\
+        \ String, } <br> Response 201: The response contains the id of the created\
+        \ lobby. response: { \"lobbyId\": <br> String, } <br> Response 400: Failed\
+        \ to create a lobby, because the playerName is invalid."
       requestBody:
         content:
           application/json:
@@ -56,8 +54,7 @@ paths:
         \ body contains the player code from the player, which was specified in the\
         \ <br> path. response: { \"code\": String, } <br> Response 400: An incorrect\
         \ player has been specified in the path/request. response: { <br> \"message\"\
-        : String, } <br> Response 404: No code has been submitted for the specified\
-        \ player yet or the lobby does not <br> exist."
+        : String, } <br> Response 404: If lobby doesn't exist."
       parameters:
       - name: "player"
         in: "path"
@@ -182,13 +179,8 @@ paths:
         \ The lobby id is invalid, so the id wasn't given as the path parameter OR\
         \ the <br> lobby you are trying to get the status from, doesn't exist. <br>\
         \ Response 200: The GET request is valid and the lobby status including the\
-        \ visualisation data <br> is returned. Body of the Response 200: <br> { \"\
-        playerASubmitted\": boolean, <br> \"playerBSubmitted\": boolean, \"gameState\"\
-        : One of [NOT_STARTED, RUNNING, FINISHED], \"result\": <br> { \"winner\":\
-        \ One of [A, B, DRAW], }, \"visualizationData\": [ { \"playerId\": One of\
-        \ [A, B], <br> \"programCounterBefore\": number, \"programCounterAfter\":\
-        \ number, <br> \"programCountersOfOtherProcesses\": number, \"memoryReads\"\
-        : number, \"memoryWrites\": number, <br> \"processDied\": boolean, } ] }"
+        \ visualisation data <br> is returned. <br> <br> <br> response: <br> <br>\
+        \ ``` <br> ```"
       parameters:
       - name: "lobbyId"
         in: "path"
@@ -214,8 +206,7 @@ paths:
         \ redcode. If no errors were <br> encountered during compilation, the provided\
         \ error array is empty. The body must contain the <br> code that is to be\
         \ checked. body: { \"code\": String, } <br> Response 200: The post operation\
-        \ was successful. response: { \"errors\": <br> [ { \"line\": number, \"message\"\
-        : string, \"columnStart\": number, \"columnEnd\": number, }, ] }"
+        \ was successful. <br> <br> response: <br> <br> ´´´ <br> { <br> } <br> ´´´"
       requestBody:
         content:
           application/json:
