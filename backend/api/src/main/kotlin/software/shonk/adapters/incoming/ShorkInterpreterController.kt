@@ -66,27 +66,11 @@ fun Route.configureShorkInterpreterControllerV1() {
      * Response 200: The GET request is valid and the lobby status including the visualisation data
      * is returned. <br> response: <br>
      *
-     * ```
-     * {
-     *     "playerASubmitted": boolean,
-     *     "playerBSubmitted": boolean,
-     *     "gameState": One of [NOT_STARTED, RUNNING, FINISHED],
-     *     "result": {
-     *         "winner": One of [A, B, DRAW],
-     *     },
-     *     "visualizationData": [
-     *         {
-     *             "playerId": One of [A, B],
-     *             "programCounterBefore": number,
-     *             "programCounterAfter": number,
-     *             "programCountersOfOtherProcesses": [number],
-     *             "memoryReads": [number],
-     *             "memoryWrites": [number],
-     *             "processDied": boolean,
-     *         }
-     *     ]
-     * }
-     * ```
+     * { "playerASubmitted": boolean, "playerBSubmitted": boolean, "gameState": One of
+     * [NOT_STARTED, RUNNING, FINISHED], "result": { "winner": One of [A, B, DRAW], },
+     * "visualizationData": [ { "playerId": One of [A, B], "programCounterBefore": number,
+     * "programCounterAfter": number, "programCountersOfOtherProcesses": number, "memoryReads":
+     * number, "memoryWrites": number, "processDied": boolean, } ] }
      */
     get("lobby/{lobbyId}/status") {
         val lobbyId =
@@ -202,20 +186,9 @@ fun Route.configureShorkInterpreterControllerV1() {
      * Gets a list of all existing lobbies and their details. The playersJoined attribute contains a
      * list of all playerNames that joined the lobby. Joined means joined, not code submitted!
      *
-     * Response 200: The post operation was successful. response: <br>
-     *
-     * ```
-     * {
-     *   "lobbies": [
-     *     {
-     *       "id": number,
-     *       "playersJoined": [string],
-     *       "gameState": One of [NOT_STARTED, RUNNING, FINISHED],
-     *     },
-     *     ...
-     *   ]
-     * }
-     * ```
+     * Response 200: The post operation was successful. response: <br> { "lobbies":
+     * [ { "id": number, "playersJoined": string, "gameState": One of [NOT_STARTED, RUNNING, FINISHED],
+     * }, ... ] }
      */
     get("/lobby") {
         val lobbiesStatus = shorkUseCase.getAllLobbies()
@@ -228,8 +201,8 @@ fun Route.configureShorkInterpreterControllerV1() {
      * encountered during compilation, the provided error array is empty. The body must contain the
      * code that is to be checked. body: { "code": String, }
      *
-     * Response 200: The post operation was successful. <br> response: <br> ´´´ { "errors":
-     * [ { "line": number, "message": string, "columnStart": number, "columnEnd": number, }, ] } ´´´
+     * Response 200: The post operation was successful. <br> response: <br> { "errors":
+     * [ { "line": number, "message": string, "columnStart": number, "columnEnd": number, }, ] }
      */
     post("/redcode/compile/errors") {
         @Serializable data class CompileErrorsRequest(val code: String)
