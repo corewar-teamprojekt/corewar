@@ -12,6 +12,8 @@ data class Lobby(
     var currentSettings: Settings = Settings(),
     var joinedPlayers: MutableList<String> = mutableListOf(),
 ) {
+    private var visualizationData = emptyList<RoundInformation>()
+
     fun setSettings(settings: Settings) {
         currentSettings = settings
     }
@@ -26,6 +28,7 @@ data class Lobby(
             playerBSubmitted = programs.containsKey("playerB"),
             gameState = gameState,
             result = GameResult(winner),
+            visualizationData = visualizationData,
         )
 
     fun addProgram(name: String, program: String) {
@@ -36,12 +39,14 @@ data class Lobby(
     }
 
     fun run() {
-        val result = shork.run(currentSettings, programs).getOrThrow().outcome.player
+        val result = shork.run(currentSettings, programs).getOrThrow()
+        visualizationData = result.roundInformation.map { it.toDomainRoundInformation() }
+        val winningPlayer = result.outcome.player
         gameState = GameState.FINISHED
 
-        if (result == "playerA") {
+        if (winningPlayer == "playerA") {
             winner = Winner.A
-        } else if (result == "playerB") {
+        } else if (winningPlayer == "playerB") {
             winner = Winner.B
         }
     }

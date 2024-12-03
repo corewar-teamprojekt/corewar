@@ -15,7 +15,7 @@ class LobbyTest {
     fun canSetSetting() {
         val SOME_SETTINGS = Settings(69, 123, "NOP", 0)
 
-        val lobby = Lobby(id = 0, programs = HashMap<String, String>(), shork = MockShork())
+        val lobby = Lobby(id = 0, programs = HashMap(), shork = MockShork())
 
         lobby.setSettings(SOME_SETTINGS)
         assertEquals(SOME_SETTINGS, lobby.getSettings())
@@ -23,52 +23,58 @@ class LobbyTest {
 
     @Test
     fun initsWithDefaultStatus() {
-        val lobby = Lobby(id = 0, programs = HashMap<String, String>(), shork = MockShork())
-        val someStatus: Status =
+        val lobby = Lobby(id = 0, programs = HashMap(), shork = MockShork())
+        val actualStatus = lobby.getStatus()
+        val expectedStatus =
             Status(
                 playerASubmitted = false,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
                 result = GameResult(Winner.DRAW),
+                visualizationData = actualStatus.visualizationData,
             )
-        assertEquals(someStatus, lobby.getStatus())
+        assertEquals(expectedStatus, actualStatus)
     }
 
     @Test
     fun `player a submitted becomes true when the player uploads their program`() {
-        val lobby = Lobby(id = 0, programs = HashMap<String, String>(), shork = MockShork())
+        val lobby = Lobby(id = 0, programs = HashMap(), shork = MockShork())
 
         lobby.addProgram("playerA", "test")
 
-        val someStatus: Status =
+        val actualStatus = lobby.getStatus()
+        val expectedStatus =
             Status(
                 playerASubmitted = true,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
                 result = GameResult(Winner.DRAW),
+                visualizationData = actualStatus.visualizationData,
             )
-        assertEquals(someStatus, lobby.getStatus())
+        assertEquals(expectedStatus, actualStatus)
     }
 
     @Test
     fun `player b submitted becomes true when the player uploads their program`() {
-        val lobby = Lobby(id = 0, programs = HashMap<String, String>(), shork = MockShork())
+        val lobby = Lobby(id = 0, programs = HashMap(), shork = MockShork())
 
         lobby.addProgram("playerB", "test")
 
-        val someStatus: Status =
+        val actualStatus = lobby.getStatus()
+        val expectedStatus =
             Status(
                 playerASubmitted = false,
                 playerBSubmitted = true,
                 gameState = GameState.NOT_STARTED,
                 result = GameResult(Winner.DRAW),
+                visualizationData = actualStatus.visualizationData,
             )
-        assertEquals(someStatus, lobby.getStatus())
+        assertEquals(expectedStatus, actualStatus)
     }
 
     @Test
     fun `runs game when both players have submitted their programs`() {
-        val lobby = spyk(Lobby(id = 0, programs = HashMap<String, String>(), shork = MockShork()))
+        val lobby = spyk(Lobby(id = 0, programs = HashMap(), shork = MockShork()))
 
         lobby.addProgram("playerA", "someProgram")
         lobby.addProgram("playerB", "someOtherProgram")
@@ -82,24 +88,26 @@ class LobbyTest {
         every { shork.run(any(), any()) } returns
             Result.success(GameResult(GameOutcome("playerA", OutcomeKind.WIN), emptyList()))
 
-        val lobby = Lobby(id = 0, programs = HashMap<String, String>(), shork = shork)
+        val lobby = Lobby(id = 0, programs = HashMap(), shork = shork)
         lobby.addProgram("playerA", "someProgram")
         lobby.addProgram("playerB", "someOtherProgram")
 
-        val someStatus: Status =
+        val actualStatus = lobby.getStatus()
+        val expectedStatus =
             Status(
                 playerASubmitted = true,
                 playerBSubmitted = true,
                 gameState = GameState.FINISHED,
                 result = GameResult(Winner.A),
+                visualizationData = actualStatus.visualizationData,
             )
-        assertEquals(someStatus, lobby.getStatus())
+        assertEquals(expectedStatus, actualStatus)
     }
 
     @Test
     fun `tests if the shork is called upon during the lobby run`() {
         val shork = spyk<MockShork>()
-        val lobby = Lobby(id = 0, programs = HashMap<String, String>(), shork = shork)
+        val lobby = Lobby(id = 0, programs = HashMap(), shork = shork)
         lobby.addProgram("playerA", "someProgram")
         lobby.addProgram("playerB", "someOtherProgram")
 

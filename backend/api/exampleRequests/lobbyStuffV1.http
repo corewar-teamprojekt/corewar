@@ -10,4 +10,22 @@ Content-Type: application/json
 GET http://localhost:8080/api/v1/lobby/0/status
 
 ###
+# Submit code for player A, will run until the end of the game
+POST http://localhost:8080/api/v1/lobby/0/code/playerA
+Content-Type: application/json
+
+{
+  "code": "mov 0, 1"
+}
+
+###
+# Submit code for player B, will run until the end of the game
+POST http://localhost:8080/api/v1/lobby/0/code/playerB
+Content-Type: application/json
+
+{
+  "code": "mov 0, 1"
+}
+
+###
 GET http://localhost:8080/api/v1/lobby

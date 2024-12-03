@@ -6,13 +6,14 @@ import org.junit.jupiter.api.Test
 import software.shonk.domain.*
 import software.shonk.interpreter.MockShork
 import software.shonk.interpreter.Settings
+import software.shonk.interpreter.Shork
 
 class ShorkServiceTest {
 
     @Test
     fun `inits with no default lobby`() {
         val shorkService = ShorkService(MockShork())
-        assertEquals(shorkService.lobbies.size, 0)
+        assertEquals(0, shorkService.lobbies.size)
     }
 
     @Test
@@ -20,14 +21,17 @@ class ShorkServiceTest {
         val shorkService = ShorkService(MockShork())
         shorkService.createLobby("playerA")
         shorkService.addProgramToLobby(0L, "playerA", "someProgram")
+        val result = shorkService.getLobbyStatus(0L).getOrThrow()
+
         assertEquals(
-            shorkService.getLobbyStatus(0L).getOrThrow(),
             Status(
                 playerASubmitted = true,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
                 result = GameResult(winner = Winner.DRAW),
+                visualizationData = result.visualizationData,
             ),
+            result,
         )
     }
 
@@ -36,14 +40,17 @@ class ShorkServiceTest {
         val shorkService = ShorkService(MockShork())
         shorkService.createLobby("playerA")
         shorkService.addProgramToLobby(0L, "playerB", "someProgram")
+        val result = shorkService.getLobbyStatus(0L).getOrThrow()
+
         assertEquals(
-            shorkService.getLobbyStatus(0L).getOrThrow(),
             Status(
                 playerASubmitted = false,
                 playerBSubmitted = true,
                 gameState = GameState.NOT_STARTED,
                 result = GameResult(winner = Winner.DRAW),
+                visualizationData = result.visualizationData,
             ),
+            result,
         )
     }
 
@@ -51,15 +58,18 @@ class ShorkServiceTest {
     fun `create lobby creates a new lobby`() {
         val shorkService = ShorkService(MockShork())
         val lobbyId = shorkService.createLobby("playerA")
-        assertEquals(shorkService.lobbies.size, 1)
+        assertEquals(1, shorkService.lobbies.size)
+
+        val result = shorkService.getLobbyStatus(lobbyId.getOrThrow()).getOrThrow()
         assertEquals(
-            shorkService.getLobbyStatus(lobbyId.getOrThrow()).getOrThrow(),
             Status(
                 playerASubmitted = false,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
                 result = GameResult(winner = Winner.DRAW),
+                visualizationData = result.visualizationData,
             ),
+            result,
         )
     }
 
@@ -69,22 +79,27 @@ class ShorkServiceTest {
         shorkService.createLobby("playerA")
         shorkService.createLobby("playerB")
         shorkService.addProgramToLobby(0L, "playerA", "someProgram")
+        val result0 = shorkService.getLobbyStatus(0L).getOrThrow()
         assertEquals(
-            shorkService.getLobbyStatus(0L).getOrThrow(),
+            result0,
             Status(
                 playerASubmitted = true,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
                 result = GameResult(winner = Winner.DRAW),
+                visualizationData = result0.visualizationData,
             ),
         )
+
+        val result1 = shorkService.getLobbyStatus(1L).getOrThrow()
         assertEquals(
-            shorkService.getLobbyStatus(1L).getOrThrow(),
+            result1,
             Status(
                 playerASubmitted = false,
                 playerBSubmitted = false,
                 gameState = GameState.NOT_STARTED,
                 result = GameResult(winner = Winner.DRAW),
+                visualizationData = result1.visualizationData,
             ),
         )
     }
@@ -94,8 +109,9 @@ class ShorkServiceTest {
         val shorkService = ShorkService(MockShork())
         shorkService.createLobby("playerA")
         val result = shorkService.addProgramToLobby(0L, null, "someProgram")
-        assertEquals(result.isFailure, true)
-        assertEquals(result.exceptionOrNull()?.message, "Invalid player name")
+
+        assertEquals(true, result.isFailure)
+        assertEquals("Invalid player name", result.exceptionOrNull()?.message)
     }
 
     @Test
@@ -103,31 +119,35 @@ class ShorkServiceTest {
         val shorkService = ShorkService(MockShork())
         shorkService.createLobby("playerA")
         shorkService.deleteLobby(0L)
-        assertEquals(shorkService.lobbies.size, 0)
+
+        assertEquals(0, shorkService.lobbies.size)
     }
 
     @Test
     fun `delete lobby fails if lobby does not exist`() {
         val shorkService = ShorkService(MockShork())
         val result = shorkService.deleteLobby(0L)
-        assertEquals(result.isFailure, true)
-        assertEquals(result.exceptionOrNull()?.message, "No lobby with that id")
+
+        assertEquals(true, result.isFailure)
+        assertEquals("No lobby with that id", result.exceptionOrNull()?.message)
     }
 
     @Test
     fun `get status for the lobby fails if lobby does not exist`() {
         val shorkService = ShorkService(MockShork())
         val result = shorkService.getLobbyStatus(0L)
-        assertEquals(result.isFailure, true)
-        assertEquals(result.exceptionOrNull()?.message, "No lobby with that id")
+
+        assertEquals(true, result.isFailure)
+        assertEquals("No lobby with that id", result.exceptionOrNull()?.message)
     }
 
     @Test
     fun `add program to the lobby fails if lobby does not exist`() {
         val shorkService = ShorkService(MockShork())
         val result = shorkService.addProgramToLobby(0L, "playerA", "someProgram")
-        assertEquals(result.isFailure, true)
-        assertEquals(result.exceptionOrNull()?.message, "No lobby with that id")
+
+        assertEquals(true, result.isFailure)
+        assertEquals("No lobby with that id", result.exceptionOrNull()?.message)
     }
 
     @Test
@@ -136,6 +156,7 @@ class ShorkServiceTest {
         shorkService.createLobby("playerA")
         val someSettings = Settings(69, 123, "NOP", 0)
         shorkService.setLobbySettings(0, someSettings)
+
         assertEquals(someSettings, shorkService.lobbies[0]?.getSettings())
     }
 
@@ -144,8 +165,9 @@ class ShorkServiceTest {
         val shorkService = ShorkService(MockShork())
         val someSettings = Settings(69, 123, "NOP", 0)
         val result = shorkService.setLobbySettings(0, someSettings)
-        assertEquals(result.isFailure, true)
-        assertEquals(result.exceptionOrNull()?.message, "No lobby with that id")
+
+        assertEquals(true, result.isFailure)
+        assertEquals("No lobby with that id", result.exceptionOrNull()?.message)
     }
 
     @Test
@@ -154,6 +176,7 @@ class ShorkServiceTest {
         shorkService.createLobby("playerA")
         shorkService.addProgramToLobby(0L, "playerA", "someProgram")
         shorkService.addProgramToLobby(0L, "playerB", "someOtherProgram")
+
         assertEquals("someProgram", shorkService.getProgramFromLobby(0L, "playerA").getOrNull())
         assertEquals(
             "someOtherProgram",
@@ -167,6 +190,7 @@ class ShorkServiceTest {
         shorkService.createLobby("playerA")
         shorkService.addProgramToLobby(0L, "playerA", "someProgram")
         shorkService.addProgramToLobby(0L, "playerB", "someOtherProgram")
+
         val secondLobby = shorkService.createLobby("playerB")
         shorkService.addProgramToLobby(secondLobby.getOrThrow(), "playerA", "differentProgram")
         shorkService.addProgramToLobby(
@@ -174,6 +198,7 @@ class ShorkServiceTest {
             "playerB",
             "evenMoreDifferentProgram",
         )
+
         assertEquals("someProgram", shorkService.getProgramFromLobby(0L, "playerA").getOrNull())
         assertEquals(
             "someOtherProgram",
@@ -194,6 +219,7 @@ class ShorkServiceTest {
         val shorkService = ShorkService(MockShork())
         shorkService.createLobby("playerA")
         shorkService.addProgramToLobby(0L, "playerA", "someProgram")
+
         assertEquals(
             "No player with that name in the lobby",
             shorkService.getProgramFromLobby(0L, "playerB").exceptionOrNull()?.message,
@@ -203,6 +229,7 @@ class ShorkServiceTest {
     @Test
     fun `get code from lobby with invalid lobby`() {
         val shorkService = ShorkService(MockShork())
+
         assertEquals(
             "No lobby with that id",
             shorkService.getProgramFromLobby(0L, "playerA").exceptionOrNull()?.message,
@@ -214,6 +241,7 @@ class ShorkServiceTest {
         val shorkService = ShorkService(MockShork())
         shorkService.createLobby("playerA")
         shorkService.joinLobby(0L, "playerB")
+
         assertEquals(true, shorkService.lobbies[0]?.joinedPlayers?.contains("playerB"))
     }
 
@@ -222,6 +250,7 @@ class ShorkServiceTest {
         val shorkService = ShorkService(MockShork())
         shorkService.createLobby("playerA")
         shorkService.joinLobby(0L, "playerA")
+
         assertEquals(1, shorkService.lobbies[0]?.joinedPlayers?.size)
     }
 
@@ -229,6 +258,7 @@ class ShorkServiceTest {
     fun `join nonexistent lobby`() {
         val shorkService = ShorkService(MockShork())
         val result = shorkService.joinLobby(0L, "playerA")
+
         assertEquals(result.isFailure, true)
     }
 
@@ -289,5 +319,19 @@ class ShorkServiceTest {
                 LobbyStatus(id = 3L, playersJoined = listOf("playerB"), gameState = "NOT_STARTED")
             )
         )
+    }
+
+    @Test
+    fun `game visualization data exists`() {
+        val shorkService = ShorkService(Shork())
+        shorkService.createLobby("playerA")
+        shorkService.addProgramToLobby(0L, "playerA", "mov 0, 1")
+        shorkService.addProgramToLobby(0L, "playerB", "mov 0, 1")
+        shorkService.setLobbySettings(0L, Settings())
+
+        val result = shorkService.getLobbyStatus(0L).getOrThrow()
+        assertEquals(GameState.FINISHED, result.gameState)
+        assertEquals(Winner.DRAW, result.result.winner)
+        assertTrue(result.visualizationData.isNotEmpty())
     }
 }

@@ -11,7 +11,7 @@ const val NO_LOBBY_MESSAGE = "No lobby with that id"
 
 class ShorkService(private val shork: IShork) : ShorkUseCase {
 
-    val lobbies: HashMap<Long, Lobby> = HashMap<Long, Lobby>()
+    val lobbies: HashMap<Long, Lobby> = HashMap()
     private var lobbyCounter = 0L
 
     override fun setLobbySettings(lobbyId: Long, settings: Settings): Result<Unit> {
@@ -25,7 +25,6 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
     }
 
     override fun addProgramToLobby(lobbyId: Long, name: String?, program: String): Result<Unit> {
-
         if (lobbies[lobbyId]?.gameState == GameState.FINISHED) {
             lobbies[lobbyId] = resetLobby(lobbyId).getOrThrow()
         }
