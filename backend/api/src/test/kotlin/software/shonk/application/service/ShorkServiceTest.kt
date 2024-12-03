@@ -334,4 +334,16 @@ class ShorkServiceTest {
         assertEquals(Winner.DRAW, result.result.winner)
         assertTrue(result.visualizationData.isNotEmpty())
     }
+
+    @Test
+    fun `game visualization data absent before first run`() {
+        val shorkService = ShorkService(Shork())
+        shorkService.createLobby("playerA")
+        shorkService.setLobbySettings(0L, Settings())
+
+        val result = shorkService.getLobbyStatus(0L).getOrThrow()
+        assertEquals(GameState.NOT_STARTED, result.gameState)
+        assertEquals(Winner.DRAW, result.result.winner)
+        assertTrue(result.visualizationData.isEmpty())
+    }
 }
