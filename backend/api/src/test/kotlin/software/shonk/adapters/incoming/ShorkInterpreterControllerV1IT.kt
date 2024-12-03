@@ -8,6 +8,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.koin.dsl.module
 import software.shonk.domain.CompileError
 import software.shonk.domain.LobbyStatus
 import software.shonk.module
@@ -21,6 +22,55 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             moduleApiV1()
         }
     }
+
+    @Serializable data class Program(val code: String)
+
+    // Workaround for content negotiation plugin bullshit
+    fun Program.json() = Json.encodeToString(Program.serializer(), this)
+
+    @Serializable data class CompileErrorResponse(val errors: List<CompileError>)
+
+    @Serializable data class JoinLobbyRequest(val playerName: String)
+
+    fun JoinLobbyRequest.json() = Json.encodeToString(JoinLobbyRequest.serializer(), this)
+
+    @Serializable data class JoinLobbyResponse(val lobbyId: Long)
+
+    @Serializable
+    data class VisualizationData(
+        val playerId: String,
+        val programCounterBefore: Int,
+        val programCounterAfter: Int,
+        val programCountersOfOtherProcesses: List<Int>,
+        val memoryReads: List<Int>,
+        val memoryWrites: List<Int>,
+        val processDied: Boolean,
+    )
+
+    @Serializable
+    enum class GameState {
+        NOT_STARTED,
+        RUNNING,
+        FINISHED,
+    }
+
+    @Serializable
+    enum class GameWinner {
+        A,
+        B,
+        DRAW,
+    }
+
+    @Serializable data class GameResult(val winner: GameWinner)
+
+    @Serializable
+    data class LobbyStatusResponse(
+        val playerASubmitted: Boolean,
+        val playerBSubmitted: Boolean,
+        val gameState: GameState,
+        val result: GameResult,
+        val visualizationData: List<VisualizationData>,
+    )
 
     private suspend fun parseStatus(response: HttpResponse): Map<String, String> {
         val responseJson = Json.parseToJsonElement(response.bodyAsText()).jsonObject
@@ -447,13 +497,6 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             )
         }
 
-    @Serializable data class Program(val code: String)
-
-    // Workaround for content negotiation plugin bullshit
-    fun Program.json() = Json.encodeToString(Program.serializer(), this)
-
-    @Serializable data class CompileErrorResponse(val errors: List<CompileError>)
-
     @Test
     fun `test compile invalid json`() = runTest {
         val result =
@@ -487,5 +530,69 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
         assertEquals(HttpStatusCode.OK, result.status)
         val response = Json.decodeFromString(CompileErrorResponse.serializer(), result.bodyAsText())
         assertTrue(response.errors.isNotEmpty())
+    }
+
+    @Test
+    fun `test if game visualization data is absent before any game round has run`() = runTest {
+        val joinLobbyResponse =
+            client.post("/api/v1/lobby") {
+                contentType(ContentType.Application.Json)
+                setBody(JoinLobbyRequest("playerA").json())
+            }
+        assertEquals(HttpStatusCode.Created, joinLobbyResponse.status)
+
+        val lobby =
+            Json.decodeFromString(JoinLobbyResponse.serializer(), joinLobbyResponse.bodyAsText())
+        val lobbyId = lobby.lobbyId
+
+        val lobbyStatusResponse = client.get("/api/v1/lobby/$lobbyId/status")
+        assertEquals(HttpStatusCode.OK, lobbyStatusResponse.status)
+
+        val lobbyStatus =
+            Json.decodeFromString(
+                LobbyStatusResponse.serializer(),
+                lobbyStatusResponse.bodyAsText(),
+            )
+        assertEquals(GameState.NOT_STARTED, lobbyStatus.gameState)
+        assertTrue(lobbyStatus.visualizationData.isEmpty())
+    }
+
+    @Test
+    fun `test if game visualization data is present after a game round has run`() = runTest {
+        val joinLobbyResponse =
+            client.post("/api/v1/lobby") {
+                contentType(ContentType.Application.Json)
+                setBody(JoinLobbyRequest("playerA").json())
+            }
+        assertEquals(HttpStatusCode.Created, joinLobbyResponse.status)
+
+        val lobby =
+            Json.decodeFromString(JoinLobbyResponse.serializer(), joinLobbyResponse.bodyAsText())
+        val lobbyId = lobby.lobbyId
+
+        val playerACode =
+            client.post("/api/v1/lobby/$lobbyId/code/playerA") {
+                contentType(ContentType.Application.Json)
+                setBody(Program("MOV 0, 1").json())
+            }
+        assertEquals(HttpStatusCode.OK, playerACode.status)
+
+        val playerBCode =
+            client.post("/api/v1/lobby/$lobbyId/code/playerB") {
+                contentType(ContentType.Application.Json)
+                setBody(Program("MOV 0, 1").json())
+            }
+        assertEquals(HttpStatusCode.OK, playerBCode.status)
+
+        val lobbyStatusResponse = client.get("/api/v1/lobby/$lobbyId/status")
+        assertEquals(HttpStatusCode.OK, lobbyStatusResponse.status)
+
+        val lobbyStatus =
+            Json.decodeFromString(
+                LobbyStatusResponse.serializer(),
+                lobbyStatusResponse.bodyAsText(),
+            )
+        assertEquals(GameState.FINISHED, lobbyStatus.gameState)
+        assertTrue(lobbyStatus.visualizationData.isNotEmpty())
     }
 }
