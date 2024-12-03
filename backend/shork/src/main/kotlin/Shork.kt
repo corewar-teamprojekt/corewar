@@ -80,6 +80,11 @@ class Shork : IShork {
                 }
             }
 
-        return Result.success(GameResult(outcome = outcome, roundInformation = emptyList()))
+        return Result.success(
+            GameResult(
+                outcome = outcome,
+                roundInformation = shork.gameDataCollector.getGameStatistics(),
+            )
+        )
     }
 }
