@@ -31,12 +31,13 @@ internal class MemoryCore(memorySize: Int, val settings: InternalSettings) : ICo
     }
 
     private fun resolvedAddressBounds(address: Int): Int {
-        return if (address < 0) {
-            val negativeIndex = address % memory.size
-            (memory.size + negativeIndex) % memory.size
-        } else {
-            address % memory.size
+        var temp = address % memory.size
+        while (temp < 0) {
+            temp += memory.size
+            temp %= memory.size
         }
+
+        return temp
     }
 
     /**
