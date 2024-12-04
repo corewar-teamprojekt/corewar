@@ -174,3 +174,28 @@ If no errors were encountered during compilation, the provided error array is em
     ]
 }
 ```
+
+# GET /lobby/{lobbyId}/settings
+Gets the settings of a lobby.
+
+## responses:
+### 200:
+```json
+{
+    "settings:": {
+        "interpreterSettings": {
+            "coreSize": number,
+            "instructionLimit": number,
+            "initialInstruction": String,
+            "maximumTicks": number,
+            "maximumProcessesPerPlayer": number,
+            "readDistance": number,
+            "writeDistance": number,
+            "minimumSeparation": number,
+            "separation": number,
+            "randomSeparation": boolean,
+        }
+    }
+}
+```
+### 404: Lobby does not exist
