@@ -1,6 +1,5 @@
 package software.shonk.adapters.incoming
 
-import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -8,7 +7,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.koin.dsl.module
 import software.shonk.domain.CompileError
 import software.shonk.domain.LobbyStatus
 import software.shonk.module
@@ -188,6 +186,17 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
                 setBody("{\"code\":\"weDontCareWhatsInHereForThisTest\"}")
             }
         assertEquals(HttpStatusCode.OK, result.status)
+    }
+
+    @Test
+    fun `test player code submission in invalid lobby`() = runTest {
+        val player = "playerA"
+        val result =
+            client.post("/api/v1/lobby/0/code/$player") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"code\":\"weDontCareWhatsInHereForThisTest\"}")
+            }
+        assertEquals(HttpStatusCode.NotFound, result.status)
     }
 
     @Test
