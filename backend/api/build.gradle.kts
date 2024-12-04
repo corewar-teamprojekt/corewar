@@ -12,6 +12,7 @@ plugins {
     id("com.ncorti.ktfmt.gradle") version "0.20.1"
     id("io.ktor.plugin") version "2.3.12"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
+    id("com.adarshr.test-logger") version "4.0.0"
     jacoco
 }
 
@@ -36,6 +37,9 @@ dependencies { implementation("io.insert-koin:koin-core:$koinVersion") }
 dependencies { implementation("io.insert-koin:koin-test-junit5:$koinVersion") }
 
 tasks.test {
+    testlogger {
+        showPassed = false
+    }
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
 }
