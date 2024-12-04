@@ -97,6 +97,11 @@ fun Route.configureShorkInterpreterControllerV1() {
 
         val player = call.parameters["player"]
         val submitCodeRequest = call.receive<SubmitCodeRequest>()
+
+        if (shorkUseCase.getLobbyStatus(lobbyId).isFailure) {
+            return@post call.respond(HttpStatusCode.NotFound)
+        }
+
         val result = shorkUseCase.addProgramToLobby(lobbyId, player, submitCodeRequest.code)
 
         result.onFailure {
