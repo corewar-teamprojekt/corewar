@@ -28,7 +28,7 @@ internal class TestSlt {
     }
 
     private fun executeSltAndAssertCounter(slt: Slt, expectedCounterIncrement: Int) {
-        slt.execute(process)
+        slt.execute(process, shork.memoryCore.resolveAll(0))
         assertEquals(expectedCounterIncrement, process.programCounter)
     }
 

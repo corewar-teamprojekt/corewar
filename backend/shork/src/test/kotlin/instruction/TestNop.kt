@@ -31,7 +31,8 @@ internal class TestNop {
     fun `test executing with every modifier`() {
         for (mod in Modifier.entries) {
             val nop = Nop(0, 0, AddressMode.DIRECT, AddressMode.DIRECT, mod)
-            nop.execute(process)
+            shork.memoryCore.storeAbsolute(0, nop)
+            nop.execute(process, shork.memoryCore.resolveAll(0))
             assertEquals(0, process.programCounter)
         }
     }

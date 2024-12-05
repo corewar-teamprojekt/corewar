@@ -2,6 +2,7 @@ package software.shonk.interpreter.internal.instruction
 
 import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
+import software.shonk.interpreter.internal.memory.ResolvedAddresses
 import software.shonk.interpreter.internal.process.AbstractProcess
 
 internal class Jmz(
@@ -12,12 +13,11 @@ internal class Jmz(
     modifier: Modifier,
 ) : AbstractInstruction(aField, bField, addressModeA, addressModeB, modifier) {
 
-    override fun execute(process: AbstractProcess) {
+    override fun execute(process: AbstractProcess, resolvedAddresses: ResolvedAddresses) {
         val core = process.program.shork.memoryCore
-        val checkZeroAddress = core.resolveForReading(process.programCounter, bField, addressModeB)
+        val checkZeroAddress = resolvedAddresses.bFieldRead
         val checkZeroInstruction = core.loadAbsolute(checkZeroAddress)
-        val absoluteJumpDestination =
-            core.resolveForReading(process.programCounter, aField, addressModeA)
+        val absoluteJumpDestination = resolvedAddresses.aFieldRead
 
         val shouldJump =
             when (modifier) {
