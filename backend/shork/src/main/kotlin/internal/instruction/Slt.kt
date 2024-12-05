@@ -2,6 +2,7 @@ package software.shonk.interpreter.internal.instruction
 
 import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
+import software.shonk.interpreter.internal.memory.ResolvedAddresses
 import software.shonk.interpreter.internal.process.AbstractProcess
 
 internal class Slt(
@@ -11,11 +12,10 @@ internal class Slt(
     addressModeB: AddressMode,
     modifier: Modifier,
 ) : AbstractInstruction(aField, bField, addressModeA, addressModeB, modifier) {
-    override fun execute(process: AbstractProcess) {
+    override fun execute(process: AbstractProcess, resolvedAddresses: ResolvedAddresses) {
         val core = process.program.shork.memoryCore
-        val sourceAddress = core.resolveForReading(process.programCounter, aField, addressModeA)
-        val destinationAddress =
-            core.resolveForReading(process.programCounter, bField, addressModeB)
+        val sourceAddress = resolvedAddresses.aFieldRead
+        val destinationAddress = resolvedAddresses.bFieldRead
         val sourceInstruction = core.loadAbsolute(sourceAddress)
         val destinationInstruction = core.loadAbsolute(destinationAddress)
 
