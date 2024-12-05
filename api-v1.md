@@ -84,6 +84,8 @@ playerXSubmitted will switch back to false once the gameState switches to `FINIS
     ]
 }
 ```
+### 404:
+No lobby with that id exists.
 
 # POST /lobby/{lobbyId}/code/{player}
 Player path variable has to be one of [A, B]
