@@ -32,12 +32,12 @@ internal class TestAdd {
         val add = Add(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.A)
         shork.memoryCore.storeAbsolute(0, add)
 
-        add.execute(process)
+        add.execute(process, shork.memoryCore.resolveAll(0))
 
         val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
         assert(resultInstruction is Dat)
-        assert(resultInstruction.aField == 10)
+        assertEquals(resultInstruction.aField, 10)
         assert(resultInstruction.bField == 7)
         assert(resultInstruction.addressModeA == AddressMode.IMMEDIATE)
         assert(resultInstruction.addressModeB == AddressMode.IMMEDIATE)
@@ -48,7 +48,7 @@ internal class TestAdd {
         val add = Add(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.B)
         shork.memoryCore.storeAbsolute(0, add)
 
-        add.execute(process)
+        add.execute(process, shork.memoryCore.resolveAll(0))
 
         val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
@@ -64,7 +64,7 @@ internal class TestAdd {
         val add = Add(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.AB)
         shork.memoryCore.storeAbsolute(0, add)
 
-        add.execute(process)
+        add.execute(process, shork.memoryCore.resolveAll(0))
 
         val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
@@ -80,7 +80,7 @@ internal class TestAdd {
         val add = Add(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.BA)
         shork.memoryCore.storeAbsolute(0, add)
 
-        add.execute(process)
+        add.execute(process, shork.memoryCore.resolveAll(0))
 
         val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
@@ -96,7 +96,7 @@ internal class TestAdd {
         val add = Add(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.F)
         shork.memoryCore.storeAbsolute(0, add)
 
-        add.execute(process)
+        add.execute(process, shork.memoryCore.resolveAll(0))
 
         val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
@@ -112,7 +112,7 @@ internal class TestAdd {
         val add = Add(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.I)
         shork.memoryCore.storeAbsolute(0, add)
 
-        add.execute(process)
+        add.execute(process, shork.memoryCore.resolveAll(0))
 
         val resultInstruction = shork.memoryCore.loadAbsolute(2)
 
@@ -128,7 +128,7 @@ internal class TestAdd {
         val add = Add(1, 2, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.X)
         shork.memoryCore.storeAbsolute(0, add)
 
-        add.execute(process)
+        add.execute(process, shork.memoryCore.resolveAll(0))
 
         val resultInstruction = shork.memoryCore.loadAbsolute(2)
 

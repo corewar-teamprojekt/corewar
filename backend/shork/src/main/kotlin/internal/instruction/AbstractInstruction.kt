@@ -4,6 +4,7 @@ import software.shonk.interpreter.internal.ICloneable
 import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.memory.MemoryCore
+import software.shonk.interpreter.internal.memory.ResolvedAddresses
 import software.shonk.interpreter.internal.process.AbstractProcess
 
 /**
@@ -27,7 +28,7 @@ internal abstract class AbstractInstruction(
     val modifier: Modifier,
 ) : ICloneable<AbstractInstruction> {
 
-    abstract fun execute(process: AbstractProcess)
+    abstract fun execute(process: AbstractProcess, resolvedAddresses: ResolvedAddresses)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
