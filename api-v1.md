@@ -204,3 +204,32 @@ Gets the settings of a lobby.
 }
 ```
 ### 404: Lobby does not exist
+
+
+# POST /lobby/{lobbyId}/settings
+Sets the settings of a lobby.
+
+## Request Body:
+```json
+{
+    "settings:": {
+        "interpreterSettings": {
+            "coreSize": number,
+            "instructionLimit": number,
+            "initialInstruction": String,
+            "maximumTicks": number,
+            "maximumProcessesPerPlayer": number,
+            "readDistance": number,
+            "writeDistance": number,
+            "minimumSeparation": number,
+            "separation": number,
+            "randomSeparation": boolean,
+        }
+    }
+}
+```
+
+## responses:
+### 200: Settings updated
+
+### 404: Lobby does not exist
