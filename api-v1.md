@@ -51,7 +51,7 @@ There is no lobby with that id.
 Someone already joined as that player. The slot is locked and the join operation is aborted.
 
 
-# GET /lobby/{lobbyId}/status
+# GET /lobby/{lobbyId}/status?showVisualizationData={boolean}
 
 Gets the status of a lobby.
 
@@ -60,6 +60,11 @@ playerXSubmitted will only be true if code for player X has been submitted
 Result will only be valid when gameState is `FINISHED`, beforehand it is undefined.
 
 playerXSubmitted will switch back to false once the gameState switches to `FINISHED`
+
+### query parameters:
+- showVisualizationData: boolean, optional, default is true
+    - If true, the response will contain the visualization data
+    - If false, the visualization data in the response will be an empty list
 
 ## responses:
 ### 200:
