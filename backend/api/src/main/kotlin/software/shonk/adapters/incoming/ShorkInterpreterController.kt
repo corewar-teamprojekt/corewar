@@ -237,6 +237,26 @@ fun Route.configureShorkInterpreterControllerV1() {
         val errors = shorkUseCase.getCompilationErrors(compileErrorsRequest.code)
         call.respond(mapOf("errors" to errors))
     }
+
+    get("/lobby/{lobbyId}/settings") {
+        val lobbyId =
+            call.parameters["lobbyId"]?.toLongOrNull()
+                ?: return@get call.respond(HttpStatusCode.BadRequest)
+
+        val settingsResult = shorkUseCase.getLobbySettings(lobbyId)
+
+        settingsResult.onFailure {
+            call.respond(HttpStatusCode.NotFound, it.message ?: UNKNOWN_ERROR_MESSAGE)
+        }
+
+        settingsResult.onSuccess { settings ->
+            call.respond(
+                HttpStatusCode.OK,
+                mapOf("settings" to mapOf("interpreterSettings" to settings)),
+            )
+        }
+        return@get
+    }
 }
 
 @Serializable data class Program(val code: String)
