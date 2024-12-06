@@ -69,6 +69,92 @@ internal class TestMemoryCore {
     }
 
     @Test
+    fun `test resolve bounds positive`() {
+        val defaultInstruction =
+            MockInstruction(18, 18, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.I)
+        val memoryCore =
+            MemoryCore(
+                100,
+                getDefaultInternalSettings(
+                    defaultInstruction,
+                    readDistance = 10,
+                    writeDistance = 10,
+                ),
+            )
+
+        var resolvedAddresses = memoryCore.resolveAll(0)
+
+        assertEquals(98, resolvedAddresses.aFieldRead)
+        assertEquals(98, resolvedAddresses.bFieldRead)
+        assertEquals(98, resolvedAddresses.aFieldWrite)
+        assertEquals(98, resolvedAddresses.bFieldWrite)
+
+        resolvedAddresses = memoryCore.resolveAll(5)
+
+        assertEquals(3, resolvedAddresses.aFieldRead)
+        assertEquals(3, resolvedAddresses.bFieldRead)
+        assertEquals(3, resolvedAddresses.aFieldWrite)
+        assertEquals(3, resolvedAddresses.bFieldWrite)
+
+        resolvedAddresses = memoryCore.resolveAll(10)
+
+        assertEquals(8, resolvedAddresses.aFieldRead)
+        assertEquals(8, resolvedAddresses.bFieldRead)
+        assertEquals(8, resolvedAddresses.aFieldWrite)
+        assertEquals(8, resolvedAddresses.bFieldWrite)
+
+        resolvedAddresses = memoryCore.resolveAll(99)
+
+        assertEquals(97, resolvedAddresses.aFieldRead)
+        assertEquals(97, resolvedAddresses.bFieldRead)
+        assertEquals(97, resolvedAddresses.aFieldWrite)
+        assertEquals(97, resolvedAddresses.bFieldWrite)
+    }
+
+    @Test
+    fun `test resolve bounds negative`() {
+        val defaultInstruction =
+            MockInstruction(-18, -18, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.I)
+        val memoryCore =
+            MemoryCore(
+                100,
+                getDefaultInternalSettings(
+                    defaultInstruction,
+                    readDistance = 10,
+                    writeDistance = 10,
+                ),
+            )
+
+        var resolvedAddresses = memoryCore.resolveAll(0)
+
+        assertEquals(2, resolvedAddresses.aFieldRead)
+        assertEquals(2, resolvedAddresses.bFieldRead)
+        assertEquals(2, resolvedAddresses.aFieldWrite)
+        assertEquals(2, resolvedAddresses.bFieldWrite)
+
+        resolvedAddresses = memoryCore.resolveAll(5)
+
+        assertEquals(7, resolvedAddresses.aFieldRead)
+        assertEquals(7, resolvedAddresses.bFieldRead)
+        assertEquals(7, resolvedAddresses.aFieldWrite)
+        assertEquals(7, resolvedAddresses.bFieldWrite)
+
+        resolvedAddresses = memoryCore.resolveAll(10)
+
+        assertEquals(12, resolvedAddresses.aFieldRead)
+        assertEquals(12, resolvedAddresses.bFieldRead)
+        assertEquals(12, resolvedAddresses.aFieldWrite)
+        assertEquals(12, resolvedAddresses.bFieldWrite)
+
+        resolvedAddresses = memoryCore.resolveAll(99)
+
+        assertEquals(1, resolvedAddresses.aFieldRead)
+        assertEquals(1, resolvedAddresses.bFieldRead)
+        assertEquals(1, resolvedAddresses.aFieldWrite)
+        assertEquals(1, resolvedAddresses.bFieldWrite)
+    }
+
+    @Test
     fun `test if the memory core integrates with the Game Data Collector`() {
         val settings = getDefaultInternalSettings(defaultInstruction)
         val shork = InternalShork(settings)
