@@ -1,6 +1,7 @@
 package software.shonk.application.port.incoming
 
 import software.shonk.domain.CompileError
+import software.shonk.domain.InterpreterSettings
 import software.shonk.domain.LobbyStatus
 import software.shonk.domain.Status
 import software.shonk.interpreter.Settings
@@ -11,6 +12,8 @@ interface ShorkUseCase {
     fun getProgramFromLobby(lobbyId: Long, name: String?): Result<String>
 
     fun setLobbySettings(lobbyId: Long, settings: Settings): Result<Unit>
+
+    fun getLobbySettings(lobbyId: Long): Result<InterpreterSettings>
 
     fun createLobby(playerName: String): Result<Long>
 

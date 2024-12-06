@@ -359,4 +359,37 @@ class ShorkServiceTest {
         assertEquals(GameState.FINISHED, result.gameState)
         assertTrue(result.visualizationData.isEmpty())
     }
+
+    @Test
+    fun `test get lobby settings for a valid lobby`() {
+        val shorkService = ShorkService(Shork())
+        val lobbyId = shorkService.createLobby("playerA").getOrThrow()
+        val defaultSettings = Settings()
+        shorkService.setLobbySettings(lobbyId, defaultSettings)
+        val result = shorkService.getLobbySettings(lobbyId)
+        val testSettings = result.getOrThrow()
+
+        assertTrue(
+            testSettings ==
+                InterpreterSettings(
+                    coreSize = defaultSettings.coreSize,
+                    instructionLimit = defaultSettings.instructionLimit,
+                    initialInstruction = defaultSettings.initialInstruction,
+                    maximumTicks = defaultSettings.maximumTicks,
+                    maximumProcessesPerPlayer = defaultSettings.maximumProcessesPerPlayer,
+                    readDistance = defaultSettings.readDistance,
+                    writeDistance = defaultSettings.writeDistance,
+                    minimumSeparation = defaultSettings.minimumSeparation,
+                    separation = defaultSettings.separation,
+                    randomSeparation = defaultSettings.randomSeparation,
+                )
+        )
+    }
+
+    @Test
+    fun `test get lobby settings for an invalid lobby`() {
+        val shorkService = ShorkService(Shork())
+        val result = shorkService.getLobbySettings(999L)
+        assertTrue(result.isFailure)
+    }
 }
