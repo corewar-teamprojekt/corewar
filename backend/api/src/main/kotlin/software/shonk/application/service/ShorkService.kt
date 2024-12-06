@@ -24,6 +24,27 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
         return Result.success(Unit)
     }
 
+    override fun getLobbySettings(lobbyId: Long): Result<InterpreterSettings> {
+        val lobby =
+            getLobby(lobbyId).getOrElse {
+                return Result.failure(it)
+            }
+        return Result.success(
+            InterpreterSettings(
+                coreSize = lobby.getSettings().coreSize,
+                instructionLimit = lobby.getSettings().instructionLimit,
+                initialInstruction = lobby.getSettings().initialInstruction,
+                maximumTicks = lobby.getSettings().maximumTicks,
+                maximumProcessesPerPlayer = lobby.getSettings().maximumProcessesPerPlayer,
+                readDistance = lobby.getSettings().readDistance,
+                writeDistance = lobby.getSettings().writeDistance,
+                minimumSeparation = lobby.getSettings().minimumSeparation,
+                separation = lobby.getSettings().separation,
+                randomSeparation = lobby.getSettings().randomSeparation,
+            )
+        )
+    }
+
     override fun addProgramToLobby(lobbyId: Long, name: String?, program: String): Result<Unit> {
         if (lobbies[lobbyId]?.gameState == GameState.FINISHED) {
             lobbies[lobbyId] = resetLobby(lobbyId).getOrThrow()
