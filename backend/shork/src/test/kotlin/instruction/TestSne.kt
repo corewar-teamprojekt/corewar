@@ -27,7 +27,7 @@ internal class TestSne {
     }
 
     private fun executeSneAndAssertCounter(sne: Sne, expectedCounterIncrement: Int) {
-        sne.execute(process)
+        sne.execute(process, shork.memoryCore.resolveAll(0))
         assertEquals(expectedCounterIncrement, process.programCounter)
     }
 

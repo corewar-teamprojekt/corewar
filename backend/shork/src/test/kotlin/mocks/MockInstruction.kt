@@ -3,6 +3,7 @@ package mocks
 import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.instruction.AbstractInstruction
+import software.shonk.interpreter.internal.memory.ResolvedAddresses
 import software.shonk.interpreter.internal.process.AbstractProcess
 
 internal class MockInstruction(
@@ -16,7 +17,7 @@ internal class MockInstruction(
 
     var executionCount = 0
 
-    override fun execute(process: AbstractProcess) {
+    override fun execute(process: AbstractProcess, resolvedAddresses: ResolvedAddresses) {
         executionCount++
     }
 

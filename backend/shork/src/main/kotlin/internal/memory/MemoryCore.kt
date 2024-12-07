@@ -4,7 +4,7 @@ import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.instruction.AbstractInstruction
 import software.shonk.interpreter.internal.settings.InternalSettings
 
-internal class MemoryCore(memorySize: Int, val settings: InternalSettings) : ICore {
+internal class MemoryCore(val memorySize: Int, val settings: InternalSettings) : ICore {
     private val memory: Array<AbstractInstruction> =
         Array(memorySize) { settings.initialInstruction.deepCopy() }
 
@@ -18,16 +18,6 @@ internal class MemoryCore(memorySize: Int, val settings: InternalSettings) : ICo
         val resolvedAddress = resolvedAddressBounds(address)
         settings.gameDataCollector.collectMemoryWrite(resolvedAddress, instruction)
         memory[resolvedAddress] = instruction
-    }
-
-    override fun resolveForReading(sourceAddress: Int, field: Int, mode: AddressMode): Int {
-        val maxDistance = settings.readDistance
-        return resolve(sourceAddress, field, mode, maxDistance)
-    }
-
-    override fun resolveForWriting(sourceAddress: Int, field: Int, mode: AddressMode): Int {
-        val maxDistance = settings.writeDistance
-        return resolve(sourceAddress, field, mode, maxDistance)
     }
 
     private fun resolvedAddressBounds(address: Int): Int {
@@ -47,17 +37,10 @@ internal class MemoryCore(memorySize: Int, val settings: InternalSettings) : ICo
      * @param sourceAddress The address of the instruction that is executing the operation
      * @param field The field to resolve the address of, either the A or B field
      * @param mode The address mode to use, must be the address mode of the field (A or B)
-     * @param maxAddressDistance The maximum distance the operation can access
      * @return The resolved absolute address
      */
-    private fun resolve(
-        sourceAddress: Int,
-        field: Int,
-        mode: AddressMode,
-        maxAddressDistance: Int,
-    ): Int {
-        val referenceAddress =
-            sourceAddress + (field % maxAddressDistance) // Address we are pointing to
+    private fun resolve(sourceAddress: Int, field: Int, mode: AddressMode): Int {
+        val referenceAddress = sourceAddress + field // Address we are pointing to
         val instruction = loadAbsolute(referenceAddress)
 
         val addressOffset =
@@ -102,6 +85,61 @@ internal class MemoryCore(memorySize: Int, val settings: InternalSettings) : ICo
                 }
             }
 
-        return sourceAddress + (addressOffset % maxAddressDistance)
+        return sourceAddress + addressOffset
+    }
+
+    /**
+     * Resolves all addresses that a given instruction can read or write from. It makes sure the
+     * addresses are constricted to the maximum read and write distances.
+     *
+     * @param sourceAddress The address to resolve
+     * @return All of the resolved addresses
+     */
+    override fun resolveAll(sourceAddress: Int): ResolvedAddresses {
+        val sourceInstruction = loadAbsolute(sourceAddress)
+        val aField = sourceInstruction.aField
+        val bField = sourceInstruction.bField
+        val aMode = sourceInstruction.addressModeA
+        val bMode = sourceInstruction.addressModeB
+
+        val resolvedA = resolve(sourceAddress, aField, aMode)
+        val resolvedB = resolve(sourceAddress, bField, bMode)
+
+        val resolvedARead =
+            sourceAddress + resolveDistanceBounds(resolvedA - sourceAddress, settings.readDistance)
+        val resolvedAWrite =
+            sourceAddress + resolveDistanceBounds(resolvedA - sourceAddress, settings.writeDistance)
+        val resolvedBRead =
+            sourceAddress + resolveDistanceBounds(resolvedB - sourceAddress, settings.readDistance)
+        val resolvedBWrite =
+            sourceAddress + resolveDistanceBounds(resolvedB - sourceAddress, settings.writeDistance)
+
+        return ResolvedAddresses(
+            resolvedAddressBounds(resolvedARead),
+            resolvedAddressBounds(resolvedAWrite),
+            resolvedAddressBounds(resolvedBRead),
+            resolvedAddressBounds(resolvedBWrite),
+        )
+    }
+
+    /**
+     * Constricts a read or write operation within specified maximum distance. Adapted from
+     * http://www.koth.org/info/icws94.html#5.6
+     *
+     * @param offset The offset of the read or write operation
+     * @param maxDistance The maximum distance of the operation
+     * @return The resolved absolute address, constriced to the maximum distance
+     */
+    private fun resolveDistanceBounds(offset: Int, maxDistance: Int): Int {
+        var result = offset % maxDistance
+        // The implementation this is based on doesn't handle negative offsets properly,
+        // so we have to make sure it is positive.
+        if (result < 0) {
+            result += maxDistance
+        }
+        if (result > (maxDistance / 2)) {
+            result += memorySize - maxDistance
+        }
+        return result
     }
 }

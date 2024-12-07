@@ -3,6 +3,7 @@ package mocks
 import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
 import software.shonk.interpreter.internal.instruction.AbstractInstruction
+import software.shonk.interpreter.internal.memory.ResolvedAddresses
 import software.shonk.interpreter.internal.process.AbstractProcess
 
 /**
@@ -18,7 +19,7 @@ internal class KillProgramInstruction(
 ) : AbstractInstruction(aField, bField, addressModeA, addressModeB, modifier) {
     constructor() : this(0, 0, AddressMode.IMMEDIATE, AddressMode.IMMEDIATE, Modifier.A)
 
-    override fun execute(process: AbstractProcess) {
+    override fun execute(process: AbstractProcess, resolvedAddresses: ResolvedAddresses) {
         while (!process.program.processes.isEmpty()) {
             process.program.processes.removeByReference(process.program.processes.get())
         }

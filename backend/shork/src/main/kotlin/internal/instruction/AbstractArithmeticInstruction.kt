@@ -2,6 +2,7 @@ package software.shonk.interpreter.internal.instruction
 
 import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
+import software.shonk.interpreter.internal.memory.ResolvedAddresses
 import software.shonk.interpreter.internal.process.AbstractProcess
 
 /** Abstracts away common logic between all arithmetic instructions (ADD, SUB, MUL, DIV, MOD) */
@@ -30,13 +31,11 @@ internal abstract class AbstractArithmeticInstruction(
         }
     }
 
-    override fun execute(process: AbstractProcess) {
+    override fun execute(process: AbstractProcess, resolvedAddresses: ResolvedAddresses) {
         val core = process.program.shork.memoryCore
-        val sourceAddress = core.resolveForReading(process.programCounter, aField, addressModeA)
-        val destinationAddress =
-            core.resolveForReading(process.programCounter, bField, addressModeB)
-        val destinationWriteAddress =
-            core.resolveForWriting(process.programCounter, bField, addressModeB)
+        val sourceAddress = resolvedAddresses.aFieldRead
+        val destinationAddress = resolvedAddresses.bFieldRead
+        val destinationWriteAddress = resolvedAddresses.bFieldWrite
 
         val sourceInstruction = core.loadAbsolute(sourceAddress)
         val destinationInstruction = core.loadAbsolute(destinationAddress)

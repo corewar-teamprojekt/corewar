@@ -2,6 +2,7 @@ package software.shonk.interpreter.internal.instruction
 
 import software.shonk.interpreter.internal.addressing.AddressMode
 import software.shonk.interpreter.internal.addressing.Modifier
+import software.shonk.interpreter.internal.memory.ResolvedAddresses
 import software.shonk.interpreter.internal.process.AbstractProcess
 
 internal class Mov(
@@ -12,12 +13,11 @@ internal class Mov(
     modifier: Modifier,
 ) : AbstractInstruction(aField, bField, addressModeA, addressModeB, modifier) {
 
-    override fun execute(process: AbstractProcess) {
+    override fun execute(process: AbstractProcess, resolvedAddresses: ResolvedAddresses) {
         val core = process.program.shork.memoryCore
 
-        val sourceAddress = core.resolveForReading(process.programCounter, aField, addressModeA)
-        val destinationAddress =
-            core.resolveForWriting(process.programCounter, bField, addressModeB)
+        val sourceAddress = resolvedAddresses.aFieldRead
+        val destinationAddress = resolvedAddresses.bFieldWrite
         val sourceInstruction = core.loadAbsolute(sourceAddress)
         val destinationInstruction = core.loadAbsolute(destinationAddress)
 
@@ -55,7 +55,7 @@ internal class Mov(
                 }
             }
             Modifier.I -> {
-                val address = core.resolveForWriting(process.programCounter, bField, addressModeB)
+                val address = resolvedAddresses.bFieldWrite
                 core.storeAbsolute(address, sourceInstruction.deepCopy())
             }
         }
