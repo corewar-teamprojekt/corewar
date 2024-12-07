@@ -356,7 +356,6 @@ class ShorkServiceTest {
         val defaultSettings = Settings()
         val testSettings = result.getOrThrow()
 
-        assertTrue(result.isSuccess)
         assertTrue(
             testSettings ==
                 InterpreterSettings(
@@ -378,7 +377,6 @@ class ShorkServiceTest {
     fun `test get lobby settings for an invalid lobby`() {
         val shorkService = ShorkService(Shork())
         val result = shorkService.getLobbySettings(999L)
-        assertTrue(result.isFailure)
-        assertEquals("No lobby with that id", result.exceptionOrNull()?.message)
+        assertEquals(result.isFailure, true)
     }
 }

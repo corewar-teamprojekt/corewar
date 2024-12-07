@@ -653,11 +653,17 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
     inner class GetLobbySettings {
         @Test
         fun `test get lobby settings for an existing lobby`() = runTest {
-            client.post("/api/v1/lobby") {
-                contentType(ContentType.Application.Json)
-                setBody("{\"playerName\":\"playerA\"}")
-            }
-            val result = client.get("/api/v1/lobby/0/settings")
+            val clientLobby =
+                client.post("/api/v1/lobby") {
+                    contentType(ContentType.Application.Json)
+                    setBody("{\"playerName\":\"playerA\"}")
+                }
+            val responseId =
+                Json.parseToJsonElement(clientLobby.bodyAsText())
+                    .jsonObject["lobbyId"]!!
+                    .jsonPrimitive
+                    .content
+            val result = client.get("/api/v1/lobby/$responseId/settings")
             val parsedSettings = parseSettings(result)
             val defaultSettings = Settings()
 
@@ -682,7 +688,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
         @Test
         fun `test get lobby settings for a non-existing lobby`() = runTest {
             val result = client.get("/api/v1/lobby/0/settings")
-            assertEquals(HttpStatusCode.BadRequest, result.status)
+            assertEquals(HttpStatusCode.InternalServerError, result.status)
             assertTrue(result.bodyAsText().contains("No lobby with that id"))
         }
     }

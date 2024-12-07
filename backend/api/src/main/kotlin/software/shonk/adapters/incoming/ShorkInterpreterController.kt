@@ -220,12 +220,12 @@ fun Route.configureShorkInterpreterControllerV1() {
     get("/lobby/{lobbyId}/settings") {
         val lobbyId =
             call.parameters["lobbyId"]?.toLongOrNull()
-                ?: return@get call.respond(HttpStatusCode.BadRequest)
+                ?: return@get call.respond(HttpStatusCode.NotFound)
 
         val settingsResult = shorkUseCase.getLobbySettings(lobbyId)
 
         settingsResult.onFailure {
-            call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
+            call.respond(HttpStatusCode.InternalServerError, it.message ?: UNKNOWN_ERROR_MESSAGE)
         }
 
         settingsResult.onSuccess { settings ->
