@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import software.shonk.domain.CompileError
+import software.shonk.domain.InterpreterSettings
 import software.shonk.domain.LobbyStatus
+import software.shonk.interpreter.Settings
 import software.shonk.module
 import software.shonk.moduleApiV1
 
@@ -87,6 +89,12 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
         val responseJson = Json.parseToJsonElement(response.bodyAsText()).jsonObject
         val lobbiesArray = responseJson["lobbies"]!!.jsonArray
         return lobbiesArray.map { Json.decodeFromJsonElement<LobbyStatus>(it) }
+    }
+
+    private suspend fun parseSettings(response: HttpResponse): InterpreterSettings {
+        val responseJson = Json.parseToJsonElement(response.bodyAsText()).jsonObject
+        val settingsJson = responseJson["settings"]!!.jsonObject["interpreterSettings"]!!.jsonObject
+        return Json.decodeFromJsonElement(settingsJson)
     }
 
     @Nested
@@ -456,7 +464,7 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
         }
 
         @Test
-        fun `test create lobby with playername null`() = runTest {
+        fun `test create lobby with playerName null`() = runTest {
             val result =
                 client.post("/api/v1/lobby") {
                     contentType(ContentType.Application.Json)
@@ -638,6 +646,44 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             val response =
                 Json.decodeFromString(CompileErrorResponse.serializer(), result.bodyAsText())
             assertTrue(response.errors.isNotEmpty())
+        }
+    }
+
+    @Nested
+    inner class GetLobbySettings {
+        @Test
+        fun `test get lobby settings for an existing lobby`() = runTest {
+            client.post("/api/v1/lobby") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerA\"}")
+            }
+            val result = client.get("/api/v1/lobby/0/settings")
+            val parsedSettings = parseSettings(result)
+            val defaultSettings = Settings()
+
+            assertEquals(HttpStatusCode.OK, result.status)
+            assertTrue(
+                parsedSettings ==
+                    InterpreterSettings(
+                        coreSize = defaultSettings.coreSize,
+                        instructionLimit = defaultSettings.instructionLimit,
+                        initialInstruction = defaultSettings.initialInstruction,
+                        maximumTicks = defaultSettings.maximumTicks,
+                        maximumProcessesPerPlayer = defaultSettings.maximumProcessesPerPlayer,
+                        readDistance = defaultSettings.readDistance,
+                        writeDistance = defaultSettings.writeDistance,
+                        minimumSeparation = defaultSettings.minimumSeparation,
+                        separation = defaultSettings.separation,
+                        randomSeparation = defaultSettings.randomSeparation,
+                    )
+            )
+        }
+
+        @Test
+        fun `test get lobby settings for a non-existing lobby`() = runTest {
+            val result = client.get("/api/v1/lobby/0/settings")
+            assertEquals(HttpStatusCode.BadRequest, result.status)
+            assertTrue(result.bodyAsText().contains("No lobby with that id"))
         }
     }
 }
