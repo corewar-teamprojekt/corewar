@@ -1,29 +1,48 @@
 import {
 	useState,
-	ReactNode,
-	useEffect,
 	forwardRef,
 	useImperativeHandle,
 	ForwardedRef,
+	memo,
+	useMemo,
+	useCallback,
 } from "react";
 import HexagonalTile, {
 	HexagonalTileProps,
 } from "@/components/hexagonalTile/HexagonalTile.tsx";
 import "./HexagonalBoard.css";
 
-const defaultTileProps: HexagonalTileProps = {
-	fill: "",
-	isDimmed: false,
-	stroke: "gray",
-	strokeWidth: "16",
-	identifier: "",
-	textContent: "",
-};
-
 interface HexagonalBoardProps {
 	rows: number;
 	tilesPerRow: number;
 }
+
+// Memoized row component to prevent unnecessary re-renders
+const MemoizedRow = memo(
+	({
+		row,
+		rowTiles,
+	}: {
+		row: number;
+		tilesPerRow: number;
+		rowTiles: HexagonalTileProps[];
+	}) => {
+		return (
+			<div
+				key={`row-${row}`}
+				className={`boardRow ${row % 2 === 0 ? "even" : "odd"}`}
+			>
+				{rowTiles.map((tileData, col) => (
+					<HexagonalTile key={`tile-${row}-${col}`} {...tileData} />
+				))}
+			</div>
+		);
+	},
+	(prevProps, nextProps) => {
+		// Only re-render if the tiles in this specific row have changed
+		return prevProps.rowTiles === nextProps.rowTiles;
+	},
+);
 
 const HexagonalBoard = forwardRef(function HexagonalBoard(
 	{ rows, tilesPerRow }: HexagonalBoardProps,
@@ -35,79 +54,59 @@ const HexagonalBoard = forwardRef(function HexagonalBoard(
 		) => void;
 	}>,
 ) {
-	const [tileProps, setTileProps] = useState<Map<string, HexagonalTileProps>>(
-		new Map(),
+	const defaultTileProps = useMemo(
+		(): HexagonalTileProps => ({
+			fill: "",
+			isDimmed: false,
+			stroke: "gray",
+			strokeWidth: "16",
+			identifier: "",
+			textContent: "",
+		}),
+		[],
 	);
 
-	useEffect(() => {
-		const initialTileProps = new Map<string, HexagonalTileProps>();
-		for (let i = 0; i < rows; i++) {
-			for (let j = 0; j < tilesPerRow; j++) {
-				const tileId = `tile-${i}-${j}`;
-				initialTileProps.set(tileId, {
-					...defaultTileProps,
-					identifier: tileId,
-				});
-			}
-		}
-		setTileProps(initialTileProps);
-	}, [rows, tilesPerRow]);
+	const [tileProps, setTileProps] = useState<HexagonalTileProps[][]>(() =>
+		Array.from({ length: rows }, (_, row) =>
+			Array.from({ length: tilesPerRow }, (_, col) => ({
+				...defaultTileProps,
+				identifier: `tile-${row}-${col}`,
+			})),
+		),
+	);
 
-	// Update a specific tile's properties
-	const updateTile = (
-		row: number,
-		col: number,
-		props: Partial<HexagonalTileProps>,
-	) => {
-		const tileId = `tile-${row}-${col}`;
-		setTileProps((prev) => {
-			const updated = new Map(prev);
-			const existingProps = updated.get(tileId) || {
-				fill: "",
-				isDimmed: false,
-				stroke: "gray",
-				strokeWidth: "16",
-				identifier: tileId,
-				textContent: "",
-			};
-			updated.set(tileId, { ...existingProps, ...props });
-			return updated;
-		});
-	};
+	const updateTile = useCallback(
+		(row: number, col: number, props: Partial<HexagonalTileProps>) => {
+			setTileProps((prev) => {
+				// Minimize object creation
+				const newTileProps = [...prev];
+				newTileProps[row] = [...prev[row]];
+				newTileProps[row][col] = {
+					...prev[row][col],
+					...props,
+				};
+				return newTileProps;
+			});
+		},
+		[],
+	);
 
-	// Expose `updateTile` via ref
 	useImperativeHandle(ref, () => ({
 		updateTile,
 	}));
 
-	const gridCellsMatrix: ReactNode[] = [];
-	for (let i = 0; i < rows; i++) {
-		const hexTiles = [];
-		for (let j = 0; j < tilesPerRow; j++) {
-			const tileId = `tile-${i}-${j}`;
-			hexTiles.push(
-				<div className="layoutedHex" key={tileId}>
-					<HexagonalTile
-						{...{ ...defaultTileProps, ...(tileProps.get(tileId) ?? {}) }}
-					/>
-				</div>,
-			);
-		}
-		gridCellsMatrix.push(
-			<div
-				className="boardRow"
-				key={`row-${i}`}
-				style={{
-					marginLeft: i % 2 === 0 ? "0px" : "140px",
-					marginTop: i === 0 ? "0px" : "-70px",
-				}}
-			>
-				{hexTiles}
-			</div>,
-		);
-	}
-
-	return <div className="board">{gridCellsMatrix}</div>;
+	return (
+		<div className="board">
+			{tileProps.map((rowTiles, row) => (
+				<MemoizedRow
+					key={`row-${row}`}
+					row={row}
+					tilesPerRow={tilesPerRow}
+					rowTiles={rowTiles}
+				/>
+			))}
+		</div>
+	);
 });
 
 export default HexagonalBoard;
