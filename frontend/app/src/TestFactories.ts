@@ -42,6 +42,7 @@ export const mockResultWinnerA: LobbyStatus = {
 	result: {
 		winner: "A",
 	},
+	visualizationData: [],
 };
 export const mockResultWinnerB: LobbyStatus = {
 	playerASubmitted: true,
@@ -50,6 +51,7 @@ export const mockResultWinnerB: LobbyStatus = {
 	result: {
 		winner: "B",
 	},
+	visualizationData: [],
 };
 export const mockResultDraw: LobbyStatus = {
 	playerASubmitted: true,
@@ -58,4 +60,5 @@ export const mockResultDraw: LobbyStatus = {
 	result: {
 		winner: "DRAW",
 	},
+	visualizationData: [],
 };

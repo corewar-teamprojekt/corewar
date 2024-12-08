@@ -8,6 +8,7 @@ export interface HexagonalTileProps {
 	strokeWidth: string;
 	identifier: string;
 	textContent: string;
+	textColor: string;
 }
 
 const HexagonalTile = memo(
@@ -18,6 +19,7 @@ const HexagonalTile = memo(
 		stroke = "gray",
 		identifier = "",
 		textContent = "",
+		textColor = "white",
 	}: Readonly<HexagonalTileProps>) {
 		let fillColor = fill;
 
@@ -43,7 +45,9 @@ const HexagonalTile = memo(
 					/>
 					{identifier}
 				</svg>
-				<span className={"textContent"}>{textContent}</span>
+				<span className={"textContent"} style={{ color: textColor }}>
+					{textContent}
+				</span>
 			</div>
 		);
 	},

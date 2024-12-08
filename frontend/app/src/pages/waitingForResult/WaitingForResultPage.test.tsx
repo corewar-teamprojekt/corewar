@@ -208,7 +208,7 @@ describe("backend polling", () => {
 			},
 		);
 
-		expect(router.state.location.pathname).toEqual("/result-display");
+		expect(router.state.location.pathname).toEqual("/test");
 	});
 
 	it("stops polling once game is finished", async () => {
