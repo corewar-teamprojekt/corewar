@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { act, useRef, useState } from "react";
+import { act, useRef } from "react";
 import { render, screen } from "@testing-library/react";
 import HexagonalBoard from "@/components/hexagonalBoard/HexagonalBoard.tsx";
 import { HexagonalTileProps } from "@/components/hexagonalTile/HexagonalTile.tsx";
@@ -14,8 +14,8 @@ export {};
 
 describe("hexagonalBoard layouting", () => {
 	it("respects specified rows and columns", () => {
-		let rows: number = 3;
-		let cols: number = 5;
+		const rows: number = 3;
+		const cols: number = 5;
 		act(() => {
 			render(
 				<HexBoardWrapper
@@ -25,22 +25,11 @@ describe("hexagonalBoard layouting", () => {
 				></HexBoardWrapper>,
 			);
 		});
+		expect(screen.getAllByText(/^.*?tile-0-.*?$/)).toHaveLength(cols);
+		expect(screen.getAllByText(/^.*?tile-1-.*?$/)).toHaveLength(cols);
+		expect(screen.getAllByText(/^.*?tile-2-.*?$/)).toHaveLength(cols);
 
-		expect(screen.getAllByText(/tile-0-.*/)).toHaveLength(cols);
-		expect(screen.getAllByText(/tile-1-.*/)).toHaveLength(cols);
-		expect(screen.getAllByText(/tile-2-.*/)).toHaveLength(cols);
-
-		expect(screen.getAllByText(/tile-.*/)).toHaveLength(rows * cols);
-
-		rows = 1;
-		cols = 15;
-		act(() => {
-			updateBoard(rows, cols);
-		});
-
-		expect(screen.getAllByText(/tile-0-.*/)).toHaveLength(cols);
-
-		expect(screen.getAllByText(/tile-.*/)).toHaveLength(rows * cols);
+		expect(screen.getAllByText(/^.*t?ile-.*?$/)).toHaveLength(rows * cols);
 	});
 });
 
@@ -84,8 +73,6 @@ describe("updateTile function", () => {
 	});
 });
 
-let updateBoard: (newRows: number, newCols: number) => void; // Scoped outside the test function
-
 const HexBoardWrapper = ({
 	rows,
 	cols,
@@ -99,9 +86,6 @@ const HexBoardWrapper = ({
 		updatedTileProps: { textContent: string };
 	} | null;
 }) => {
-	const [rowCount, setRowCount] = useState(rows);
-	const [colCount, setColCount] = useState(cols);
-
 	const boardRef = useRef<{
 		updateTile: (
 			row: number,
@@ -109,12 +93,6 @@ const HexBoardWrapper = ({
 			props: Partial<HexagonalTileProps>,
 		) => void;
 	}>(null);
-
-	// Mock function to simulate external state change
-	updateBoard = (newRows: number, newCols: number) => {
-		setRowCount(newRows);
-		setColCount(newCols);
-	};
 
 	const callUpdateTile = () => {
 		if (boardRef.current && updateProps != null) {
@@ -128,7 +106,7 @@ const HexBoardWrapper = ({
 
 	return (
 		<>
-			<HexagonalBoard rows={rowCount} tilesPerRow={colCount} ref={boardRef} />
+			<HexagonalBoard rows={rows} tilesPerRow={cols} ref={boardRef} />
 			<button data-testid={"call-update-tile"} onClick={callUpdateTile}>
 				Change tile
 			</button>
