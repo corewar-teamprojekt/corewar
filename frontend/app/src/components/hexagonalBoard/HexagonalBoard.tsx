@@ -62,6 +62,7 @@ const HexagonalBoard = forwardRef(function HexagonalBoard(
 			strokeWidth: "16",
 			identifier: "",
 			textContent: "",
+			textColor: "white",
 		}),
 		[],
 	);

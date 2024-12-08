@@ -31,7 +31,7 @@ function WaitingForResultPage() {
 			if (status.gameState === GameState.FINISHED) {
 				setIsPollingEnabled(false);
 				console.log("Game finished. Stopped polling. Rerouting");
-				navigate("/result-display");
+				navigate("/test");
 			}
 		};
 

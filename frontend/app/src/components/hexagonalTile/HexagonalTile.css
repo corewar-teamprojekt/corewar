@@ -1,5 +1,6 @@
 .textContent {
-	font-size: 128px;
+	font-size: 192px;
+	font-weight: bolder;
 	position: absolute;
 	left: 50%;
 	top: 50%;
