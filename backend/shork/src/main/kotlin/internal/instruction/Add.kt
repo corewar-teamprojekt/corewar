@@ -31,4 +31,8 @@ internal class Add(
     override fun deepCopy(): AbstractInstruction {
         return Add(aField, bField, addressModeA, addressModeB, modifier)
     }
+
+    override fun toString(): String {
+        return "ADD $aField, $bField $addressModeA $addressModeB $modifier"
+    }
 }
