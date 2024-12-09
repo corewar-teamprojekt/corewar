@@ -240,13 +240,15 @@ internal class Parser(private val tokens: List<Token>) {
         }
 
         peek().let {
-            if (it.type != TokenType.NUMBER && !isAddressModeToken(it)) {
+            if (
+                it.type != TokenType.NUMBER && !isAddressModeToken(it) && it.type != TokenType.MINUS
+            ) {
                 return null
             }
         }
 
         var token = advance()
-        if (token.type != TokenType.NUMBER) {
+        if (token.type != TokenType.NUMBER && token.type != TokenType.MINUS) {
             addressMode =
                 when (token.type) {
                     TokenType.HASHTAG -> AddressMode.IMMEDIATE
@@ -267,6 +269,19 @@ internal class Parser(private val tokens: List<Token>) {
         }
 
         return when (token.type) {
+            TokenType.MINUS -> {
+                var value = 0
+                if (peek().type == TokenType.NUMBER) {
+                    token = advance()
+                    try {
+                        value = -1 * token.lexeme.toInt()
+                    } catch (ex: NumberFormatException) {
+                        emitError("Couldn't parse as number: `${token.lexeme}`", token)
+                    }
+                }
+
+                Pair(value, addressMode)
+            }
             TokenType.NUMBER -> {
                 var value = 0
                 try {
