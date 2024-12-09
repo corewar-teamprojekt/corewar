@@ -61,7 +61,13 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
             getLobby(lobbyId).getOrElse {
                 return Result.failure(it)
             }
-        return Result.success(lobby.getStatus())
+
+        val status = lobby.getStatus()
+        if (!includeRoundInformation) {
+            status.visualizationData = emptyList()
+        }
+
+        return Result.success(status)
     }
 
     override fun getCompilationErrors(code: String): List<CompileError> {
@@ -102,7 +108,7 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
 
     override fun getAllLobbies(): List<LobbyStatus> {
         return lobbies.keys.mapNotNull { lobbyId ->
-            val status = getLobbyStatus(lobbyId).getOrNull() ?: return@mapNotNull null
+            val status = getLobbyStatus(lobbyId, true).getOrNull() ?: return@mapNotNull null
             val playersJoined = lobbies[lobbyId]?.joinedPlayers ?: return@mapNotNull null
             return@mapNotNull LobbyStatus(
                 id = lobbyId,

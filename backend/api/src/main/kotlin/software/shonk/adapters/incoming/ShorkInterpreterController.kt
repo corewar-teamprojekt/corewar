@@ -49,6 +49,17 @@ fun Route.configureShorkInterpreterControllerV1() {
     }
 
     /**
+     * Path params:
+     * - lobbyId: The id of the lobby, whose status you want to get.
+     * - Type: number
+     *
+     * <br>
+     *
+     * Query params:
+     * - showVisualizationData: Whether to include visualization data in the response.
+     *     - Default: true
+     *     - Type: boolean
+     *
      * Returns either the status of the current game in a lobby or the status of the last finished
      * game in a lobby. Path parameter - {lobbyId}: The id of the lobby, which status you want to
      * get. Keep in mind, that in this api version there is no default lobby!
@@ -63,8 +74,14 @@ fun Route.configureShorkInterpreterControllerV1() {
      * Response 400: The lobby id is invalid, so the id wasn't given as the path parameter OR the
      * lobby you are trying to get the status from, doesn't exist.
      *
-     * Response 200: The GET request is valid and the lobby status including the visualisation data
-     * is returned. <br> response: <br>
+     * Response 200: The GET request is valid and the lobby status including the visualization data
+     * is returned.
+     *
+     * <br>
+     *
+     * response:
+     *
+     * <br>
      *
      * { "playerASubmitted": boolean, "playerBSubmitted": boolean, "gameState": One of
      * [NOT_STARTED, RUNNING, FINISHED], "result": { "winner": One of [A, B, DRAW], },
@@ -77,7 +94,10 @@ fun Route.configureShorkInterpreterControllerV1() {
             call.parameters["lobbyId"]?.toLongOrNull()
                 ?: return@get call.respond(HttpStatusCode.BadRequest)
 
-        val lobbyStatus = shorkUseCase.getLobbyStatus(lobbyId)
+        val showVisualizationData =
+            call.request.queryParameters["showVisualizationData"]?.toBoolean() ?: true
+
+        val lobbyStatus = shorkUseCase.getLobbyStatus(lobbyId, showVisualizationData)
         lobbyStatus.onFailure {
             call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
         }

@@ -8,5 +8,5 @@ data class Status(
     val playerBSubmitted: Boolean,
     val gameState: GameState,
     val result: GameResult,
-    val visualizationData: List<RoundInformation>,
+    var visualizationData: List<RoundInformation>,
 )
