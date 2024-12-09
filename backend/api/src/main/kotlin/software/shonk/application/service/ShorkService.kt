@@ -56,7 +56,7 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
         }
     }
 
-    override fun getLobbyStatus(lobbyId: Long): Result<Status> {
+    override fun getLobbyStatus(lobbyId: Long, includeRoundInformation: Boolean): Result<Status> {
         val lobby =
             getLobby(lobbyId).getOrElse {
                 return Result.failure(it)

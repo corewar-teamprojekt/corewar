@@ -374,6 +374,63 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             assertEquals(GameState.FINISHED, lobbyStatus.gameState)
             assertTrue(lobbyStatus.visualizationData.isNotEmpty())
         }
+
+        @Test
+        fun `test if game visualization data can be excluded with query parameter`() = runTest {
+            val joinLobbyResponse =
+                client.post("/api/v1/lobby") {
+                    contentType(ContentType.Application.Json)
+                    setBody(JoinLobbyRequest("playerA").json())
+                }
+            assertEquals(HttpStatusCode.Created, joinLobbyResponse.status)
+
+            val lobby =
+                Json.decodeFromString(
+                    JoinLobbyResponse.serializer(),
+                    joinLobbyResponse.bodyAsText(),
+                )
+            val lobbyId = lobby.lobbyId
+
+            val playerACode =
+                client.post("/api/v1/lobby/$lobbyId/code/playerA") {
+                    contentType(ContentType.Application.Json)
+                    setBody(Program("MOV 0, 1").json())
+                }
+            assertEquals(HttpStatusCode.OK, playerACode.status)
+
+            val playerBCode =
+                client.post("/api/v1/lobby/$lobbyId/code/playerB") {
+                    contentType(ContentType.Application.Json)
+                    setBody(Program("MOV 0, 1").json())
+                }
+            assertEquals(HttpStatusCode.OK, playerBCode.status)
+
+            // Test if the query parameter works
+            val lobbyStatusResponse =
+                client.get("/api/v1/lobby/$lobbyId/status?showVisualizationData=true")
+            assertEquals(HttpStatusCode.OK, lobbyStatusResponse.status)
+
+            val lobbyStatus =
+                Json.decodeFromString(
+                    LobbyStatusResponse.serializer(),
+                    lobbyStatusResponse.bodyAsText(),
+                )
+            assertEquals(GameState.FINISHED, lobbyStatus.gameState)
+            assertTrue(lobbyStatus.visualizationData.isNotEmpty())
+
+            // Now to test if the query parameter also works to disable the visualization data
+            val lobbyStatusNoVisualizationData =
+                client.get("/api/v1/lobby/$lobbyId/status?showVisualizationData=false")
+            assertEquals(HttpStatusCode.OK, lobbyStatusNoVisualizationData.status)
+
+            val lobbyStatusNoVisualizationDataParsed =
+                Json.decodeFromString(
+                    LobbyStatusResponse.serializer(),
+                    lobbyStatusNoVisualizationData.bodyAsText(),
+                )
+            assertEquals(GameState.FINISHED, lobbyStatusNoVisualizationDataParsed.gameState)
+            assertTrue(lobbyStatusNoVisualizationDataParsed.visualizationData.isEmpty())
+        }
     }
 
     @Nested

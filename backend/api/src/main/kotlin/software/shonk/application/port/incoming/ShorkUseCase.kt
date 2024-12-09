@@ -18,7 +18,7 @@ interface ShorkUseCase {
 
     fun deleteLobby(lobbyId: Long): Result<Unit>
 
-    fun getLobbyStatus(lobbyId: Long): Result<Status>
+    fun getLobbyStatus(lobbyId: Long, includeRoundInformation: Boolean = true): Result<Status>
 
     fun getCompilationErrors(code: String): List<CompileError>
 

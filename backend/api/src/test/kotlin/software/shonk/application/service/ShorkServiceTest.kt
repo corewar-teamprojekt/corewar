@@ -324,12 +324,12 @@ class ShorkServiceTest {
     @Test
     fun `game visualization data exists`() {
         val shorkService = ShorkService(Shork())
-        shorkService.createLobby("playerA")
-        shorkService.addProgramToLobby(0L, "playerA", "mov 0, 1")
-        shorkService.addProgramToLobby(0L, "playerB", "mov 0, 1")
-        shorkService.setLobbySettings(0L, Settings())
+        val lobbyId = shorkService.createLobby("playerA").getOrThrow()
+        shorkService.addProgramToLobby(lobbyId, "playerA", "mov 0, 1")
+        shorkService.addProgramToLobby(lobbyId, "playerB", "mov 0, 1")
+        shorkService.setLobbySettings(lobbyId, Settings())
 
-        val result = shorkService.getLobbyStatus(0L).getOrThrow()
+        val result = shorkService.getLobbyStatus(lobbyId).getOrThrow()
         assertEquals(GameState.FINISHED, result.gameState)
         assertEquals(Winner.DRAW, result.result.winner)
         assertTrue(result.visualizationData.isNotEmpty())
@@ -338,12 +338,25 @@ class ShorkServiceTest {
     @Test
     fun `game visualization data absent before first run`() {
         val shorkService = ShorkService(Shork())
-        shorkService.createLobby("playerA")
-        shorkService.setLobbySettings(0L, Settings())
+        val lobbyId = shorkService.createLobby("playerA").getOrThrow()
+        shorkService.setLobbySettings(lobbyId, Settings())
 
-        val result = shorkService.getLobbyStatus(0L).getOrThrow()
+        val result = shorkService.getLobbyStatus(lobbyId).getOrThrow()
         assertEquals(GameState.NOT_STARTED, result.gameState)
         assertEquals(Winner.DRAW, result.result.winner)
+        assertTrue(result.visualizationData.isEmpty())
+    }
+
+    @Test
+    fun `game visualization data can be disabled (not included)`() {
+        val shorkService = ShorkService(Shork())
+        val lobbyId = shorkService.createLobby("playerA").getOrThrow()
+        shorkService.addProgramToLobby(lobbyId, "playerA", "mov 0, 1")
+        shorkService.addProgramToLobby(lobbyId, "playerB", "jmp 42")
+
+        val result =
+            shorkService.getLobbyStatus(lobbyId, includeRoundInformation = false).getOrThrow()
+        assertEquals(GameState.FINISHED, result.gameState)
         assertTrue(result.visualizationData.isEmpty())
     }
 }
