@@ -10,5 +10,9 @@ internal interface ICore {
     /** Writes an instruction to the given address */
     fun storeAbsolute(address: Int, instruction: AbstractInstruction)
 
-    fun resolveAll(sourceAddress: Int): ResolvedAddresses
+    /**
+     * Resolves both the a-field and the b-field addresses, respecting the read and write distance
+     * for each
+     */
+    fun resolveFields(sourceAddress: Int): ResolvedAddresses
 }
