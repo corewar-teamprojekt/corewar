@@ -15,7 +15,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
-
+import { useToast } from "@/hooks/use-toast";
 interface CodeEditorProps {
 	setProgram: (s: string) => void;
 	program: string;
@@ -30,6 +30,7 @@ export default function CodeEditor({
 	const linterOwner = "redCodeLinter";
 	const isPageVisible = usePageVisibility();
 	const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
+	const { toast } = useToast();
 
 	useEffect(() => {
 		const pollingCallback = async () => {
@@ -88,11 +89,21 @@ export default function CodeEditor({
 
 	async function getFileContentAndSetCode(e: ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0];
+
 		if (file) {
 			const reader = new FileReader();
+			const isIllegalRegex = /\ufffd/; //check if ureadable character is in file
 			reader.onload = (event) => {
 				const text = event.target?.result as string;
-				setProgram(text);
+				if (!isIllegalRegex.test(text)) {
+					setProgram(text);
+				} else {
+					toast({
+						title: "Whoops, that is not a corewar program!",
+						description: "Please check the file content and try again😢",
+						variant: "destructive",
+					});
+				}
 			};
 			reader.readAsText(file);
 		}
