@@ -11,7 +11,7 @@ class Shork : IShork {
     private val logger = LoggerFactory.getLogger(Shork::class.java)
 
     override fun run(settings: Settings, programs: Map<String, String>): Result<GameResult> {
-        var internalSettings =
+        val internalSettings =
             settings
                 .toInternalSettings()
                 .getOrElse({
@@ -49,6 +49,7 @@ class Shork : IShork {
 
             val program = Program(player, shork)
             shork.addProgram(program)
+            shork.gameDataCollector.startRoundForProgram(program)
 
             address =
                 if (internalSettings.randomSeparation) {
@@ -64,6 +65,7 @@ class Shork : IShork {
                 shork.memoryCore.storeAbsolute(address++, instruction)
             }
             program.createProcessAt(start)
+            shork.gameDataCollector.endRoundForProgram(program)
         }
 
         val outcome =

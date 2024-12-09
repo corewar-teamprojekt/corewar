@@ -1,5 +1,4 @@
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import software.shonk.interpreter.*
@@ -55,6 +54,17 @@ internal class TestShork {
         val result = shork.run(settings, programs)
 
         val roundInformation = result.getOrThrow().roundInformation
-        assertTrue(roundInformation.isNotEmpty())
+        assertEquals(6, roundInformation.size)
+    }
+
+    @Test
+    fun `test integration of game data with more instructions per player`() {
+        val shork = Shork()
+        val programs =
+            mapOf("impy" to "mov 0, 1\nmov 1, 2\nmov 2, 3", "blahaj" to "jmp $10, 0\n mov 2, 3")
+        val result = shork.run(settings, programs)
+
+        val roundInformation = result.getOrThrow().roundInformation
+        assertEquals(6, roundInformation.size)
     }
 }
