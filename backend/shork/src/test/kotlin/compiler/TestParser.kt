@@ -20,6 +20,29 @@ import software.shonk.interpreter.internal.instruction.Sne
 
 internal class TestParser {
     @Test
+    fun `parser can parse negative numbers as fields`() {
+        val program =
+            listOf(
+                Token(TokenType.MOV, "MOV", "", 1, 0, 0),
+                Token(TokenType.DOT, ".", "", 1, 0, 0),
+                Token(TokenType.F, "F", "", 1, 0, 0),
+                Token(TokenType.MINUS, "-", "", 1, 0, 0),
+                Token(TokenType.NUMBER, "42", 42, 1, 0, 0),
+                Token(TokenType.COMMA, ",", "", 1, 0, 0),
+                Token(TokenType.MINUS, "-", "", 1, 0, 0),
+                Token(TokenType.NUMBER, "1337", 1337, 1, 0, 0),
+                Token(TokenType.EOF, "", "", 1, 0, 0),
+            )
+
+        val expected = listOf(Mov(-42, -1337, AddressMode.DIRECT, AddressMode.DIRECT, Modifier.F))
+
+        val parser = Parser(program)
+        val instructions = parser.parse()
+
+        assertEquals(expected, instructions)
+    }
+
+    @Test
     fun `parser allows missing B-Field`() {
         val program =
             listOf(
