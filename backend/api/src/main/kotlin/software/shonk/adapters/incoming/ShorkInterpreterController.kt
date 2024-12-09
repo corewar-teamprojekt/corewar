@@ -99,7 +99,8 @@ fun Route.configureShorkInterpreterControllerV1() {
 
         val lobbyStatus = shorkUseCase.getLobbyStatus(lobbyId, showVisualizationData)
         lobbyStatus.onFailure {
-            call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)
+            logger.error("No lobby with that id exists.")
+            return@get call.respond(HttpStatusCode.NotFound, it.message ?: UNKNOWN_ERROR_MESSAGE)
         }
         lobbyStatus.onSuccess { call.respond(HttpStatusCode.OK, it) }
         return@get

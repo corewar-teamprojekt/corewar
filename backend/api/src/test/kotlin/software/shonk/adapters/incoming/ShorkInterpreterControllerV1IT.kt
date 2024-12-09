@@ -261,9 +261,9 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
     @Nested
     inner class GetLobbyStatus {
         @Test
-        fun `test get lobby status with invalid ID`() = runTest {
+        fun `test get lobby status with lobby id that doesn't exist`() = runTest {
             val result = client.get("/api/v1/lobby/1/status")
-            assertEquals(HttpStatusCode.BadRequest, result.status)
+            assertEquals(HttpStatusCode.NotFound, result.status)
             assert(result.bodyAsText().contains("No lobby with that id"))
         }
 
