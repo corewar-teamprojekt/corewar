@@ -95,7 +95,7 @@ internal class MemoryCore(val memorySize: Int, val settings: InternalSettings) :
      * @param sourceAddress The address to resolve
      * @return All of the resolved addresses
      */
-    override fun resolveAll(sourceAddress: Int): ResolvedAddresses {
+    override fun resolveFields(sourceAddress: Int): ResolvedAddresses {
         val sourceInstruction = loadAbsolute(sourceAddress)
         val aField = sourceInstruction.aField
         val bField = sourceInstruction.bField
