@@ -21,7 +21,7 @@ export function getStatusV0(): Promise<Response> {
 
 export async function getLinterLintsV1(code: string): Promise<Linterlint[]> {
 	const response = await fetch(
-		`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/redcode/compile/errors`,
+		`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/v1/redcode/compile/errors`,
 		{
 			method: "POST",
 			headers: {
