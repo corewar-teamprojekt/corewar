@@ -137,6 +137,14 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
         }
     }
 
+    override fun authenticatePlayer(playerName: String, lobbyId: Long): Result<Unit> {
+        println(lobbies[lobbyId]?.joinedPlayers)
+        if (lobbies[lobbyId]?.joinedPlayers?.contains(playerName) == true) {
+            return Result.success(Unit)
+        }
+        return Result.failure(IllegalArgumentException("You have not joined a lobby!"))
+    }
+
     override fun deleteLobby(lobbyId: Long): Result<Unit> {
         if (lobbies.containsKey(lobbyId)) {
             lobbies.remove(lobbyId)

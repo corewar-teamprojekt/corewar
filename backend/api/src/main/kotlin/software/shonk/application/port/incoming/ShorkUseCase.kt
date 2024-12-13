@@ -26,4 +26,6 @@ interface ShorkUseCase {
     fun getCompilationErrors(code: String): List<CompileError>
 
     fun getAllLobbies(): List<LobbyStatus>
+
+    fun authenticatePlayer(playerName: String, lobbyId: Long): Result<Unit>
 }

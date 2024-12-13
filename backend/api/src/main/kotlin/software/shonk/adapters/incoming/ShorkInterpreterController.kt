@@ -194,14 +194,21 @@ fun Route.configureShorkInterpreterControllerV1() {
             call.parameters["lobbyId"]?.toLongOrNull()
                 ?: return@post call.respond(HttpStatusCode.BadRequest)
 
-        val player = call.parameters["player"]
+        val playerName = call.parameters["player"]
         val submitCodeRequest = call.receive<SubmitCodeRequest>()
 
         if (shorkUseCase.getLobbyStatus(lobbyId).isFailure) {
             return@post call.respond(HttpStatusCode.NotFound)
         }
 
-        val result = shorkUseCase.addProgramToLobby(lobbyId, player, submitCodeRequest.code)
+        val authenticatePlayer = shorkUseCase.authenticatePlayer(playerName.toString(), lobbyId)
+
+        authenticatePlayer.onFailure {
+            logger.error("You can't submit code to a lobby you have not joined!")
+            return@post call.respond(HttpStatusCode.Forbidden)
+        }
+
+        val result = shorkUseCase.addProgramToLobby(lobbyId, playerName, submitCodeRequest.code)
 
         result.onFailure {
             call.respond(HttpStatusCode.BadRequest, it.message ?: UNKNOWN_ERROR_MESSAGE)

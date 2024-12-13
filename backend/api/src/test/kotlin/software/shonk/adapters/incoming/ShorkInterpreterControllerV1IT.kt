@@ -111,6 +111,11 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
                 setBody("{\"code\": \"someString\"}")
             }
 
+            client.post("/api/v1/lobby/0/join") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerB\"}")
+            }
+
             client.post("/api/v1/lobby/0/code/playerB") {
                 contentType(ContentType.Application.Json)
                 setBody("{\"code\": \"someOtherString\"}")
@@ -228,6 +233,11 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
                 setBody("{\"code\":\"someVeryLongString\"}")
             }
 
+            client.post("/api/v1/lobby/0/join") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerB\"}")
+            }
+
             client.post("/api/v1/lobby/0/code/playerB") {
                 contentType(ContentType.Application.Json)
                 setBody("{\"code\":\"someShortString\"}")
@@ -265,6 +275,54 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             assertEquals("NOT_STARTED", responseData["gameState"])
             assertEquals("DRAW", responseData["result.winner"])
         }
+
+        @Test
+        fun `test post player code to a lobby which you have not joined yet`() = runTest {
+            client.post("/api/v1/lobby") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerA\"}")
+            }
+            val player = "playerB"
+            val result =
+                client.post("/api/v1/lobby/0/code/$player") {
+                    contentType(ContentType.Application.Json)
+                    setBody("{\"code\":\"ForbiddenPlayerCode\"}")
+                }
+            assertEquals(HttpStatusCode.Forbidden, result.status)
+        }
+
+        @Test
+        fun `test submitting code only works after joining`() = runTest {
+            client.post("/api/v1/lobby") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerA\"}")
+            }
+            val resultA =
+                client.post("/api/v1/lobby/0/code/playerA") {
+                    contentType(ContentType.Application.Json)
+                    setBody("{\"code\":\"PlayerCode\"}")
+                }
+            assertEquals(HttpStatusCode.OK, resultA.status)
+
+            val resultTryToPostNotInLobby =
+                client.post("/api/v1/lobby/0/code/playerB") {
+                    contentType(ContentType.Application.Json)
+                    setBody("{\"code\":\"ForbiddenPlayerCode\"}")
+                }
+            assertEquals(HttpStatusCode.Forbidden, resultTryToPostNotInLobby.status)
+
+            client.post("/api/v1/lobby/0/join") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerB\"}")
+            }
+
+            val resultB =
+                client.post("/api/v1/lobby/0/code/playerB") {
+                    contentType(ContentType.Application.Json)
+                    setBody("{\"code\":\"PlayerCode\"}")
+                }
+            assertEquals(HttpStatusCode.OK, resultB.status)
+        }
     }
 
     @Nested
@@ -299,6 +357,11 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
             client.post("/api/v1/lobby/0/code/playerA") {
                 contentType(ContentType.Application.Json)
                 setBody("{\"code\":\"someString\"}")
+            }
+
+            client.post("/api/v1/lobby/0/join") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerB\"}")
             }
 
             client.post("/api/v1/lobby/0/code/playerB") {
@@ -365,6 +428,11 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
                 }
             assertEquals(HttpStatusCode.OK, playerACode.status)
 
+            client.post("/api/v1/lobby/0/join") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerB\"}")
+            }
+
             val playerBCode =
                 client.post("/api/v1/lobby/$lobbyId/code/playerB") {
                     contentType(ContentType.Application.Json)
@@ -406,6 +474,11 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
                     setBody(Program("MOV 0, 1").json())
                 }
             assertEquals(HttpStatusCode.OK, playerACode.status)
+
+            client.post("/api/v1/lobby/0/join") {
+                contentType(ContentType.Application.Json)
+                setBody("{\"playerName\":\"playerB\"}")
+            }
 
             val playerBCode =
                 client.post("/api/v1/lobby/$lobbyId/code/playerB") {
