@@ -1,6 +1,7 @@
 package software.shonk.domain
 
 import kotlinx.serialization.Serializable
+import software.shonk.interpreter.Settings
 
 @Serializable
 data class InterpreterSettings(
@@ -15,3 +16,18 @@ data class InterpreterSettings(
     val separation: Int,
     val randomSeparation: Boolean,
 )
+
+fun InterpreterSettings.toSettings(): Settings {
+    return Settings(
+        coreSize = this.coreSize,
+        instructionLimit = this.instructionLimit,
+        initialInstruction = this.initialInstruction,
+        maximumTicks = this.maximumTicks,
+        maximumProcessesPerPlayer = this.maximumProcessesPerPlayer,
+        readDistance = this.readDistance,
+        writeDistance = this.writeDistance,
+        minimumSeparation = this.minimumSeparation,
+        separation = this.separation,
+        randomSeparation = this.randomSeparation,
+    )
+}
