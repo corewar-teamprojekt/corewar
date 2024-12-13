@@ -10,6 +10,7 @@ import {
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import CodeEditor from "./CodeEditor";
+import { Linterlint } from "@/domain/LinterLint";
 
 vi.mock("@/lib/usePageVisibility");
 vi.mock("@/services/rest/RestService");
@@ -57,13 +58,11 @@ describe("CodeEditor", () => {
 	});
 
 	it("sets polled linterLints correctly", async () => {
-		const linterLints = [
+		const linterLints: Linterlint[] = [
 			{
-				severity: 1,
-				startLineNumber: 1,
-				startColumn: 1,
-				endLineNumber: 1,
-				endColumn: 5,
+				line: 1,
+				columnStart: 1,
+				columnEnd: 5,
 				message: "Test message",
 			},
 		];
