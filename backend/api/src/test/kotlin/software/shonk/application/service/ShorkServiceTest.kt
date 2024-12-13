@@ -392,4 +392,15 @@ class ShorkServiceTest {
         val result = shorkService.getLobbySettings(999L)
         assertTrue(result.isFailure)
     }
+
+    @Test
+    fun `test authenticate joined players`() {
+        val shorkService = ShorkService(Shork())
+        val lobbyId = shorkService.createLobby("playerA").getOrThrow()
+        val resultA = shorkService.authenticatePlayer("playerA", lobbyId)
+        assertTrue(resultA.isSuccess)
+        shorkService.joinLobby(lobbyId, "playerB")
+        val resultB = shorkService.authenticatePlayer("playerB", lobbyId)
+        assertTrue(resultB.isSuccess)
+    }
 }
