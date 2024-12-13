@@ -754,13 +754,13 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
     inner class PostLobbySettings {
         @Test
         fun `update settings for an existing lobby`() = runTest {
-            val clientLobby =
+            val lobby =
                 client.post("/api/v1/lobby") {
                     contentType(ContentType.Application.Json)
                     setBody("{\"playerName\":\"playerA\"}")
                 }
             val lobbyId =
-                Json.parseToJsonElement(clientLobby.bodyAsText())
+                Json.parseToJsonElement(lobby.bodyAsText())
                     .jsonObject["lobbyId"]!!
                     .jsonPrimitive
                     .content
@@ -778,13 +778,19 @@ class ShorkInterpreterControllerV1IT : AbstractControllerTest() {
                     randomSeparation = true,
                 )
 
-            val updateResponse =
+            val customSettings =
                 client.post("/api/v1/lobby/$lobbyId/settings") {
                     contentType(ContentType.Application.Json)
                     setBody(Json.encodeToString(updatedSettings))
                 }
 
-            assertEquals(HttpStatusCode.OK, updateResponse.status)
+            assertEquals(HttpStatusCode.OK, customSettings.status)
+
+            // test if the settings got updated
+            val getSettingsResponse = client.get("/api/v1/lobby/$lobbyId/settings")
+            val parsedSettings = parseSettings(getSettingsResponse)
+
+            assertEquals(updatedSettings, parsedSettings)
         }
 
         @Test
