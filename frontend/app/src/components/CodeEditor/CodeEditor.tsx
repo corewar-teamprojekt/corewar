@@ -16,6 +16,8 @@ import {
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { MarkerSeverity } from "monaco-editor/esm/vs/editor/editor.api";
+
 interface CodeEditorProps {
 	setProgram: (s: string) => void;
 	program: string;
@@ -73,11 +75,11 @@ export default function CodeEditor({
 		const markers = [];
 		for (const ll of linterLints) {
 			const marker = {
-				severity: ll.severity,
-				startLineNumber: ll.startLineNumber,
-				startColumn: ll.startColumn,
-				endLineNumber: ll.endLineNumber,
-				endColumn: ll.endColumn,
+				severity: MarkerSeverity.Error,
+				startLineNumber: ll.line,
+				endLineNumber: ll.line,
+				startColumn: ll.columnStart,
+				endColumn: ll.columnEnd,
 				message: ll.message,
 				owner: linterOwner,
 				resource: model.uri,
