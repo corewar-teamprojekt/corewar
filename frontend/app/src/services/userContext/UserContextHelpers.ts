@@ -33,5 +33,5 @@ export function userReducer(
 	}
 }
 
-export const playerA: User = new User("playerA", "#FF0000");
-export const playerB: User = new User("playerB", "#0000FF");
+export const playerA: User = new User("playerA", "#FF006E");
+export const playerB: User = new User("playerB", "#00FFFF");

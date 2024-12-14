@@ -104,7 +104,7 @@ describe("test header", () => {
 
 				expect(circle).toBeTruthy();
 				expect(circle.querySelector("circle")?.getAttribute("fill")).toEqual(
-					"#FF0000",
+					"#FF006E",
 				);
 			});
 
@@ -120,7 +120,7 @@ describe("test header", () => {
 
 				expect(circle).toBeTruthy();
 				expect(circle.querySelector("circle")?.getAttribute("fill")).toEqual(
-					"#0000FF",
+					"#00FFFF",
 				);
 			});
 		});

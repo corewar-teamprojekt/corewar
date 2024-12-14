@@ -17,20 +17,20 @@ describe("mvp", () => {
 	describe("reducer", () => {
 		it("returns playerA on setPlayerA", () => {
 			expect(userReducer(null, { type: "setPlayerA", user: null })).toEqual(
-				new User("playerA", "#FF0000"),
+				new User("playerA", "#FF006E"),
 			);
 		});
 
 		it("returns playerB on setPlayerB", () => {
 			expect(userReducer(null, { type: "setPlayerB", user: null })).toEqual(
-				new User("playerB", "#0000FF"),
+				new User("playerB", "#00FFFF"),
 			);
 		});
 
 		it("returns playerB after initializing with playerA and then setting to playerB", () => {
 			const playerA = userReducer(null, { type: "setPlayerA", user: null });
 			expect(userReducer(playerA, { type: "setPlayerB", user: null })).toEqual(
-				new User("playerB", "#0000FF"),
+				new User("playerB", "#00FFFF"),
 			);
 		});
 	});
