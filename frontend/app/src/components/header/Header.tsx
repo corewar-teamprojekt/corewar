@@ -25,7 +25,24 @@ function Header() {
 		<div id="headerContainer">
 			<div id="headerText">
 				<h2 className="text-3xl font-semibold">
-					{location.pathname.length !== 1 && "Corewar"}
+					{location.pathname.length !== 1 && (
+						<>
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "space-between",
+									alignItems: "center",
+								}}
+							>
+								<img
+									src={"corewarIcon.svg"}
+									alt={"corewar icon"}
+									style={{ maxHeight: "70px" }}
+								/>
+								Corewar
+							</div>
+						</>
+					)}
 				</h2>
 			</div>
 			{lobby !== null && (
