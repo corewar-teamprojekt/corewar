@@ -64,8 +64,8 @@ function GameVisuPage() {
 			// Queue updates instead of applying directly
 			for (const writeIndex of currentIteration.memoryWrites) {
 				boardRef.current.updateTile(
-					Math.floor(writeIndex / 128),
-					writeIndex % 128,
+					Math.floor((writeIndex % 8192) / 128),
+					(writeIndex % 8192) % 128,
 					{
 						fill: playerColor,
 						textContent: "",
@@ -77,8 +77,8 @@ function GameVisuPage() {
 			// Player reads
 			for (const readIndex of currentIteration.memoryReads) {
 				boardRef.current.updateTile(
-					Math.floor(readIndex / 128),
-					readIndex % 128,
+					Math.floor((readIndex % 8192) / 128),
+					(readIndex % 8192) % 128,
 					{
 						textContent: "X",
 						textColor: playerColor,
@@ -90,8 +90,8 @@ function GameVisuPage() {
 				// Turn off previous active process
 				if (previousIteration.programCounterBefore >= 0) {
 					boardRef.current.updateTile(
-						Math.floor(previousIteration.programCounterBefore / 128),
-						previousIteration.programCounterBefore % 128,
+						Math.floor((previousIteration.programCounterBefore % 8192) / 128),
+						(previousIteration.programCounterBefore % 8192) % 128,
 						{
 							isDimmed: true,
 							stroke: "",
@@ -102,8 +102,8 @@ function GameVisuPage() {
 				// Move last active process
 				if (previousIteration.programCounterAfter >= 0) {
 					boardRef.current.updateTile(
-						Math.floor(previousIteration.programCounterAfter / 128),
-						previousIteration.programCounterAfter % 128,
+						Math.floor((previousIteration.programCounterAfter % 8192) / 128),
+						(previousIteration.programCounterAfter % 8192) % 128,
 						{
 							stroke: "#BBBBBB",
 							strokeWidth: "16",
@@ -115,8 +115,8 @@ function GameVisuPage() {
 			// Active process
 			if (currentIteration.programCounterBefore >= 0) {
 				boardRef.current.updateTile(
-					Math.floor(currentIteration.programCounterBefore / 128),
-					currentIteration.programCounterBefore % 128,
+					Math.floor((currentIteration.programCounterBefore % 8192) / 128),
+					(currentIteration.programCounterBefore % 8192) % 128,
 					{
 						isDimmed: false,
 						stroke: "white",
@@ -128,8 +128,8 @@ function GameVisuPage() {
 			// Sleeping processes
 			for (const sleepingProcess of currentIteration.programCountersOfOtherProcesses) {
 				boardRef.current.updateTile(
-					Math.floor(sleepingProcess / 128),
-					sleepingProcess % 128,
+					Math.floor((sleepingProcess % 8192) / 128),
+					(sleepingProcess % 8192) % 128,
 					{
 						stroke: "#BBBBBB",
 						strokeWidth: "16",
