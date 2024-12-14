@@ -8,7 +8,9 @@ import { LobbyStatus } from "@/domain/LobbyStatus.ts";
 import { useLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
 import { getLobbyStatusV1 } from "@/services/rest/LobbyRest.ts";
 import { useNavigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator.tsx";
 
+// Not explicitly tested atm, because I dont have the time for it, this is mostly visual and we are nearing the deadline :(
 function GameVisuPage() {
 	const delay = (ms: number | undefined) =>
 		new Promise((res) => setTimeout(res, ms));
@@ -18,6 +20,7 @@ function GameVisuPage() {
 	const navigate = useNavigate();
 	const interval_time: number = 33;
 	const counterRef = useRef(0);
+	const [derivedValue, setDerivedValue] = useState(counterRef.current);
 
 	useEffect(() => {
 		if (lobby) {
@@ -135,6 +138,7 @@ function GameVisuPage() {
 			}
 
 			counterRef.current++;
+			setDerivedValue(counterRef.current);
 		}, interval_time);
 
 		// Clear interval on component unmount
@@ -153,7 +157,27 @@ function GameVisuPage() {
 		<div id={"everything"}>
 			<Header />
 			<div id={"boardBuffer"}>
-				<button>{"skip visualization>>"}</button>
+				<div id={"infodump"}>
+					Infodump:
+					<Separator
+						style={{ height: "2px", background: "#FFFFFF" }}
+					></Separator>
+					<span>
+						<b>Board size: </b>8192 cells
+					</span>
+					<span>
+						<b>Current cycle: </b>
+						{derivedValue}
+					</span>
+					<span>
+						<b>Max cycles: </b>10.000
+					</span>
+				</div>
+				<div id={"theRestOfTheBoard"}>
+					<button onClick={() => navigate("/result-display")}>
+						{"skip visualization>>"}
+					</button>
+				</div>
 			</div>
 			<div id={"visuBoard"}>
 				<HexagonalBoard

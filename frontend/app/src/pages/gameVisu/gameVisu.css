@@ -10,8 +10,23 @@
 	min-height: calc(100dvh - var(--HEADER-HEIGHT) - var(--FOOTER-HEIGHT));
 	display: flex;
 	flex-grow: 1;
+	flex-direction: row;
+	justify-content: flex-start;
+}
+
+#infodump {
+	width: 18%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#theRestOfTheBoard {
+	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
+	align-items: baseline;
+	width: 100%;
 }
 
 #layoutingContainer {
@@ -27,6 +42,6 @@
 	transform-origin: top left;
 
 	position: absolute;
-	left: 50%;
+	left: 55%;
 	top: 50%;
 }
