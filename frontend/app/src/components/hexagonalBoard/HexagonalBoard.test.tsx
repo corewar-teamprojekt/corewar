@@ -87,20 +87,24 @@ const HexBoardWrapper = ({
 	} | null;
 }) => {
 	const boardRef = useRef<{
-		updateTile: (
-			row: number,
-			col: number,
-			props: Partial<HexagonalTileProps>,
+		updateTiles: (
+			update: {
+				row: number;
+				col: number;
+				props: Partial<HexagonalTileProps>;
+			}[],
 		) => void;
 	}>(null);
 
 	const callUpdateTile = () => {
 		if (boardRef.current && updateProps != null) {
-			boardRef.current.updateTile(
-				updateProps.updatedTileX,
-				updateProps.updatedTileY,
-				updateProps.updatedTileProps,
-			);
+			boardRef.current.updateTiles([
+				{
+					row: updateProps.updatedTileX,
+					col: updateProps.updatedTileY,
+					props: updateProps.updatedTileProps,
+				},
+			]);
 		}
 	};
 

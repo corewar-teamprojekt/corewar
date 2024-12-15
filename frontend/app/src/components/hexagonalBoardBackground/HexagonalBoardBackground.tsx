@@ -13,13 +13,19 @@ function HexagonalBoardBackground() {
 		}
 
 		for (const cell of cells.current) {
-			boardRef.current.updateTile(cell.y, cell.x, {
-				fill: "",
-				isDimmed: false,
-				stroke: "gray",
-				strokeWidth: "16",
-				textContent: "",
-			});
+			boardRef.current.updateTiles([
+				{
+					row: cell.y,
+					col: cell.x,
+					props: {
+						fill: "",
+						isDimmed: false,
+						stroke: "gray",
+						strokeWidth: "16",
+						textContent: "",
+					},
+				},
+			]);
 		}
 
 		cells.current = [];
@@ -43,13 +49,19 @@ function HexagonalBoardBackground() {
 			};
 		} while (listOfActiveCells.current.includes(randomCoords));
 
-		boardRef.current.updateTile(randomCoords.y, randomCoords.x, {
-			fill: color,
-			isDimmed: false,
-			stroke: color,
-			strokeWidth: "16",
-			textContent: "",
-		});
+		boardRef.current.updateTiles([
+			{
+				row: randomCoords.y,
+				col: randomCoords.x,
+				props: {
+					fill: color,
+					isDimmed: false,
+					stroke: color,
+					strokeWidth: "16",
+					textContent: "",
+				},
+			},
+		]);
 		listOfActiveCells.current.push(randomCoords);
 	}
 
@@ -63,10 +75,12 @@ function HexagonalBoardBackground() {
 	const activeCells = useRef<{ x: number; y: number }[]>([]);
 
 	const boardRef = useRef<{
-		updateTile: (
-			row: number,
-			col: number,
-			props: Partial<HexagonalTileProps>,
+		updateTiles: (
+			updates: {
+				row: number;
+				col: number;
+				props: Partial<HexagonalTileProps>;
+			}[],
 		) => void;
 	}>(null);
 

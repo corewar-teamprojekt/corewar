@@ -61,81 +61,93 @@ function GameVisuPage() {
 			const playerColor =
 				currentIteration.playerId === "playerA" ? "#FF006E" : "#00FFFF";
 
+			const updates: {
+				row: number;
+				col: number;
+				props: Partial<HexagonalTileProps>;
+			}[] = [];
+
 			// Queue updates instead of applying directly
 			for (const writeIndex of currentIteration.memoryWrites) {
-				boardRef.current.updateTile(
-					Math.floor((writeIndex % 8192) / 128),
-					(writeIndex % 8192) % 128,
-					{
+				updates.push({
+					row: Math.floor((writeIndex % 8192) / 128),
+					col: (writeIndex % 8192) % 128,
+					props: {
 						fill: playerColor,
 						textContent: "",
 						isDimmed: true,
 					},
-				);
+				});
 			}
 
 			// Player reads
 			for (const readIndex of currentIteration.memoryReads) {
-				boardRef.current.updateTile(
-					Math.floor((readIndex % 8192) / 128),
-					(readIndex % 8192) % 128,
-					{
+				updates.push({
+					row: Math.floor((readIndex % 8192) / 128),
+					col: (readIndex % 8192) % 128,
+					props: {
 						textContent: "X",
 						textColor: playerColor,
 					},
-				);
+				});
 			}
 
 			if (previousIteration != null) {
 				// Turn off previous active process
 				if (previousIteration.programCounterBefore >= 0) {
-					boardRef.current.updateTile(
-						Math.floor((previousIteration.programCounterBefore % 8192) / 128),
-						(previousIteration.programCounterBefore % 8192) % 128,
-						{
+					updates.push({
+						row: Math.floor(
+							(previousIteration.programCounterBefore % 8192) / 128,
+						),
+						col: (previousIteration.programCounterBefore % 8192) % 128,
+						props: {
 							isDimmed: true,
 							stroke: "",
 						},
-					);
+					});
 				}
 
 				// Move last active process
 				if (previousIteration.programCounterAfter >= 0) {
-					boardRef.current.updateTile(
-						Math.floor((previousIteration.programCounterAfter % 8192) / 128),
-						(previousIteration.programCounterAfter % 8192) % 128,
-						{
+					updates.push({
+						row: Math.floor(
+							(previousIteration.programCounterAfter % 8192) / 128,
+						),
+						col: (previousIteration.programCounterAfter % 8192) % 128,
+						props: {
 							stroke: "#BBBBBB",
 							strokeWidth: "16",
 						},
-					);
+					});
 				}
 			}
 
 			// Active process
 			if (currentIteration.programCounterBefore >= 0) {
-				boardRef.current.updateTile(
-					Math.floor((currentIteration.programCounterBefore % 8192) / 128),
-					(currentIteration.programCounterBefore % 8192) % 128,
-					{
+				updates.push({
+					row: Math.floor((currentIteration.programCounterBefore % 8192) / 128),
+					col: (currentIteration.programCounterBefore % 8192) % 128,
+					props: {
 						isDimmed: false,
 						stroke: "white",
 						strokeWidth: "48",
 					},
-				);
+				});
 			}
 
 			// Sleeping processes
 			for (const sleepingProcess of currentIteration.programCountersOfOtherProcesses) {
-				boardRef.current.updateTile(
-					Math.floor((sleepingProcess % 8192) / 128),
-					(sleepingProcess % 8192) % 128,
-					{
+				updates.push({
+					row: Math.floor((sleepingProcess % 8192) / 128),
+					col: (sleepingProcess % 8192) % 128,
+					props: {
 						stroke: "#BBBBBB",
 						strokeWidth: "16",
 					},
-				);
+				});
 			}
+
+			boardRef.current.updateTiles(updates);
 
 			counterRef.current++;
 			setDerivedValue(counterRef.current);
@@ -146,10 +158,12 @@ function GameVisuPage() {
 	}, [lobbyStatus]);
 
 	const boardRef = useRef<{
-		updateTile: (
-			row: number,
-			col: number,
-			props: Partial<HexagonalTileProps>,
+		updateTiles: (
+			updates: {
+				row: number;
+				col: number;
+				props: Partial<HexagonalTileProps>;
+			}[],
 		) => void;
 	}>(null);
 
