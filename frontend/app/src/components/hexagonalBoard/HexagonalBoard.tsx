@@ -47,10 +47,12 @@ const MemoizedRow = memo(
 const HexagonalBoard = forwardRef(function HexagonalBoard(
 	{ rows, tilesPerRow }: HexagonalBoardProps,
 	ref?: ForwardedRef<{
-		updateTile: (
-			row: number,
-			col: number,
-			props: Partial<HexagonalTileProps>,
+		updateTiles: (
+			updates: {
+				row: number;
+				col: number;
+				props: Partial<HexagonalTileProps>;
+			}[],
 		) => void;
 	}>,
 ) {
@@ -76,16 +78,38 @@ const HexagonalBoard = forwardRef(function HexagonalBoard(
 		),
 	);
 
-	const updateTile = useCallback(
-		(row: number, col: number, props: Partial<HexagonalTileProps>) => {
+	const updateTiles = useCallback(
+		(
+			updates: {
+				row: number;
+				col: number;
+				props: Partial<HexagonalTileProps>;
+			}[],
+		) => {
 			setTileProps((prev) => {
-				// Minimize object creation
+				// Use a Map to track rows we need to clone
+				const modifiedRows = new Map<number, HexagonalTileProps[]>();
+
+				updates.forEach(({ row, col, props }) => {
+					// Clone row if not already cloned
+					if (!modifiedRows.has(row)) {
+						modifiedRows.set(row, [...prev[row]]);
+					}
+
+					// Update the tile in the cloned row
+					const clonedRow = modifiedRows.get(row)!;
+					clonedRow[col] = {
+						...clonedRow[col],
+						...props,
+					};
+				});
+
+				// Create the final updated state
 				const newTileProps = [...prev];
-				newTileProps[row] = [...prev[row]];
-				newTileProps[row][col] = {
-					...prev[row][col],
-					...props,
-				};
+				modifiedRows.forEach((row, rowIndex) => {
+					newTileProps[rowIndex] = row;
+				});
+
 				return newTileProps;
 			});
 		},
@@ -93,7 +117,7 @@ const HexagonalBoard = forwardRef(function HexagonalBoard(
 	);
 
 	useImperativeHandle(ref, () => ({
-		updateTile,
+		updateTiles,
 	}));
 
 	return (
