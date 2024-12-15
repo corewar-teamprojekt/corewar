@@ -33,6 +33,6 @@ internal class Add(
     }
 
     override fun toString(): String {
-        return "ADD $aField, $bField $addressModeA $addressModeB $modifier"
+        return "[ADD] $addressModeA $aField, $addressModeB $bField, $modifier"
     }
 }
