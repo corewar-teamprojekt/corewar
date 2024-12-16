@@ -55,7 +55,7 @@ const router = createBrowserRouter([
 		],
 	},
 	{
-		path: "/test",
+		path: "/visu",
 		element: <GameVisuPage></GameVisuPage>,
 	},
 ]);

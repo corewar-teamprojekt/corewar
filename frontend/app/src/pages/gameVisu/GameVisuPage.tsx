@@ -22,6 +22,9 @@ function GameVisuPage() {
 	const counterRef = useRef(0);
 	const [derivedValue, setDerivedValue] = useState(counterRef.current);
 
+	const TILE_COUNT = 8192;
+	const COLUMN_COUNT = 128;
+
 	useEffect(() => {
 		if (lobby) {
 			getLobbyStatusV1(lobby.id).then((status) => {
@@ -70,8 +73,8 @@ function GameVisuPage() {
 			// Queue updates instead of applying directly
 			for (const writeIndex of currentIteration.memoryWrites) {
 				updates.push({
-					row: Math.floor((writeIndex % 8192) / 128),
-					col: (writeIndex % 8192) % 128,
+					row: Math.floor((writeIndex % TILE_COUNT) / COLUMN_COUNT),
+					col: (writeIndex % TILE_COUNT) % COLUMN_COUNT,
 					props: {
 						fill: playerColor,
 						textContent: "",
@@ -83,8 +86,8 @@ function GameVisuPage() {
 			// Player reads
 			for (const readIndex of currentIteration.memoryReads) {
 				updates.push({
-					row: Math.floor((readIndex % 8192) / 128),
-					col: (readIndex % 8192) % 128,
+					row: Math.floor((readIndex % TILE_COUNT) / COLUMN_COUNT),
+					col: (readIndex % TILE_COUNT) % COLUMN_COUNT,
 					props: {
 						textContent: "X",
 						textColor: playerColor,
@@ -97,9 +100,12 @@ function GameVisuPage() {
 				if (previousIteration.programCounterBefore >= 0) {
 					updates.push({
 						row: Math.floor(
-							(previousIteration.programCounterBefore % 8192) / 128,
+							(previousIteration.programCounterBefore % TILE_COUNT) /
+								COLUMN_COUNT,
 						),
-						col: (previousIteration.programCounterBefore % 8192) % 128,
+						col:
+							(previousIteration.programCounterBefore % TILE_COUNT) %
+							COLUMN_COUNT,
 						props: {
 							isDimmed: true,
 							stroke: "",
@@ -111,9 +117,12 @@ function GameVisuPage() {
 				if (previousIteration.programCounterAfter >= 0) {
 					updates.push({
 						row: Math.floor(
-							(previousIteration.programCounterAfter % 8192) / 128,
+							(previousIteration.programCounterAfter % TILE_COUNT) /
+								COLUMN_COUNT,
 						),
-						col: (previousIteration.programCounterAfter % 8192) % 128,
+						col:
+							(previousIteration.programCounterAfter % TILE_COUNT) %
+							COLUMN_COUNT,
 						props: {
 							stroke: "#BBBBBB",
 							strokeWidth: "16",
@@ -125,8 +134,11 @@ function GameVisuPage() {
 			// Active process
 			if (currentIteration.programCounterBefore >= 0) {
 				updates.push({
-					row: Math.floor((currentIteration.programCounterBefore % 8192) / 128),
-					col: (currentIteration.programCounterBefore % 8192) % 128,
+					row: Math.floor(
+						(currentIteration.programCounterBefore % TILE_COUNT) / COLUMN_COUNT,
+					),
+					col:
+						(currentIteration.programCounterBefore % TILE_COUNT) % COLUMN_COUNT,
 					props: {
 						isDimmed: false,
 						stroke: "white",
@@ -138,8 +150,8 @@ function GameVisuPage() {
 			// Sleeping processes
 			for (const sleepingProcess of currentIteration.programCountersOfOtherProcesses) {
 				updates.push({
-					row: Math.floor((sleepingProcess % 8192) / 128),
-					col: (sleepingProcess % 8192) % 128,
+					row: Math.floor((sleepingProcess % TILE_COUNT) / COLUMN_COUNT),
+					col: (sleepingProcess % TILE_COUNT) % COLUMN_COUNT,
 					props: {
 						stroke: "#BBBBBB",
 						strokeWidth: "16",
@@ -155,6 +167,8 @@ function GameVisuPage() {
 
 		// Clear interval on component unmount
 		return () => clearInterval(interval);
+		// this hook is supposed to trigger the interval / loop. adding further dependencies would create multiple instances of it
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [lobbyStatus]);
 
 	const boardRef = useRef<{
