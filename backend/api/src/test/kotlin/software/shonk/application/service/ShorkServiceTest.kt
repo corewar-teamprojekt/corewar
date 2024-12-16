@@ -394,13 +394,13 @@ class ShorkServiceTest {
     }
 
     @Test
-    fun `test authenticate joined players`() {
+    fun `test verify joined players`() {
         val shorkService = ShorkService(Shork())
         val lobbyId = shorkService.createLobby("playerA").getOrThrow()
-        val resultA = shorkService.authenticatePlayer("playerA", lobbyId)
+        val resultA = shorkService.verifyPlayer("playerA", lobbyId)
         assertTrue(resultA.isSuccess)
         shorkService.joinLobby(lobbyId, "playerB")
-        val resultB = shorkService.authenticatePlayer("playerB", lobbyId)
+        val resultB = shorkService.verifyPlayer("playerB", lobbyId)
         assertTrue(resultB.isSuccess)
     }
 }

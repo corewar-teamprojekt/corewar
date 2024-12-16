@@ -27,5 +27,5 @@ interface ShorkUseCase {
 
     fun getAllLobbies(): List<LobbyStatus>
 
-    fun authenticatePlayer(playerName: String, lobbyId: Long): Result<Unit>
+    fun verifyPlayer(playerName: String, lobbyId: Long): Result<Unit>
 }
