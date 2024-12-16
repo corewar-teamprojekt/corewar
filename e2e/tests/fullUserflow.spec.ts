@@ -55,7 +55,17 @@ test("complete userflow", async ({ browser }) => {
     await expect(playerBPage.getByText("Waiting for game result..."))
         .toBeVisible({ timeout: 60000 });
 
-    /*
+    const skipVisuButtonA = playerAPage.getByRole("button", {
+        name: "skip visualization>>",
+    });
+    await expect(skipVisuButtonA).toBeVisible();
+    await skipVisuButtonA.dispatchEvent('click')
+
+    const skipVisuButtonB = playerBPage.getByRole("button", {
+        name: "skip visualization>>",
+    });
+    await expect(skipVisuButtonB).toBeVisible();
+    await skipVisuButtonB.dispatchEvent('click')
 
     await expect(playerAPage.getByText("It's a draw!")).toBeVisible({
         timeout: 60000,
@@ -71,6 +81,6 @@ test("complete userflow", async ({ browser }) => {
     await playAgainButton.click();
 
     await expect(playerAPage).toHaveURL(/.*lobby-selection/);
-     */
+
 });
 
