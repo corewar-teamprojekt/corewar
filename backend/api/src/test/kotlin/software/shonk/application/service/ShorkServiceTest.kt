@@ -39,6 +39,7 @@ class ShorkServiceTest {
     fun `create lobby and playerB submits program`() {
         val shorkService = ShorkService(MockShork())
         shorkService.createLobby("playerA")
+        shorkService.joinLobby(0L, "playerB")
         shorkService.addProgramToLobby(0L, "playerB", "someProgram")
         val result = shorkService.getLobbyStatus(0L).getOrThrow()
 
@@ -175,6 +176,7 @@ class ShorkServiceTest {
         val shorkService = ShorkService(MockShork())
         shorkService.createLobby("playerA")
         shorkService.addProgramToLobby(0L, "playerA", "someProgram")
+        shorkService.joinLobby(0L, "playerB")
         shorkService.addProgramToLobby(0L, "playerB", "someOtherProgram")
 
         assertEquals("someProgram", shorkService.getProgramFromLobby(0L, "playerA").getOrNull())
@@ -189,9 +191,11 @@ class ShorkServiceTest {
         val shorkService = ShorkService(MockShork())
         shorkService.createLobby("playerA")
         shorkService.addProgramToLobby(0L, "playerA", "someProgram")
+        shorkService.joinLobby(0L, "playerB")
         shorkService.addProgramToLobby(0L, "playerB", "someOtherProgram")
 
         val secondLobby = shorkService.createLobby("playerB")
+        shorkService.joinLobby(secondLobby.getOrThrow(), "playerA")
         shorkService.addProgramToLobby(secondLobby.getOrThrow(), "playerA", "differentProgram")
         shorkService.addProgramToLobby(
             secondLobby.getOrThrow(),
@@ -326,6 +330,7 @@ class ShorkServiceTest {
         val shorkService = ShorkService(Shork())
         val lobbyId = shorkService.createLobby("playerA").getOrThrow()
         shorkService.addProgramToLobby(lobbyId, "playerA", "mov 0, 1")
+        shorkService.joinLobby(0L, "playerB")
         shorkService.addProgramToLobby(lobbyId, "playerB", "mov 0, 1")
         shorkService.setLobbySettings(lobbyId, Settings())
 
@@ -352,6 +357,7 @@ class ShorkServiceTest {
         val shorkService = ShorkService(Shork())
         val lobbyId = shorkService.createLobby("playerA").getOrThrow()
         shorkService.addProgramToLobby(lobbyId, "playerA", "mov 0, 1")
+        shorkService.joinLobby(0L, "playerB")
         shorkService.addProgramToLobby(lobbyId, "playerB", "jmp 42")
 
         val result =

@@ -48,12 +48,6 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
             lobbies[lobbyId] = resetLobby(lobbyId).getOrThrow()
         }
 
-        if (verifyPlayer(name.toString(), lobbyId).isFailure) {
-            return Result.failure(
-                IllegalStateException("You can't submit code to a lobby you have not joined!")
-            )
-        }
-
         val lobby =
             getLobby(lobbyId).getOrElse {
                 return Result.failure(it)
@@ -61,6 +55,12 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
 
         if (name == null || !verifyPlayerName(name)) {
             return Result.failure(IllegalArgumentException("Invalid player name"))
+        }
+
+        if (verifyPlayer(name.toString(), lobbyId).isFailure) {
+            return Result.failure(
+                IllegalStateException("You can't submit code to a lobby you have not joined!")
+            )
         }
 
         lobby.addProgram(name, program)
@@ -144,7 +144,6 @@ class ShorkService(private val shork: IShork) : ShorkUseCase {
     }
 
     override fun verifyPlayer(playerName: String, lobbyId: Long): Result<Unit> {
-        println(lobbies[lobbyId]?.joinedPlayers)
         if (lobbies[lobbyId]?.joinedPlayers?.contains(playerName) == true) {
             return Result.success(Unit)
         }
