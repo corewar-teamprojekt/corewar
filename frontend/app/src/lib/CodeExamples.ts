@@ -5,7 +5,7 @@ export const codeExamples: CodeExample[] = [
 		title: "Dwarf",
 		shortDescription:
 			'The dwarf "bombs" the core at regular intervals with DATs while making sure to not hit itself',
-		code: "add.ab  #4, 3\nmov.i   2, @2\njmp     -2\ndat     #0, #0\n",
+		code: "add.ab  #5, 3\nmov.i   2, @2\njmp     -2\ndat     #0, #0\n",
 	},
 	{
 		title: "Mice",

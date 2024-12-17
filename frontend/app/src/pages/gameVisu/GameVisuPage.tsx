@@ -18,12 +18,12 @@ function GameVisuPage() {
 	const [lobbyStatus, setLobbyStatus] = useState<LobbyStatus>();
 	const lobby = useLobby();
 	const navigate = useNavigate();
-	const interval_time: number = 33;
+	const interval_time: number = 250;
 	const counterRef = useRef(0);
 	const [derivedValue, setDerivedValue] = useState(counterRef.current);
 
-	const TILE_COUNT = 8192;
-	const COLUMN_COUNT = 128;
+	const TILE_COUNT = 64;
+	const COLUMN_COUNT = 8;
 
 	useEffect(() => {
 		if (lobby) {
@@ -191,7 +191,7 @@ function GameVisuPage() {
 						style={{ height: "2px", background: "#FFFFFF" }}
 					></Separator>
 					<span>
-						<b>Board size: </b>8192 cells
+						<b>Board size: </b>64 cells
 					</span>
 					<span>
 						<b>Current cycle: </b>
@@ -209,8 +209,8 @@ function GameVisuPage() {
 			</div>
 			<div id={"visuBoard"}>
 				<HexagonalBoard
-					rows={64}
-					tilesPerRow={128}
+					rows={8}
+					tilesPerRow={8}
 					ref={boardRef}
 				></HexagonalBoard>
 			</div>

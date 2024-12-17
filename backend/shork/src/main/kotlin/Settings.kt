@@ -12,12 +12,12 @@ import software.shonk.interpreter.internal.settings.InternalSettings
  */
 class Settings(
     /** The size of the core, in number of instructions it will fit. */
-    val coreSize: Int = 8192,
+    val coreSize: Int = 64,
     /**
      * The maximum number of instructions will be executed before the interpreter stops and a draw
      * is called.
      */
-    val instructionLimit: Int = 100000,
+    val instructionLimit: Int = 10000,
     /** The initial instruction the core will be filled with. */
     val initialInstruction: String = "DAT $0, $0",
     /**
@@ -35,9 +35,9 @@ class Settings(
     val writeDistance: Int = coreSize,
 
     /** The minimum separation between two processes. */
-    val minimumSeparation: Int = 100,
+    val minimumSeparation: Int = 25,
     /** The number of instructions between two processes when created */
-    val separation: Int = 100,
+    val separation: Int = 25,
     /**
      * Whether the separation between two processes is random. `separation` is ignored if this is
      * true
