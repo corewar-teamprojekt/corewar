@@ -4,7 +4,6 @@
 </picture>
 
 <p align="center">
-    <a href="https://main.corewar.shonk.software"><img alt="Main Deployment Status" src="https://corewar-status.schnelle.dev/badge-main"></a>
     <a href="https://github.com/corewar-teamprojekt/corewar/actions"><img alt="build status" src="https://img.shields.io/github/actions/workflow/status/corewar-teamprojekt/corewar/build-and-deploy.yml"></a>
     <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/corewar-teamprojekt/corewar">
     <img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/corewar-teamprojekt/corewar">
@@ -19,11 +18,6 @@ The game concept originated in 1984 and was first introduced in [this article](h
 This project aims to revitalize Corewar, bringing it to a whole new audience of tech enthusiasts. Happy hacking!
 
 ## Start playing
-The current production deployment can be found [here](https://corewar.shonk.software/).
-
-We deploy every active branch to https://$BRANCHNAME.corewar.shonk.software/ aswell.
-
-### Local setup
 To run the project locally, you can use our prebuilt container image.
 ```bash
 docker run -p 8080:80 ghcr.io/corewar-teamprojekt/corewar:latest
