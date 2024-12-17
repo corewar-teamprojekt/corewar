@@ -23,6 +23,16 @@ The current production deployment can be found [here](https://corewar.shonk.soft
 
 We deploy every active branch to https://$BRANCHNAME.corewar.shonk.software/ aswell.
 
+### Local setup
+To run the project locally, you can use our prebuilt container image.
+```bash
+docker run -p 8080:80 ghcr.io/corewar-teamprojekt/corewar:latest
+```
+
+```bash
+podman run -p 8080:80 ghcr.io/corewar-teamprojekt/corewar:latest
+```
+
 ## Technologies
 This app uses a [react](https://react.dev/) frontend with [shadcn](https://ui.shadcn.com/) as its core component library.
 On the serverside, we run a [ktor](https://ktor.io/) backend.
