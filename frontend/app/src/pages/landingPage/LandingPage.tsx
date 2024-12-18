@@ -75,7 +75,6 @@ function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 							</Button>
 						</CardContent>
 					</Card>
-					<div id={styles["poster"]}>beep boop</div>
 				</div>
 			</div>
 			<Card className={styles["cheatSheet"]}>
