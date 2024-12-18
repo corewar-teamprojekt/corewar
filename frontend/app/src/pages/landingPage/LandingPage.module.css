@@ -74,6 +74,17 @@
 	justify-content: flex-start;
 }
 
+.cheatSheet {
+	background: none;
+	width: 70%;
+	line-height: 2rem;
+	margin-left: -100px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}
+
 .textCard h2 {
 	margin-bottom: 20px;
 }

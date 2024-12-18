@@ -56,30 +56,116 @@ function LandingPage({ enableThreeJs }: { enableThreeJs: boolean }) {
 				<div id={styles["infodump0Layout"]}>
 					<Card className={styles["textCard"]}>
 						<CardContent>
-							<h2 className="text-3xl font-semibold">Hello World</h2>
-							<p>
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-								eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-								enim ad minim veniam, quis nostrud exercitation ullamco laboris
-								nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-								in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-								nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-								sunt in culpa qui officia deserunt mollit anim id est laborum.
-							</p>
-							<Button>READ MORE</Button>
+							<h2 className="text-3xl font-semibold">Welcome to CoreWar!</h2>
+							CoreWar is a strategic programming game originally developed in
+							1984 by A. K. Dewdney and D. G. Jones. In it, players write
+							programs in an assembly-esque programming language that compete
+							within a shared memory space. The goal is to get the opponent to
+							execute an illegal instruction, at which point the program gets
+							killed.
+							<br />
+							This implementation was developed as part of a university course
+							in cooperation with ConLeos GmbH.
+							<Button
+								onClick={() =>
+									window.open("https://github.com/corewar-teamprojekt/corewar")
+								}
+							>
+								Check out the Code!
+							</Button>
 						</CardContent>
 					</Card>
-					<div id={styles["poster"]}></div>
+					<div id={styles["poster"]}>beep boop</div>
 				</div>
 			</div>
-			<div id={styles["lastFullContentView"]}>
+			<Card className={styles["cheatSheet"]}>
+				<h2 className="text-3xl font-semibold">Cheat Sheet</h2>
 				<div id={styles["infodump1Layout"]}>
-					<div id={styles["infodump1GridItem0"]}>abc</div>
-					<div id={styles["infodump1GridItem1"]}>def</div>
-					<div id={styles["infodump1GridItem2"]}>ghi</div>
-					<div id={styles["infodump1GridItem3"]}>abc</div>
+					<div id={styles["infodump1GridItem0"]}>
+						<h2 className="text-2xl font-semibold">Memory Layout</h2>
+						CoreWar uses a circular memory layout. That means reads and writes
+						past the size of the memory will loop around to the start or the end
+						again. Addressing is always relative to the current instruction. If
+						an instruction references address 2, it points at the instruction
+						two steps ahead of it. If address -2 is referenced, it means the
+						instruction 2 steps before it in memory.
+					</div>
+					<div id={styles["infodump1GridItem1"]}>
+						<h2 className="text-2xl font-semibold">Instruction Set</h2>
+						- DAT: Kills the executing process
+						<br />
+						- MOV: Copies data from source to destination
+						<br />
+						- ADD: Adds source to destination
+						<br />
+						- SUB: Subtracts source from destination
+						<br />
+						- MUL: Multiplies source to destination
+						<br />
+						- DIV: Divides source by destination
+						<br />
+						- MOD: Calculates the remainder after division of source by
+						destination
+						<br />
+						- JMP: Jump to a destination pointed at by the source
+						<br />
+						- JMZ: Jump to the source when the destination is zero
+						<br />
+						- JMN: Jump to the source when the destination is not zero
+						<br />
+						- SEQ: Skip next instruction if source and destination are equal
+						<br />
+						- SNE: Skip next instruction if source and destination are not equal
+						<br />
+						- SLT: Skip next instruction if source is less than destination
+						<br />
+						- DJN: Decrement the source by one, then jump if it is not zero
+						<br />
+						- SPL: Create a new process at the source instruction
+						<br />
+						- NOP: Do nothing
+						<br />
+					</div>
+					<div id={styles["infodump1GridItem2"]}>
+						<h2 className="text-2xl font-semibold">Address Modes</h2>
+						- '#': Immediate mode
+						<br />
+						- '$': Direct mode
+						<br />
+						- '*': A-field indirect
+						<br />
+						- '@': B-field indirect
+						<br />
+						- '&#123;': A-field indirect with predecrement
+						<br />
+						- '&lt;': B-field indirect with predecrement
+						<br />
+						- '&#125;': A-field indirect with postincrement
+						<br />- '&gt;': B-field indirect with postincrement
+					</div>
+					<div id={styles["infodump1GridItem3"]}>
+						<h2 className="text-2xl font-semibold">Modifiers</h2>
+						- A: Operates on the A-field of both source and destination
+						<br />
+						- B: Operates on the B-field of both source and destination
+						<br />
+						- AB: Operates on the A-field of the source and the B-field of the
+						destination
+						<br />
+						- BA: Operates on the B-field of the source and the A-field of the
+						destination
+						<br />
+						- F: Does the operation like the A modifier, then like the
+						B-modifier
+						<br />
+						- X: Does the operation like the AB modifier, then like the
+						BA-modifier
+						<br />
+						- I: Operates on the whole instruction (including opcode)
+						<br />
+					</div>
 				</div>
-			</div>
+			</Card>
 			{enableThreeJs && (
 				// just threejs styling
 				// eslint-disable-next-line
