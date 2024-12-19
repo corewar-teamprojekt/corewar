@@ -9,7 +9,7 @@ test("complete userflow", async ({ browser }) => {
 
     // Landing page
     await playerAPage.goto("/");
-    await playerAPage.getByText("Play").click();
+    await playerAPage.locator('button:has-text("Play")').click();
 
     // Lobby selection page
     await playerAPage.getByRole("button", { name: "create lobby" }).click();
@@ -30,7 +30,7 @@ test("complete userflow", async ({ browser }) => {
 
     // Landing page
     await playerBPage.goto("/");
-    await playerBPage.getByText("Play").click();
+    await playerBPage.locator('button:has-text("Play")').click();
 
     // Lobby selection page
     await playerBPage.getByRole("button", { name: "join" }).click();
@@ -83,4 +83,3 @@ test("complete userflow", async ({ browser }) => {
     await expect(playerAPage).toHaveURL(/.*lobby-selection/);
 
 });
-
