@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { HexagonalTileProps } from "@/components/hexagonalTile/HexagonalTile.tsx";
 import CanvasVisu from "@/components/canvasVisu/CanvasVisu";
 import { LobbyStatus } from "@/domain/LobbyStatus.ts";
 import { useLobby } from "@/services/lobbyContext/LobbyContextHelpers.ts";
@@ -10,6 +9,7 @@ import Header from "@/components/header/Header.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import Footer from "@/components/footer/Footer.tsx";
 import "./canvasGameVisu.css";
+import { HexagonalTileProps } from "@/domain/HexagonalTileProps.tsx";
 
 function CanvasGameVisuPage() {
 	const lobbyStatus = useRef<LobbyStatus | null>(null);
