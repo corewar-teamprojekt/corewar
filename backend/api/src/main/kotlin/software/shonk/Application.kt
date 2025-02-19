@@ -10,21 +10,47 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.koin.ktor.plugin.koin
-import software.shonk.adapters.incoming.configureShorkInterpreterControllerV0
-import software.shonk.adapters.incoming.configureShorkInterpreterControllerV1
-import software.shonk.application.port.incoming.ShorkUseCase
-import software.shonk.application.port.incoming.V0ShorkUseCase
-import software.shonk.application.service.ShorkService
-import software.shonk.application.service.V0ShorkService
 import software.shonk.interpreter.IShork
 import software.shonk.interpreter.Shork
+import software.shonk.interpreter.adapters.incoming.configureGetCompilationErrorsControllerV1
+import software.shonk.interpreter.application.port.incoming.GetCompilationErrorsQuery
+import software.shonk.interpreter.application.service.GetCompilationErrorsService
+import software.shonk.lobby.adapters.incoming.addProgramToLobby.configureAddProgramToLobbyControllerV1
+import software.shonk.lobby.adapters.incoming.createLobby.configureCreateLobbyControllerV1
+import software.shonk.lobby.adapters.incoming.getAllLobbies.configureGetAllLobbiesControllerV1
+import software.shonk.lobby.adapters.incoming.getLobbySettings.configureGetLobbySettingsControllerV1
+import software.shonk.lobby.adapters.incoming.getLobbyStatus.configureGetLobbyStatusControllerV1
+import software.shonk.lobby.adapters.incoming.getProgramFromPlayerInLobby.configureGetProgramFromPlayerInLobbyControllerV1
+import software.shonk.lobby.adapters.incoming.joinLobby.configureJoinLobbyControllerV1
+import software.shonk.lobby.adapters.incoming.setLobbySettings.configureSetLobbySettingsControllerV1
+import software.shonk.lobby.adapters.outgoing.MemoryLobbyManager
+import software.shonk.lobby.application.port.incoming.AddProgramToLobbyUseCase
+import software.shonk.lobby.application.port.incoming.CreateLobbyUseCase
+import software.shonk.lobby.application.port.incoming.GetAllLobbiesQuery
+import software.shonk.lobby.application.port.incoming.GetLobbySettingsQuery
+import software.shonk.lobby.application.port.incoming.GetLobbyStatusQuery
+import software.shonk.lobby.application.port.incoming.GetProgramFromPlayerInLobbyQuery
+import software.shonk.lobby.application.port.incoming.JoinLobbyUseCase
+import software.shonk.lobby.application.port.incoming.SetLobbySettingsUseCase
+import software.shonk.lobby.application.port.outgoing.DeleteLobbyPort
+import software.shonk.lobby.application.port.outgoing.LoadLobbyPort
+import software.shonk.lobby.application.port.outgoing.SaveLobbyPort
+import software.shonk.lobby.application.service.AddProgramToLobbyService
+import software.shonk.lobby.application.service.CreateLobbyService
+import software.shonk.lobby.application.service.GetAllLobbiesService
+import software.shonk.lobby.application.service.GetLobbySettingsService
+import software.shonk.lobby.application.service.GetLobbyStatusService
+import software.shonk.lobby.application.service.GetProgramFromPlayerInLobbyService
+import software.shonk.lobby.application.service.JoinLobbyService
+import software.shonk.lobby.application.service.SetLobbySettingsService
 
 fun main() {
     embeddedServer(Netty, port = 8080) {
-            module()
-            moduleApiV0()
+            basicModule()
             moduleApiV1()
             koinModule()
             staticResources()
@@ -32,7 +58,7 @@ fun main() {
         .start(wait = true)
 }
 
-fun Application.module() {
+fun Application.basicModule() {
     // Install basic middleware like CORS and content negotiation here
     install(CORS) {
         allowMethod(HttpMethod.Options)
@@ -54,20 +80,19 @@ fun Application.module() {
     }
 }
 
-fun Application.moduleApiV0() {
-    routing {
-        route("/api/v0") {
-            staticResources("/docs", "openapi/v0", index = "scalar.html")
-            configureShorkInterpreterControllerV0()
-        }
-    }
-}
-
 fun Application.moduleApiV1() {
     routing {
         route("/api/v1") {
             staticResources("/docs", "openapi/v1", index = "scalar.html")
-            configureShorkInterpreterControllerV1()
+            configureAddProgramToLobbyControllerV1()
+            configureCreateLobbyControllerV1()
+            configureGetProgramFromPlayerInLobbyControllerV1()
+            configureGetCompilationErrorsControllerV1()
+            configureSetLobbySettingsControllerV1()
+            configureGetLobbySettingsControllerV1()
+            configureGetAllLobbiesControllerV1()
+            configureJoinLobbyControllerV1()
+            configureGetLobbyStatusControllerV1()
         }
     }
 }
@@ -81,8 +106,22 @@ fun Application.koinModule() {
         modules(
             module {
                 single<IShork> { Shork() }
-                single<ShorkUseCase> { ShorkService(get()) }
-                single<V0ShorkUseCase> { V0ShorkService(get()) }
+                single<CreateLobbyUseCase> { CreateLobbyService(get(), get()) }
+                single<SetLobbySettingsUseCase> { SetLobbySettingsService(get(), get()) }
+                single<GetProgramFromPlayerInLobbyQuery> {
+                    GetProgramFromPlayerInLobbyService(get())
+                }
+                single<GetLobbySettingsQuery> { GetLobbySettingsService(get()) }
+                single<GetCompilationErrorsQuery> { GetCompilationErrorsService() }
+                single<GetAllLobbiesQuery> { GetAllLobbiesService(get()) }
+                single<JoinLobbyUseCase> { JoinLobbyService(get(), get()) }
+                single<GetLobbyStatusQuery> { GetLobbyStatusService(get()) }
+                single<AddProgramToLobbyUseCase> { AddProgramToLobbyService(get(), get()) }
+                singleOf(::MemoryLobbyManager) {
+                    bind<LoadLobbyPort>()
+                    bind<SaveLobbyPort>()
+                    bind<DeleteLobbyPort>()
+                }
             }
         )
     }
